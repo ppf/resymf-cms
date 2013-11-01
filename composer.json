@@ -19,14 +19,9 @@
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "braincrafted/bootstrap-bundle": "dev-master",
+        "friendsofsymfony/user-bundle": "dev-master",
         "twitter/bootstrap": "dev-master",
-        "components/jquery": "1.9.1",
-        "sonata-project/admin-bundle": "dev-master",
-        "sonata-project/page-bundle": "dev-master",
-        "sonata-project/doctrine-orm-admin-bundle": "dev-master",
-        "sonata-project/media-bundle": "dev-master",
-        "sonata-project/cache-bundle": "dev-master"
+        "components/jquery": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
