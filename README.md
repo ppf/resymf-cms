@@ -4,4 +4,4 @@ ReSymf-CMS
 
 <h3>Documentation:</h3>
 
-* Styled login form in /login path
+see http://ppf.github.io/resymf-cms/
