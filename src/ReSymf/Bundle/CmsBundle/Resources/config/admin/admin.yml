@@ -1,0 +1,21 @@
+site_config:
+    name: 'refymf cms'
+    description: 'the best of cms'
+
+admin_menu:
+    -
+        type: 'crud'
+        route_name: ''
+        class: 'post'
+        object_prefix: 'object'
+        actions: ['list','create','delete','update']
+        submenu:
+            -
+                type: 'link'
+                route: 'my_route'
+        label: 'My Post'
+    -
+        type: 'page'
+        label: 'my custom page'
+        slug: 'my_slug'
+        template: 'ReSymfCmsBundle:Default:form.html.twig'

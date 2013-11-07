@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8" />
+	<meta charset="UTF-8"/>
 	<title>{% block title %}Welcome in ReSymf App{% endblock %}</title>
+	<link href="{{ asset('bundles/resymfcms/css/bootstrap.min.css') }}" rel="stylesheet"/>
 	{% block stylesheets %}{% endblock %}
-	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body>
 {% block body %}{% endblock %}
 {% block javascripts %}{% endblock %}
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="{{ asset('bundles/resymfcms/js/bootstrap.min.js') }}"></script>
 </body>
 </html>

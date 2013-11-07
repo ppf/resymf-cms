@@ -4,15 +4,12 @@
 	<link href="{{ asset('bundles/resymfcms/css/login.css') }}" rel="stylesheet" />
 {% endblock %}
 
-{% block body %}
-	<div class='login-container'>
-	<div class='login-form'>
-		<h1>{{ 'login.title'|trans }}</h1>
-	{% block fos_user_content %}
 
-	{% endblock fos_user_content %}
-</div>
-		</div>
+{% block body %}
+	{{ include('ReSymfCmsBundle:admin:menu.html.twig', { 'menu': menu , 'site_config' : site_config}) }}
+	{% block content %}
+	{% endblock %}
 {% endblock body %}
+
 {% block javascripts %}
 {% endblock %}

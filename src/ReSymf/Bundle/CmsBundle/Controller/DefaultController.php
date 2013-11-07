@@ -2,18 +2,42 @@
 
 namespace ReSymf\Bundle\CmsBundle\Controller;
 
+use ReSymf\Bundle\CmsBundle\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+/**
+ * Class DefaultController
+ * @package ReSymf\Bundle\CmsBundle\Controller
+ *
+ * @author Piotr Francuz <francuz256@gmail.com>
+ */
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/hello/{name}")
-     * @Template()
-     */
-    public function indexAction($name)
-    {
-        return array('name' => $name);
-    }
+	/**
+	 * @param $name
+	 *
+	 * @return array
+	 */
+	public function indexAction($name)
+	{
+		return true;
+	}
+
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function addPostAction()
+	{
+		$post = new Post();
+
+		$form = $this->createFormBuilder($post)
+				->add('name', 'text')
+				->add('content', 'textarea')
+				->add('save', 'submit')
+				->getForm();
+
+		return $this->render('ReSymfCmsBundle:Default:form.html.twig', array(
+			'form' => $form->createView(),
+		));
+	}
 }

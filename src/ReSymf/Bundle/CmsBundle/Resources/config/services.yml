@@ -1,0 +1,4 @@
+services:
+    resymfcms.configurator.menu:
+        class: ReSymf\Bundle\CmsBundle\Services\MenuConfigurator
+        arguments: []

@@ -10,6 +10,6 @@ _configurator:
     resource: "@SensioDistributionBundle/Resources/config/routing/webconfigurator.xml"
     prefix:   /_configurator
 
-_main:
-    resource: routing.yml
-
+re_symf_cms:
+    resource: "@ReSymfCmsBundle/Resources/config/routing/routing.yml"
+    prefix:   /

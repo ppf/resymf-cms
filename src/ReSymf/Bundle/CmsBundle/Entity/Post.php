@@ -1,0 +1,156 @@
+<?php
+
+namespace ReSymf\Bundle\CmsBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Post
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ *
+ * @author Piotr Francuz <francuz256@gmail.com>
+ */
+class Post
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetime")
+     */
+    private $createDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="content", type="text")
+     */
+    private $content;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="author_id", type="integer")
+     */
+    private $authorId;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set createDate
+     *
+     * @param \DateTime $createDate
+     * @return Post
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get createDate
+     *
+     * @return \DateTime 
+     */
+    public function getCreateDate()
+    {
+        return $this->createDate;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Post
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set content
+     *
+     * @param string $content
+     * @return Post
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    
+        return $this;
+    }
+
+    /**
+     * Get content
+     *
+     * @return string 
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set authorId
+     *
+     * @param integer $authorId
+     * @return Post
+     */
+    public function setAuthorId($authorId)
+    {
+        $this->authorId = $authorId;
+    
+        return $this;
+    }
+
+    /**
+     * Get authorId
+     *
+     * @return integer 
+     */
+    public function getAuthorId()
+    {
+        return $this->authorId;
+    }
+}

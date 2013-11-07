@@ -1,6 +1,5 @@
 re_symf_cms:
-    resource: "@ReSymfCmsBundle/Controller/"
-    type:     annotation
+    resource: "@ReSymfCmsBundle/Resources/config/routing/routing.yml"
     prefix:   /
 
 fos_user_security:

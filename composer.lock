@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "4c037b025148109b2d2c54b16fe42973",
+    "hash": "39e8e1b55a85a434ef2b884b21203eae",
     "packages": [
         {
             "name": "components/jquery",
@@ -1661,12 +1661,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "19fdd707efecbb7fa26be242b6785a3bf9bf0211"
+                "reference": "df3b44f27a25d72895adf5755bf5fef4eb02ea67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/19fdd707efecbb7fa26be242b6785a3bf9bf0211",
-                "reference": "19fdd707efecbb7fa26be242b6785a3bf9bf0211",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/df3b44f27a25d72895adf5755bf5fef4eb02ea67",
+                "reference": "df3b44f27a25d72895adf5755bf5fef4eb02ea67",
                 "shasum": ""
             },
             "type": "library",
@@ -1690,7 +1690,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-10-31 20:36:52"
+            "time": "2013-11-03 03:11:08"
         }
     ],
     "packages-dev": [
@@ -1703,7 +1703,8 @@
     "stability-flags": {
         "friendsofsymfony/user-bundle": 20,
         "twitter/bootstrap": 20,
-        "components/jquery": 20
+        "components/jquery": 20,
+        "symfony/yaml": 20
     },
     "platform": {
         "php": ">=5.3.3"
