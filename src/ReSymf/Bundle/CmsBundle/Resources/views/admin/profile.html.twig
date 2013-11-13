@@ -1,0 +1,16 @@
+{% extends 'ReSymfCmsBundle:admin:baseAdmin.html.twig' %}
+
+{% block content %}
+	<div class="col-lg-4 col-md-4 col-sm-6 form_container">
+		<div class="well">
+			<form action="{{ path('resymf_admin_profile_show') }}" method="POST" class="fos_user_profile_edit">
+				<label for="inputEmail" class="col-lg-4 col-md-5 col-sm-4 col-xs-5 control-label">{{ 'profile.show.username'|trans }}:</label>		 {{ app.user.username }}</p>
+				<label for="inputEmail" class="col-lg-4 col-md-5 col-sm-4 col-xs-5 control-label">{{ 'profile.show.email'|trans }}:</label>		 {{ app.user.email }}</p>
+				<div>
+					<input type="submit" value="{{ 'profile.edit.submit'|trans }}"/>
+				</div>
+			</form>
+
+		</div>
+	</div>
+{% endblock content %}

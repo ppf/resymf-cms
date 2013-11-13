@@ -1,6 +1,9 @@
-dashboard:
-    pattern: /admin/dashboard
+resymf_admin_dashboard:
+    pattern: /dashboard
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:dashboard" }
-custom_admin_page:
-    pattern: /admin/page/{slug}
+resymf_admin_custom_page:
+    pattern: /page/{slug}
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:custom" }
+resymf_admin_profile_show:
+    pattern: /profile
+    defaults: { _controller: "ReSymfCmsBundle:AdminMenu:profile" }

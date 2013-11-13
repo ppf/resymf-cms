@@ -14,13 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DefaultController extends Controller
 {
 	/**
-	 * @param $name
-	 *
 	 * @return array
 	 */
-	public function indexAction($name)
+	public function indexAction()
 	{
-		return true;
+		return $this->render('ReSymfCmsBundle::index.html.twig');
 	}
 
 	/**

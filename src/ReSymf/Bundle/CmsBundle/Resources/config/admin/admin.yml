@@ -1,21 +1,27 @@
 site_config:
     name: 'refymf cms'
     description: 'the best of cms'
+    domain: 'resymf-cms'
+    theme: ''
 
 admin_menu:
     -
         type: 'crud'
         route_name: ''
-        class: 'post'
+        class: 'page'
         object_prefix: 'object'
         actions: ['list','create','delete','update']
+        icon: 'file'
         submenu:
             -
                 type: 'link'
                 route: 'my_route'
         label: 'My Post'
+        role: 'ROLE_ADMIN'
     -
         type: 'page'
         label: 'my custom page'
+        icon: 'umbrella'
         slug: 'my_slug'
         template: 'ReSymfCmsBundle:Default:form.html.twig'
+        role: 'ROLE_TEACHER'

@@ -1,1 +1,2 @@
-post : 'ReSymfCmsBundle\Entity\Post'
+mapping:
+    page : 'ReSymfCmsBundle:Page'

@@ -14,6 +14,16 @@ use ReSymf\Bundle\CmsBundle\Form\PostType;
 class AdminMenuController extends Controller
 {
 
+	public function profileAction()
+	{
+		$menuConfigurator = $this->get('resymfcms.configurator.menu');
+//		var_dump($menuConfigurator->getMenuFromConfig());
+//		$entity = new Post();
+//		$form   = $this->createCreateForm($entity);
+
+		return $this->render('ReSymfCmsBundle:admin:profile.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig()));
+	}
+
 	public function dashboardAction()
 	{
 		$menuConfigurator = $this->get('resymfcms.configurator.menu');
@@ -30,13 +40,16 @@ class AdminMenuController extends Controller
      */
     public function listAction($type)
     {
+	    $menuConfigurator = $this->get('resymfcms.configurator.menu');
+	    $objectMapper = $this->get('resymfcms.object.mapper');
+
+	    $objectType = $objectMapper->getMappedObject($type);
+
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('ReSymfCmsBundle:Post')->findAll();
+        $entities = $em->getRepository($objectType)->findAll();
 
-        return $this->render('ReSymfCmsBundle:Post:index.html.twig', array(
-            'entities' => $entities,
-        ));
+        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig(), 'entities' => $entities));
     }
     /**
      * Creates a new entity.

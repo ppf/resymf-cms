@@ -4,4 +4,9 @@ security:
         password: "Password"
         remember_me: "Remember me"
         submit: "Log in"
-        message: "Log in"
+        message: "ReSymf Log in"
+        info: "Insert Your Username and Password"
+profile:
+    show:
+        username: "Username"
+        email: "Email"

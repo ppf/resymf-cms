@@ -2,3 +2,6 @@ services:
     resymfcms.configurator.menu:
         class: ReSymf\Bundle\CmsBundle\Services\MenuConfigurator
         arguments: []
+    resymfcms.object.mapper:
+        class: ReSymf\Bundle\CmsBundle\Services\ObjectMapper
+        arguments: []

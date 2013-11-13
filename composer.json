@@ -19,8 +19,6 @@
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "friendsofsymfony/user-bundle": "dev-master",
-        "twitter/bootstrap": "dev-master",
         "components/jquery": "dev-master",
 	"symfony/yaml": "2.3.*@dev"
     },

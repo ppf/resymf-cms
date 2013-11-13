@@ -1,7 +1,14 @@
+re_symf_cms_main:
+    pattern: /
+    defaults: { _controller: "ReSymfCmsBundle:Default:index" }
+
 re_symf_cms_object:
     resource: "@ReSymfCmsBundle/Resources/config/routing/admin/object.yml"
     prefix:   /admin/object
-re_symf_cms_main:
+
+re_symf_cms_admin:
     resource: "@ReSymfCmsBundle/Resources/config/routing/admin/main.yml"
-    prefix:   /
+    prefix:   /admin
+
+
 

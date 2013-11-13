@@ -1,6 +1,6 @@
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface:
+        ReSymf\Bundle\CmsBundle\Entity\User:
              algorithm: bcrypt
              cost:      15
 
@@ -9,21 +9,26 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+        administrators:
+            entity: { class: ReSymfCmsBundle:User }
 
     firewalls:
-        main:
-            pattern: ^/
+        secured_area:
+            pattern:    ^/
+            anonymous: ~
+            logout: ~
             form_login:
-                provider: fos_userbundle
                 csrf_provider: form.csrf_provider
-            logout:       true
-            anonymous:    true
+                csrf_parameter: _csrf_token
+            remember_me:
+                key:      "%secret%"
+                lifetime: 31536000 # 365 days in seconds
+                path:     /
+                domain:   ~ # Defaults to the current domain from $_SERVER
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/.*, role: ROLE_ADMIN }
-#          - { path: ^/admin/.*, role: ROLE_ADMIN }
+        - { path: ^/profile, role: ROLE_USER }

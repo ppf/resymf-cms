@@ -237,27 +237,4 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->isActive;
     }
-
-    /**
-     * Add roles
-     *
-     * @param \ReSymf\Bundle\CmsBundle\Entity\Role $roles
-     * @return User
-     */
-    public function addRole(\ReSymf\Bundle\CmsBundle\Entity\Role $roles)
-    {
-        $this->roles[] = $roles;
-    
-        return $this;
-    }
-
-    /**
-     * Remove roles
-     *
-     * @param \ReSymf\Bundle\CmsBundle\Entity\Role $roles
-     */
-    public function removeRole(\ReSymf\Bundle\CmsBundle\Entity\Role $roles)
-    {
-        $this->roles->removeElement($roles);
-    }
 }
