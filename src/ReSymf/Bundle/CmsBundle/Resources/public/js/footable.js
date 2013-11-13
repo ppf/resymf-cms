@@ -1,6 +1,6 @@
 ﻿/*!
  * FooTable - Awesome Responsive Tables
- * Version : 2.0.1
+ * Version : 2.0.1.2
  * http://fooplugins.com/plugins/footable-jquery/
  *
  * Requires jQuery - http://jquery.com/
@@ -9,7 +9,7 @@
  * Released under the MIT license
  * You are free to use FooTable in commercial projects as long as this copyright header is left intact.
  *
- * Date: 31 Aug 2013
+ * Date: 21 Sep 2013
  */
 (function ($, w, undefined) {
     w.footable = {
@@ -34,7 +34,8 @@
             calculateWidthOverride: null,
             toggleSelector: ' > tbody > tr:not(.footable-row-detail)', //the selector to show/hide the detail row
             columnDataSelector: '> thead > tr:last-child > th, > thead > tr:last-child > td', //the selector used to find the column data in the thead
-            detailSeparator: ':', //the seperator character used when building up the detail row
+            detailSeparator: ':', //the separator character used when building up the detail row
+            toggleHTMLElement: '<span />', // override this if you want to insert a click target rather than use a background image.
             createGroupedDetail: function (data) {
                 var groups = { '_none': { 'name': null, 'data': [] } };
                 for (var i = 0; i < data.length; i++) {
@@ -99,7 +100,9 @@
                 resize: 'footable_resize',                              //trigger this event to force FooTable to resize
                 redraw: 'footable_redraw',								//trigger this event to force FooTable to redraw
                 toggleRow: 'footable_toggle_row',                       //trigger this event to force FooTable to toggle a row
-                expandFirstRow: 'footable_expand_first_row'             //trigger this event to force FooTable to expand the first row
+                expandFirstRow: 'footable_expand_first_row',            //trigger this event to force FooTable to expand the first row
+                expandAll: 'footable_expand_all',                       //trigger this event to force FooTable to expand all rows
+                collapseAll: 'footable_collapse_all'                    //trigger this event to force FooTable to collapse all rows
             },
             events: {
                 alreadyInitialized: 'footable_already_initialized',     //fires when the FooTable has already been initialized
@@ -114,7 +117,8 @@
                 rowDetailUpdated: 'footable_row_detail_updated',        //fires when a detail row is being updated
                 rowCollapsed: 'footable_row_collapsed',                 //fires when a row is collapsed
                 rowExpanded: 'footable_row_expanded',                   //fires when a row is expanded
-                rowRemoved: 'footable_row_removed'                      //fires when a row is removed
+                rowRemoved: 'footable_row_removed',                     //fires when a row is removed
+                reset: 'footable_reset'                                 //fires when FooTable is reset
             },
             debug: false, // Whether or not to log information to the console.
             log: null
@@ -309,6 +313,7 @@
             });
 
             $table
+                .unbind(trg.initialize)
                 //bind to FooTable initialize trigger
                 .bind(trg.initialize, function () {
                     //remove previous "state" (to "force" a resize)
@@ -327,18 +332,30 @@
                     //raise the initialized event
                     ft.raise(evt.initialized);
                 })
+                .unbind(trg.redraw)
                 //bind to FooTable redraw trigger
                 .bind(trg.redraw, function () {
                     ft.redraw();
                 })
-
+                .unbind(trg.resize)
                 //bind to FooTable resize trigger
                 .bind(trg.resize, function () {
                     ft.resize();
                 })
+                .unbind(trg.expandFirstRow)
                 //bind to FooTable expandFirstRow trigger
                 .bind(trg.expandFirstRow, function () {
                     $table.find(opt.toggleSelector).first().not('.' + cls.detailShow).trigger(trg.toggleRow);
+                })
+                .unbind(trg.expandAll)
+                //bind to FooTable expandFirstRow trigger
+                .bind(trg.expandAll, function () {
+                    $table.find(opt.toggleSelector).not('.' + cls.detailShow).trigger(trg.toggleRow);
+                })
+                .unbind(trg.collapseAll)
+                //bind to FooTable expandFirstRow trigger
+                .bind(trg.collapseAll, function () {
+                    $table.find('.' + cls.detailShow).trigger(trg.toggleRow);
                 });
 
             //trigger a FooTable initialize
@@ -368,7 +385,7 @@
                 if (col.toggle) {
                     hasToggleColumn = true;
                     var selector = '> tbody > tr:not(.' + cls.detail + ',.' + cls.disabled + ') > td:nth-child(' + (parseInt(col.index, 10) + 1) + ')';
-                    $table.find(selector).not('.' + cls.detailCell).prepend($('<span />').addClass(cls.toggle));
+                    $table.find(selector).not('.' + cls.detailCell).prepend($(opt.toggleHTMLElement).addClass(cls.toggle));
                     return;
                 }
             }
@@ -377,7 +394,7 @@
                 $table
                     .find('> tbody > tr:not(.' + cls.detail + ',.' + cls.disabled + ') > td:first-child')
                     .not('.' + cls.detailCell)
-                    .prepend($('<span />').addClass(cls.toggle));
+                    .prepend($(opt.toggleHTMLElement).addClass(cls.toggle));
             }
         };
 
@@ -406,7 +423,7 @@
 
             $table.find(opt.toggleSelector).unbind(trg.toggleRow).bind(trg.toggleRow, function (e) {
                 var $row = $(this).is('tr') ? $(this) : $(this).parents('tr:first');
-                ft.toggleDetail($row.get(0));
+                ft.toggleDetail($row);
             });
 
             $table.find(opt.toggleSelector).unbind('click.footable').bind('click.footable', function (e) {
@@ -653,8 +670,8 @@
 
             } else {
                 ft.createOrUpdateDetailRow($row[0]);
-                $row.addClass(cls.detailShow);
-                $row.next().show();
+                $row.addClass(cls.detailShow)
+					.next().show();
 
                 ft.raise(evt.rowExpanded, { 'row': $row[0] });
             }
@@ -740,6 +757,23 @@
             } //pre jQuery 1.6 which did not allow data to be passed to event object constructor
             $(ft.table).trigger(e);
             return e;
+        };
+
+        //reset the state of FooTable
+        ft.reset = function() {
+            var $table = $(ft.table);
+            $table.removeData('footable_info')
+                .data('breakpoint', '')
+                .removeClass(cls.loading)
+                .removeClass(cls.loaded);
+
+            $table.find(opt.toggleSelector).unbind(trg.toggleRow).unbind('click.footable');
+
+            $table.find('> tbody > tr').removeClass(cls.detailShow);
+
+            $table.find('> tbody > tr.' + cls.detail).remove();
+
+            ft.raise(evt.reset);
         };
 
         ft.init();

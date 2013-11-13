@@ -16,7 +16,7 @@ admin_menu:
             -
                 type: 'link'
                 route: 'my_route'
-        label: 'My Post'
+        label: 'Pages'
         role: 'ROLE_ADMIN'
     -
         type: 'page'
