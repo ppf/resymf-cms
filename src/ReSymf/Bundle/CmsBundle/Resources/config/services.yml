@@ -5,3 +5,6 @@ services:
     resymfcms.object.mapper:
         class: ReSymf\Bundle\CmsBundle\Services\ObjectMapper
         arguments: []
+    resymfcms.annotation.reader:
+        class: ReSymf\Bundle\CmsBundle\Annotation\AnnotationReader
+        arguments: [@annotation_reader]

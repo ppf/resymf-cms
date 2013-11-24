@@ -3,13 +3,15 @@
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ReSymf\Bundle\CmsBundle\Annotation\TableAnnotation;
+
 
 /**
  * Post
  *
  * @ORM\Table()
  * @ORM\Entity
- *
+ * @TableAnnotation(display=false)
  * @author Piotr Francuz <francuz256@gmail.com>
  */
 class Page

@@ -5,6 +5,7 @@ namespace ReSymf\Bundle\CmsBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+
 use ReSymf\Bundle\CmsBundle\Form\PostType;
 
 /**
@@ -17,6 +18,7 @@ class AdminMenuController extends Controller
 	public function profileAction()
 	{
 		$menuConfigurator = $this->get('resymfcms.configurator.menu');
+
 //		var_dump($menuConfigurator->getMenuFromConfig());
 //		$entity = new Post();
 //		$form   = $this->createCreateForm($entity);
@@ -27,11 +29,10 @@ class AdminMenuController extends Controller
 	public function dashboardAction()
 	{
 		$menuConfigurator = $this->get('resymfcms.configurator.menu');
-//		var_dump($menuConfigurator->getMenuFromConfig());
-//		$entity = new Post();
-//		$form   = $this->createCreateForm($entity);
+        $annotationReader = $this->get('resymfcms.annotation.reader');
+        $tableConfig = $annotationReader->readTableAnnotation('ReSymf\Bundle\CmsBundle\Entity\Page');
 
-		return $this->render('ReSymfCmsBundle:admin:dashboard.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig()));
+        return $this->render('ReSymfCmsBundle:admin:dashboard.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig()));
 	}
 
     /**
@@ -47,7 +48,7 @@ class AdminMenuController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository($objectType)->findAll();
+        $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(100)->getQuery()->getResult();
 
         return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig(), 'entities' => $entities));
     }

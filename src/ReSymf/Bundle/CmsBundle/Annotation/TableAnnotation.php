@@ -5,7 +5,8 @@ namespace ReSymf\Bundle\CmsBundle\Annotation;
 /**
  * @Annotation
  */
-class Grid {
+class TableAnnotation
+{
 
     private $display = true;
     private $hideOnDevice = false;
