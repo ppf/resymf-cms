@@ -5,7 +5,7 @@ namespace ReSymf\Bundle\CmsBundle\Annotation;
 /**
  * @Annotation
  */
-class TableAnnotation
+class Table
 {
 
     private $display = true;
@@ -15,12 +15,8 @@ class TableAnnotation
     private $pageSize = 10;
     private $filtering = false;
 
-    // read all @Grid annotations from Entity
+    // read all @Table annotations from Entity
     public function __construct($options) {
-        if (isset($options['value'])) {
-            $options['propertyName'] = $options['value'];
-            unset($options['value']);
-        }
 
         foreach ($options as $key => $value) {
             if (!property_exists($this, $key)) {

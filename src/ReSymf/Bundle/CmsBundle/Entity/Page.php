@@ -3,7 +3,8 @@
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ReSymf\Bundle\CmsBundle\Annotation\TableAnnotation;
+use ReSymf\Bundle\CmsBundle\Annotation\Table;
+use ReSymf\Bundle\CmsBundle\Annotation\Form;
 
 
 /**
@@ -11,13 +12,15 @@ use ReSymf\Bundle\CmsBundle\Annotation\TableAnnotation;
  *
  * @ORM\Table()
  * @ORM\Entity
- * @TableAnnotation(display=false)
+ * @Table(display=false)
  * @author Piotr Francuz <francuz256@gmail.com>
  */
 class Page
 {
     /**
      * @var integer
+     *
+     * @Form(display=false)
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -28,6 +31,8 @@ class Page
     /**
      * @var \DateTime
      *
+     * @Table(hideOnDevice=[tablet,phone])
+     * @Form(type=date,required=true)
      * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;

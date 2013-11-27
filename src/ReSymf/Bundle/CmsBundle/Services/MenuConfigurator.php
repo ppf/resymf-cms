@@ -27,7 +27,7 @@ class MenuConfigurator
 			printf("Unable to parse the YAML string: %s", $e->getMessage());
 		}
 
-		$this->menu = $value['admin_menu'];
+		$this->menu = $value['admin'];
 		$this->config = $value['site_config'];
 		// TODO: Implement __construct() method. Load menu to array
 	}

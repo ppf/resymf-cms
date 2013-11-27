@@ -31,26 +31,24 @@ class AnnotationReader
     public function readTableAnnotation($classNameSpace)
     {
 
-//        if (!isset($entity)) {
-//            return false;
-//        }
+        if (!isset($classNameSpace)) {
+            return false;
+        }
         $configTableObject = new \stdClass;
 
         $reflectionClass = new \ReflectionClass($classNameSpace);
-        $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\TableAnnotation');
+        $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
         $configTableObject->display = $classAnnotations->getDisplay();
         $properties = $reflectionClass->getProperties();
 
 
         foreach ($properties as $reflectionProperty) {
 
-            $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\TableAnnotation');
+            $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
             if (null !== $annotation) {
                 $hideOnDevice = $annotation->getHideOnDevice();
-                if ($hideOnDevice) {
-                    $devicesArray = explode(',', $hideOnDevice);
-                    $configTableObject->$hideOnDevice = array('propertyName', $devicesArray);
-                }
+                $devicesArray = explode(',', $hideOnDevice);
+                $configTableObject->$hideOnDevice = array('propertyName', $devicesArray);
             }
         }
 

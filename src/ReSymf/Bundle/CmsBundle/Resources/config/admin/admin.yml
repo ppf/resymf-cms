@@ -4,12 +4,13 @@ site_config:
     domain: 'resymf-cms'
     theme: ''
 
-admin_menu:
-    -
+admin:
+    page:
         type: 'crud'
         route_name: ''
-        class: 'page'
+        class: 'ReSymf\Bundle\CmsBundle\Entity\Page'
         object_prefix: 'object'
+        remote: false
         actions: ['list','create','delete','update']
         icon: 'file'
         submenu:
@@ -18,10 +19,10 @@ admin_menu:
                 route: 'my_route'
         label: 'Pages'
         role: 'ROLE_ADMIN'
-    -
-        type: 'page'
-        label: 'my custom page'
+    my_slug:
+        type: 'custom_page'
+        label: 'my custom title'
         icon: 'umbrella'
-        slug: 'my_slug'
+#        slug: 'my_slug'
         template: 'ReSymfCmsBundle:Default:form.html.twig'
         role: 'ROLE_TEACHER'

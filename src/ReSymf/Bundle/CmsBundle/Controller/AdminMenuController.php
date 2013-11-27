@@ -29,8 +29,7 @@ class AdminMenuController extends Controller
 	public function dashboardAction()
 	{
 		$menuConfigurator = $this->get('resymfcms.configurator.menu');
-        $annotationReader = $this->get('resymfcms.annotation.reader');
-        $tableConfig = $annotationReader->readTableAnnotation('ReSymf\Bundle\CmsBundle\Entity\Page');
+
 
         return $this->render('ReSymfCmsBundle:admin:dashboard.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig()));
 	}
@@ -42,9 +41,11 @@ class AdminMenuController extends Controller
     public function listAction($type)
     {
 	    $menuConfigurator = $this->get('resymfcms.configurator.menu');
-	    $objectMapper = $this->get('resymfcms.object.mapper');
+//	    $objectMapper = $this->get('resymfcms.object.mapper');
 
 	    $objectType = $objectMapper->getMappedObject($type);
+        $annotationReader = $this->get('resymfcms.annotation.reader');
+        $tableConfig = $annotationReader->readTableAnnotation('ReSymf\Bundle\CmsBundle\Entity\Page');
 
         $em = $this->getDoctrine()->getManager();
 
