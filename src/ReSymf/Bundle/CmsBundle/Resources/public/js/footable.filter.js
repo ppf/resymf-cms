@@ -9,7 +9,7 @@
             timeout: 300,
             minimum: 2,
             disableEnter: false,
-            filterFunction: function(index) {
+            filterFunction: function (index) {
                 var $t = $(this),
                     $table = $t.parents('table:first'),
                     filter = $table.data('current-filter').toUpperCase(),
@@ -76,9 +76,9 @@
                                 p.filter(filter);
                             }
                         }
-                })
-                //save the filter object onto the table so we can access it later
-                .data('footable-filter', p);
+                    })
+                    //save the filter object onto the table so we can access it later
+                    .data('footable-filter', p);
             }
         };
 
@@ -92,10 +92,10 @@
             var event = ft.raise('footable_filtering', { filter: filterString, clear: clear });
             if (event && event.result === false) return;
             if (event.filter && event.filter.length < minimum) {
-              return; //if we do not have the minimum chars then do nothing
+                return; //if we do not have the minimum chars then do nothing
             }
 
-          if (event.clear) {
+            if (event.clear) {
                 p.clearFilter();
             } else {
                 var filters = event.filter.split(' ');

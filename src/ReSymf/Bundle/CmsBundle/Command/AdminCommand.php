@@ -13,49 +13,48 @@ use ReSymf\Bundle\CmsBundle\Entity\Role;
 
 class AdminCommand extends ContainerAwareCommand
 {
-	protected function configure()
-	{
-		$this
-				->setName('security:createadmin')
-				->setDescription('Create admin user')
-				->addArgument('username', InputArgument::REQUIRED, 'Admin Name')
-				->addArgument('email', InputArgument::REQUIRED, 'Admin Email')
-				->addArgument('password', InputArgument::REQUIRED, 'password')
-		;
-	}
+    protected function configure()
+    {
+        $this
+            ->setName('security:createadmin')
+            ->setDescription('Create admin user')
+            ->addArgument('username', InputArgument::REQUIRED, 'Admin Name')
+            ->addArgument('email', InputArgument::REQUIRED, 'Admin Email')
+            ->addArgument('password', InputArgument::REQUIRED, 'password');
+    }
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		// get em
-		$em = $this->getContainer()->get('doctrine')->getManager();
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        // get em
+        $em = $this->getContainer()->get('doctrine')->getManager();
 
-		$username   = $input->getArgument('username');
-		$email      = $input->getArgument('email');
-		$password   = $input->getArgument('password');
-		$user  = new User();
+        $username = $input->getArgument('username');
+        $email = $input->getArgument('email');
+        $password = $input->getArgument('password');
+        $user = new User();
 
-		$user->setUsername($username);
-		$user->setEmail($email);
+        $user->setUsername($username);
+        $user->setEmail($email);
 
-		$factory = $this->getContainer()->get('security.encoder_factory');
-		$encoder = $factory->getEncoder($user);
-		$pwd = $encoder->encodePassword($password, $user->getSalt());
-		$user->setPassword($pwd);
+        $factory = $this->getContainer()->get('security.encoder_factory');
+        $encoder = $factory->getEncoder($user);
+        $pwd = $encoder->encodePassword($password, $user->getSalt());
+        $user->setPassword($pwd);
 
-		$repository = $this->getContainer()->get('doctrine')->getRepository('ReSymfCmsBundle:Role');
-		$role = $repository->findOneBy(array('role'=>'ROLE_ADMIN'));
+        $repository = $this->getContainer()->get('doctrine')->getRepository('ReSymfCmsBundle:Role');
+        $role = $repository->findOneBy(array('role' => 'ROLE_ADMIN'));
 
-		if(!$role) {
-			$role = new Role();
-			$role->setName('admin');
-			$role->setRole('ROLE_ADMIN');
-		}
-		$role->addUser($user);
-		$user->addRole($role);
-		$em->persist($user);
-		$em->persist($role);
+        if (!$role) {
+            $role = new Role();
+            $role->setName('admin');
+            $role->setRole('ROLE_ADMIN');
+        }
+        $role->addUser($user);
+        $user->addRole($role);
+        $em->persist($user);
+        $em->persist($role);
 
-		$em->flush();
-		$output->writeln(sprintf('Created user <comment>%s</comment>', $username));
-	}
+        $em->flush();
+        $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
+    }
 }

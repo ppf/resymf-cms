@@ -6,13 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use ReSymf\Bundle\CmsBundle\Annotation\Table;
 use ReSymf\Bundle\CmsBundle\Annotation\Form;
 
-
 /**
- * Post
+ * Class Page
+ * @package ReSymf\Bundle\CmsBundle\Entity
  *
  * @ORM\Table()
  * @ORM\Entity
  * @Table(display=false)
+ *
  * @author Piotr Francuz <francuz256@gmail.com>
  */
 class Page
@@ -31,8 +32,8 @@ class Page
     /**
      * @var \DateTime
      *
-     * @Table(hideOnDevice=[tablet,phone])
-     * @Form(type=date,required=true)
+     * @Table(hideOnDevice="tablet,phone")
+     * @Form(type="date",required=true)
      * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;
@@ -58,11 +59,17 @@ class Page
      */
     private $authorId;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="slug", type="string")
+     */
+    private $slug;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -78,14 +85,14 @@ class Page
     public function setCreateDate($createDate)
     {
         $this->createDate = $createDate;
-    
+
         return $this;
     }
 
     /**
      * Get createDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreateDate()
     {
@@ -101,14 +108,14 @@ class Page
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -124,14 +131,14 @@ class Page
     public function setContent($content)
     {
         $this->content = $content;
-    
+
         return $this;
     }
 
     /**
      * Get content
      *
-     * @return string 
+     * @return string
      */
     public function getContent()
     {
@@ -147,17 +154,34 @@ class Page
     public function setAuthorId($authorId)
     {
         $this->authorId = $authorId;
-    
+
         return $this;
     }
 
     /**
      * Get authorId
      *
-     * @return integer 
+     * @return integer
      */
     public function getAuthorId()
     {
         return $this->authorId;
     }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
 }

@@ -4,4 +4,4 @@ ReSymf-CMS
 
 <h3>Documentation:</h3>
 
-see http://ppf.github.io/resymf-cms/
+

@@ -145,8 +145,8 @@
                 ///<param name="plugin">The object defining the plugin, this should implement a string property called "name" and a function called "init".</param>
 
                 if (!$.isFunction(plugin)) {
-                  if (w.footable.options.debug === true) console.error('Validation failed, expected type "function", received type "{0}".', typeof plugin);
-                  return false;
+                    if (w.footable.options.debug === true) console.error('Validation failed, expected type "function", received type "{0}".', typeof plugin);
+                    return false;
                 }
                 var p = new plugin();
                 if (typeof p['name'] !== 'string') {
@@ -171,17 +171,17 @@
                     if (typeof options === 'object') $.extend(true, w.footable.options, options);
                 }
             },
-            load: function(instance){
-              var loaded = [], registered, i;
-              for(i = 0; i < w.footable.plugins.registered.length; i++){
-                try {
-                  registered = w.footable.plugins.registered[i];
-                  loaded.push(new registered(instance));
-                } catch (err) {
-                  if (w.footable.options.debug === true) console.error(err);
+            load: function (instance) {
+                var loaded = [], registered, i;
+                for (i = 0; i < w.footable.plugins.registered.length; i++) {
+                    try {
+                        registered = w.footable.plugins.registered[i];
+                        loaded.push(new registered(instance));
+                    } catch (err) {
+                        if (w.footable.options.debug === true) console.error(err);
+                    }
                 }
-              }
-              return loaded;
+                return loaded;
             },
             init: function (instance) {
                 ///<summary>Loops through all registered plugins and calls the "init" method supplying the current <paramref name="instance"/> of the FooTable as the first parameter.</summary>
@@ -189,7 +189,7 @@
 
                 for (var i = 0; i < instance.plugins.length; i++) {
                     try {
-                      instance.plugins[i]['init'](instance);
+                        instance.plugins[i]['init'](instance);
                     } catch (err) {
                         if (w.footable.options.debug === true) console.error(err);
                     }
@@ -212,7 +212,7 @@
         return this.each(function () {
             instanceCount++;
             var footable = new Footable(this, o, instanceCount);
-			$(this).data('footable', footable);
+            $(this).data('footable', footable);
         });
     };
 
@@ -427,7 +427,7 @@
             });
 
             $table.find(opt.toggleSelector).unbind('click.footable').bind('click.footable', function (e) {
-                if ($table.is('.breakpoint') && $(e.target).is('td,.'+ cls.toggle)) {
+                if ($table.is('.breakpoint') && $(e.target).is('td,.' + cls.toggle)) {
                     $(this).trigger(trg.toggleRow);
                 }
             });
@@ -671,7 +671,7 @@
             } else {
                 ft.createOrUpdateDetailRow($row[0]);
                 $row.addClass(cls.detailShow)
-					.next().show();
+                    .next().show();
 
                 ft.raise(evt.rowExpanded, { 'row': $row[0] });
             }
@@ -760,7 +760,7 @@
         };
 
         //reset the state of FooTable
-        ft.reset = function() {
+        ft.reset = function () {
             var $table = $(ft.table);
             $table.removeData('footable_info')
                 .data('breakpoint', '')

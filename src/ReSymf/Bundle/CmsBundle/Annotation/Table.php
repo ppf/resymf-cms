@@ -3,7 +3,12 @@
 namespace ReSymf\Bundle\CmsBundle\Annotation;
 
 /**
+ * Class Table
+ * @package ReSymf\Bundle\CmsBundle\Annotation
+ *
  * @Annotation
+ *
+ * @author Piotr Francuz <francuz256@gmail.com>
  */
 class Table
 {
@@ -16,7 +21,8 @@ class Table
     private $filtering = false;
 
     // read all @Table annotations from Entity
-    public function __construct($options) {
+    public function __construct($options)
+    {
 
         foreach ($options as $key => $value) {
             if (!property_exists($this, $key)) {
@@ -27,20 +33,21 @@ class Table
         }
     }
 
-    public function getDisplay() {
+    public function getDisplay()
+    {
         return $this->display;
     }
-    
-    public function getSorting() 
+
+    public function getSorting()
     {
         return $this->sorting;
     }
-    
+
     public function getPaging()
     {
         return $this->paging;
     }
-    
+
     public function getPageSize()
     {
         return $this->pageSize;
@@ -50,7 +57,7 @@ class Table
     {
         return $this->filtering;
     }
-    
+
     public function getHideOnDevice()
     {
         return $this->hideOnDevice;

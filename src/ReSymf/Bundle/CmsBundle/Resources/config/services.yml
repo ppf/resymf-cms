@@ -1,10 +1,13 @@
 services:
-    resymfcms.configurator.menu:
-        class: ReSymf\Bundle\CmsBundle\Services\MenuConfigurator
+    resymfcms.configurator.admin:
+        class: ReSymf\Bundle\CmsBundle\Services\AdminConfigurator
         arguments: []
     resymfcms.object.mapper:
         class: ReSymf\Bundle\CmsBundle\Services\ObjectMapper
-        arguments: []
+        arguments: ["@resymfcms.configurator.admin"]
     resymfcms.annotation.reader:
         class: ReSymf\Bundle\CmsBundle\Annotation\AnnotationReader
         arguments: [@annotation_reader]
+    resymfcms.creator.form:
+        class: ReSymf\Bundle\CmsBundle\Services\FormCreator
+        arguments: []

@@ -13,29 +13,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class DefaultController extends Controller
 {
-	/**
-	 * @return array
-	 */
-	public function indexAction()
-	{
-		return $this->render('ReSymfCmsBundle::index.html.twig');
-	}
+    /**
+     * @return array
+     */
+    public function indexAction()
+    {
+        return $this->render('ReSymfCmsBundle::index.html.twig');
+    }
 
-	/**
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function addPostAction()
-	{
-		$post = new Post();
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function addPostAction()
+    {
+        $post = new Post();
 
-		$form = $this->createFormBuilder($post)
-				->add('name', 'text')
-				->add('content', 'textarea')
-				->add('save', 'submit')
-				->getForm();
+        $form = $this->createFormBuilder($post)
+            ->add('name', 'text')
+            ->add('content', 'textarea')
+            ->add('save', 'submit')
+            ->getForm();
 
-		return $this->render('ReSymfCmsBundle:Default:form.html.twig', array(
-			'form' => $form->createView(),
-		));
-	}
+        return $this->render('ReSymfCmsBundle:Default:form.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
 }

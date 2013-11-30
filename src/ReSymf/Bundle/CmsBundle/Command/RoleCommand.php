@@ -18,31 +18,30 @@ use ReSymf\Bundle\CmsBundle\Entity\Role;
 
 class RoleCommand extends ContainerAwareCommand
 {
-	protected function configure()
-	{
-		$this
-				->setName('security:createrole')
-				->setDescription('Create Role')
-				->addArgument('name', InputArgument::REQUIRED, 'Name')
-				->addArgument('roleName', InputArgument::REQUIRED, 'Role')
-		;
-	}
+    protected function configure()
+    {
+        $this
+            ->setName('security:createrole')
+            ->setDescription('Create Role')
+            ->addArgument('name', InputArgument::REQUIRED, 'Name')
+            ->addArgument('roleName', InputArgument::REQUIRED, 'Role');
+    }
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$name   = $input->getArgument('name');
-		$roleName      = $input->getArgument('roleName');
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $name = $input->getArgument('name');
+        $roleName = $input->getArgument('roleName');
 
-		$role = new Role();
+        $role = new Role();
 
-		$role->setName($name);
-		$role->setRole($roleName);
+        $role->setName($name);
+        $role->setRole($roleName);
 
-		$em = $this->getContainer()->get('doctrine')->getManager();
-		$em->persist($role);
-		$em->flush();
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($role);
+        $em->flush();
 
-		$output->writeln(sprintf('Created role <comment>%s</comment>', $roleName));
+        $output->writeln(sprintf('Created role <comment>%s</comment>', $roleName));
 
-	}
+    }
 }

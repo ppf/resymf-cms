@@ -8,33 +8,35 @@
 
 namespace ReSymf\Bundle\CmsBundle\Services;
 
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Doctrine\ORM\EntityNotFoundException;
 
-class ObjectMapper {
 
-	private $mapping_table;
+/**
+ * Class ObjectMapper
+ * @package ReSymf\Bundle\CmsBundle\Services
+ *
+ * @author Piotr Francuz <fraencuz256@gmail.com>
+ */
+class ObjectMapper
+{
 
-	public function __construct()
-	{
-		$yaml = new Parser();
-		try {
-			$value = $yaml->parse(file_get_contents(__DIR__.'/../Resources/config/admin/object-mapping.yml'));
-		} catch (ParseException $e) {
-			printf("Unable to parse the YAML string: %s", $e->getMessage());
-		}
+    private $adminConfigurator;
 
-		$this->mapping_table = $value['mapping'];
-		// TODO: Implement __construct() method. Load menu to array
-	}
+    public function __construct(AdminConfigurator $adminConfigurator)
+    {
+        $this->adminConfigurator = $adminConfigurator;
+    }
 
-	public function getMappedObject($objectName)
-	{
-		foreach($this->mapping_table as $name => $nameWithNamespace) {
-			if($name == $objectName) {
-				return $nameWithNamespace;
-			}
-		}
-		return false;
-	}
+    public function getMappedObject($objectName)
+    {
+        $adminConfig = $this->adminConfigurator->getAdminConfig();
+
+        if (is_array($adminConfig[$objectName]) && isset($adminConfig[$objectName]['class'])) {
+            return $adminConfig[$objectName]['class'];
+        } else {
+            throw new EntityNotFoundException('class not found in admin config file');
+        }
+
+        return false;
+    }
 } 

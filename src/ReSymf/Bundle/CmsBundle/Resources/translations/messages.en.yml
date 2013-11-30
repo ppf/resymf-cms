@@ -10,3 +10,5 @@ profile:
     show:
         username: "Username"
         email: "Email"
+    edit:
+        submit: "Save"

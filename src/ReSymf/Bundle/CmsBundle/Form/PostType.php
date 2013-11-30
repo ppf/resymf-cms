@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PostType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -18,10 +18,9 @@ class PostType extends AbstractType
             ->add('createDate')
             ->add('name')
             ->add('content')
-            ->add('authorId')
-        ;
+            ->add('authorId');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

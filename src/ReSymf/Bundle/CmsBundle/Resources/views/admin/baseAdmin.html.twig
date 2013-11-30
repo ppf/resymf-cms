@@ -1,31 +1,31 @@
 {% extends 'ReSymfCmsBundle::index.html.twig' %}
 
 {% block stylesheets %}
-	<link href="{{ asset('bundles/resymfcms/css/login.css') }}" rel="stylesheet" />
-	<link href="{{ asset('bundles/resymfcms/css/admin.css') }}" rel="stylesheet" />
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-	<link href="{{ asset('bundles/resymfcms/css/footable.core.css') }}" rel="stylesheet">
-	<link href="{{ asset('bundles/resymfcms/css/footable.metro.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/resymfcms/css/login.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('bundles/resymfcms/css/admin.css') }}" rel="stylesheet"/>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="{{ asset('bundles/resymfcms/css/footable.core.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/resymfcms/css/footable.metro.css') }}" rel="stylesheet">
 {% endblock %}
 
 
 {% block body %}
-	{{ include('ReSymfCmsBundle:admin:menu.html.twig', { 'menu': menu , 'site_config' : site_config}) }}
-	{% block content %}
-	{% endblock %}
+    {{ include('ReSymfCmsBundle:admin:menu.html.twig', { 'menu': menu , 'site_config' : site_config}) }}
+    {% block content %}
+    {% endblock %}
 {% endblock body %}
 
 {% block javascripts %}
-	<script src="https://code.jquery.com/jquery.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="{{ asset('bundles/resymfcms/js/bootstrap.min.js') }}"></script>
-	<script type="text/javascript">
-		$(function () {
-			$('table').footable();
-		});
-	</script>
-	<script src=" {{ asset('bundles/resymfcms/js/footable.js')}}" type="text/javascript"></script>
-	<script src=" {{ asset('bundles/resymfcms/js/footable.filter.js')}}" type="text/javascript"></script>
-	<script src=" {{ asset('bundles/resymfcms/js/footable.paginate.js')}}" type="text/javascript"></script>
-	<script src=" {{ asset('bundles/resymfcms/js/footable.sort.js')}}" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ asset('bundles/resymfcms/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('table').footable();
+        });
+    </script>
+    <script src=" {{ asset('bundles/resymfcms/js/footable.js') }}" type="text/javascript"></script>
+    <script src=" {{ asset('bundles/resymfcms/js/footable.filter.js') }}" type="text/javascript"></script>
+    <script src=" {{ asset('bundles/resymfcms/js/footable.paginate.js') }}" type="text/javascript"></script>
+    <script src=" {{ asset('bundles/resymfcms/js/footable.sort.js') }}" type="text/javascript"></script>
 {% endblock %}

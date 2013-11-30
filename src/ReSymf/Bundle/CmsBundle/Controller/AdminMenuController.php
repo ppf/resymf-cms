@@ -15,24 +15,24 @@ use ReSymf\Bundle\CmsBundle\Form\PostType;
 class AdminMenuController extends Controller
 {
 
-	public function profileAction()
-	{
-		$menuConfigurator = $this->get('resymfcms.configurator.menu');
+    public function profileAction()
+    {
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
 
-//		var_dump($menuConfigurator->getMenuFromConfig());
+//		var_dump($adminConfigurator->getAdminConfig());
 //		$entity = new Post();
 //		$form   = $this->createCreateForm($entity);
 
-		return $this->render('ReSymfCmsBundle:admin:profile.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig()));
-	}
+        return $this->render('ReSymfCmsBundle:admin:profile.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig()));
+    }
 
-	public function dashboardAction()
-	{
-		$menuConfigurator = $this->get('resymfcms.configurator.menu');
+    public function dashboardAction()
+    {
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
 
 
-        return $this->render('ReSymfCmsBundle:admin:dashboard.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig()));
-	}
+        return $this->render('ReSymfCmsBundle:admin:dashboard.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig()));
+    }
 
     /**
      * Lists all entities.
@@ -40,19 +40,20 @@ class AdminMenuController extends Controller
      */
     public function listAction($type)
     {
-	    $menuConfigurator = $this->get('resymfcms.configurator.menu');
-//	    $objectMapper = $this->get('resymfcms.object.mapper');
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        $objectMapper = $this->get('resymfcms.object.mapper');
 
-	    $objectType = $objectMapper->getMappedObject($type);
+        $objectType = $objectMapper->getMappedObject($type);
         $annotationReader = $this->get('resymfcms.annotation.reader');
-        $tableConfig = $annotationReader->readTableAnnotation('ReSymf\Bundle\CmsBundle\Entity\Page');
+
+        $tableConfig = $annotationReader->readTableAnnotation($objectType);
 
         $em = $this->getDoctrine()->getManager();
-
         $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(100)->getQuery()->getResult();
 
-        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu'=>$menuConfigurator->getMenuFromConfig(), 'site_config' => $menuConfigurator->getSiteConfig(), 'entities' => $entities));
+        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities));
     }
+
     /**
      * Creates a new entity.
      *
@@ -73,19 +74,19 @@ class AdminMenuController extends Controller
 
         return $this->render('ReSymfCmsBundle:Post:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
 
-		/**
-		 * Creates a form to create a entity.
-		 *
-		 * @param Object $entity
-		 *
-		 * @return \Symfony\Component\Form\Form
-		 */
-		private function createCreateForm($entity)
+    /**
+     * Creates a form to create a entity.
+     *
+     * @param Object $entity
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createCreateForm($entity)
     {
         $form = $this->createForm(new PostType(), $entity, array(
             'action' => $this->generateUrl('object_create'),
@@ -104,11 +105,11 @@ class AdminMenuController extends Controller
     public function newAction($type)
     {
         $entity = new Post();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return $this->render('ReSymfCmsBundle:Post:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -129,8 +130,8 @@ class AdminMenuController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('ReSymfCmsBundle:Post:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        ));
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),));
     }
 
     /**
@@ -151,20 +152,20 @@ class AdminMenuController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('ReSymfCmsBundle:Post:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
-		/**
-		 * Creates a form to edit a entity.
-		 *
-		 * @param Object $entity
-		 *
-		 * @return \Symfony\Component\Form\Form
-		 */
-		private function createEditForm($entity)
+    /**
+     * Creates a form to edit a entity.
+     *
+     * @param Object $entity
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createEditForm($entity)
     {
         $form = $this->createForm(new PostType(), $entity, array(
             'action' => $this->generateUrl('object_update', array('id' => $entity->getId())),
@@ -175,6 +176,7 @@ class AdminMenuController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing entity.
      *
@@ -200,11 +202,12 @@ class AdminMenuController extends Controller
         }
 
         return $this->render('ReSymfCmsBundle:Post:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Deletes a entity.
      *
@@ -242,7 +245,6 @@ class AdminMenuController extends Controller
             ->setAction($this->generateUrl('object_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

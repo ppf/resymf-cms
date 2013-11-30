@@ -1,16 +1,37 @@
 {% extends 'ReSymfCmsBundle:admin:baseAdmin.html.twig' %}
 
 {% block content %}
-	<div class="col-lg-4 col-md-4 col-sm-6 form_container">
-		<div class="well">
-			<form action="{{ path('resymf_admin_profile_show') }}" method="POST" class="fos_user_profile_edit">
-				<label for="inputEmail" class="col-lg-4 col-md-5 col-sm-4 col-xs-5 control-label">{{ 'profile.show.username'|trans }}:</label>		 {{ app.user.username }}</p>
-				<label for="inputEmail" class="col-lg-4 col-md-5 col-sm-4 col-xs-5 control-label">{{ 'profile.show.email'|trans }}:</label>		 {{ app.user.email }}</p>
-				<div>
-					<input type="submit" value="{{ 'profile.edit.submit'|trans }}"/>
-				</div>
-			</form>
+    <div class="col-lg-4 col-md-4 col-sm-6 form_container">
+        <div class="well">
+            <form action="{{ path('resymf_admin_profile_show') }}" method="POST" class="bs-example form-horizontal">
+                <fieldset>
+                    <div class="form-group">
 
-		</div>
-	</div>
+                        <div class="col-lg-11">
+                            <legend>Change Your account details:</legend>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="inputEmail" class="col-lg-3 control-label">{{ 'profile.show.username'|trans }}:</label>
+                            <div class="col-lg-8">
+                                <input type="text"  class="form-control" value="{{ app.user.username }}"/>
+                            </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="inputEmail" class="col-lg-3 control-label">{{ 'profile.show.email'|trans }}:</label>
+                            <div class="col-lg-8">
+                                <input type="text"  class="form-control" value="{{ app.user.email }}"/>
+                            </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-11 col-md-12 col-sm-12">
+                            <input type="submit" class="btn btn-primary" value="{{ 'profile.edit.submit'|trans }}"/>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
 {% endblock content %}

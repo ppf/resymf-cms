@@ -6,19 +6,14 @@ site_config:
 
 admin:
     page:
-        type: 'crud'
+#        type: 'crud'
         route_name: ''
         class: 'ReSymf\Bundle\CmsBundle\Entity\Page'
-        object_prefix: 'object'
-        remote: false
+#        remote: false
         actions: ['list','create','delete','update']
-        icon: 'file'
-        submenu:
-            -
-                type: 'link'
-                route: 'my_route'
+#        icon: 'file'
         label: 'Pages'
-        role: 'ROLE_ADMIN'
+#        role: 'ROLE_ADMIN'
     my_slug:
         type: 'custom_page'
         label: 'my custom title'
