@@ -38,20 +38,33 @@ class AnnotationReader
 
         $reflectionClass = new \ReflectionClass($classNameSpace);
         $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
-        $configTableObject->display = $classAnnotations->getDisplay();
-        $properties = $reflectionClass->getProperties();
+        $configTableObject->sorting = $classAnnotations->getSorting();
+        $configTableObject->paging = $classAnnotations->getPaging();
+        $configTableObject->pageSize = $classAnnotations->getPageSize();
+        $configTableObject->filtering = $classAnnotations->getFiltering();
 
+        $properties = $reflectionClass->getProperties();
+        $configTableObject->fields = array();
 
         foreach ($properties as $reflectionProperty) {
 
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
             if (null !== $annotation) {
-                $hideOnDevice = $annotation->getHideOnDevice();
-                $devicesArray = explode(',', $hideOnDevice);
-                $configTableObject->$hideOnDevice = array('propertyName', $devicesArray);
+                if($annotation->getDisplay()) {
+
+                    $hideOnDevice = $annotation->getHideOnDevice();
+//                    $devicesArray = explode(',', $hideOnDevice);
+//                    $configTableObject->hideOnDevice[$reflectionProperty->getName()] = $devicesArray;
+                    $configTableObject->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice);
+                }
+            } else {
+                $configTableObject->fields[] = array('name' =>$reflectionProperty->getName());
             }
         }
-
+//        echo '<pre>';
+//        print_r($configTableObject);
+//        echo '<pre>';
+//        die();
         return $configTableObject;
     }
 

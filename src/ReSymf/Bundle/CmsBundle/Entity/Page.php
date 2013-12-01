@@ -12,7 +12,7 @@ use ReSymf\Bundle\CmsBundle\Annotation\Form;
  *
  * @ORM\Table()
  * @ORM\Entity
- * @Table(display=false)
+ * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
  *
  * @author Piotr Francuz <francuz256@gmail.com>
  */
@@ -22,6 +22,7 @@ class Page
      * @var integer
      *
      * @Form(display=false)
+     * @Table(display=false)
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -34,6 +35,7 @@ class Page
      *
      * @Table(hideOnDevice="tablet,phone")
      * @Form(type="date",required=true)
+     *
      * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;
@@ -96,7 +98,7 @@ class Page
      */
     public function getCreateDate()
     {
-        return $this->createDate;
+        return $this->createDate->format('Y-m-d H:i:s');
     }
 
     /**

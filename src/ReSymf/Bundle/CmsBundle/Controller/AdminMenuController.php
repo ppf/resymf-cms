@@ -51,7 +51,7 @@ class AdminMenuController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(100)->getQuery()->getResult();
 
-        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities));
+        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config'=>$tableConfig));
     }
 
     /**

@@ -14,11 +14,12 @@ class Table
 {
 
     private $display = true;
+    private $label;
     private $hideOnDevice = false;
     private $sorting = true;
     private $paging = true;
     private $pageSize = 10;
-    private $filtering = false;
+    private $filtering = true;
 
     // read all @Table annotations from Entity
     public function __construct($options)
@@ -62,4 +63,13 @@ class Table
     {
         return $this->hideOnDevice;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
 }
