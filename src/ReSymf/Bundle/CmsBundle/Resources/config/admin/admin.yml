@@ -12,7 +12,8 @@ admin:
 #        remote: false
         actions: ['list','create','delete','update']
 #        icon: 'file'
-        label: 'Pages'
+        plural_label: 'Pages'
+        singular_label: 'Page'
 #        role: 'ROLE_ADMIN'
     my_slug:
         type: 'custom_page'

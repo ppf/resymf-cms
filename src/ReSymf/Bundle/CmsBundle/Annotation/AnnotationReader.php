@@ -30,42 +30,67 @@ class AnnotationReader
 
     public function readTableAnnotation($classNameSpace)
     {
-
         if (!isset($classNameSpace)) {
             return false;
         }
-        $configTableObject = new \stdClass;
+        $tableConfig = new \stdClass;
 
         $reflectionClass = new \ReflectionClass($classNameSpace);
         $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
-        $configTableObject->sorting = $classAnnotations->getSorting();
-        $configTableObject->paging = $classAnnotations->getPaging();
-        $configTableObject->pageSize = $classAnnotations->getPageSize();
-        $configTableObject->filtering = $classAnnotations->getFiltering();
+        $tableConfig->sorting = $classAnnotations->getSorting();
+        $tableConfig->paging = $classAnnotations->getPaging();
+        $tableConfig->pageSize = $classAnnotations->getPageSize();
+        $tableConfig->filtering = $classAnnotations->getFiltering();
 
         $properties = $reflectionClass->getProperties();
-        $configTableObject->fields = array();
+        $tableConfig->fields = array();
 
         foreach ($properties as $reflectionProperty) {
 
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
             if (null !== $annotation) {
                 if($annotation->getDisplay()) {
-
                     $hideOnDevice = $annotation->getHideOnDevice();
-//                    $devicesArray = explode(',', $hideOnDevice);
-//                    $configTableObject->hideOnDevice[$reflectionProperty->getName()] = $devicesArray;
-                    $configTableObject->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice);
+                    $label = $annotation->getLabel();
+                    $tableConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label);
                 }
             } else {
-                $configTableObject->fields[] = array('name' =>$reflectionProperty->getName());
+                $tableConfig->fields[] = array('name' =>$reflectionProperty->getName());
             }
         }
-//        echo '<pre>';
+
+        return $tableConfig;
+    }
+
+    public function readFormAnnotation($classNameSpace)
+    {
+        if (!isset($classNameSpace)) {
+            return false;
+        }
+        $formConfig = new \stdClass;
+
+        $reflectionClass = new \ReflectionClass($classNameSpace);
+        $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
+
+        $formConfig->editLabel = $classAnnotations->getEditLabel();
+
+        $properties = $reflectionClass->getProperties();
+        $formConfig->fields = array();
+        foreach ($properties as $reflectionProperty) {
+            $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
+            if (null !== $annotation) {
+                if($annotation->getDisplay()) {
+
+                }
+            } else {
+
+            }
+        }
+
+        //        echo '<pre>';
 //        print_r($configTableObject);
 //        echo '<pre>';
 //        die();
-        return $configTableObject;
+        return $formConfig;
     }
-
 }

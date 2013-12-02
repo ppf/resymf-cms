@@ -13,6 +13,7 @@ use ReSymf\Bundle\CmsBundle\Annotation\Form;
  * @ORM\Table()
  * @ORM\Entity
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
+ * @Form(editLabel="Edit Page")
  *
  * @author Piotr Francuz <francuz256@gmail.com>
  */
@@ -33,7 +34,7 @@ class Page
     /**
      * @var \DateTime
      *
-     * @Table(hideOnDevice="tablet,phone")
+     * @Table(label="Create Date")
      * @Form(type="date",required=true)
      *
      * @ORM\Column(name="create_date", type="datetime")
@@ -43,12 +44,17 @@ class Page
     /**
      * @var string
      *
+     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Form(type="text",required=true)
+     *
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
+     *
+     * @Form(type="editor",required=true)
      *
      * @ORM\Column(name="content", type="text")
      */
@@ -57,12 +63,17 @@ class Page
     /**
      * @var integer
      *
+     * @Table(hideOnDevice="tablet,phone", label="Author")
+     * @Form(display=false)
+     *
      * @ORM\Column(name="author_id", type="integer")
      */
     private $authorId;
 
     /**
      * @var string
+     *
+     * @Form(type="text",required=true)
      *
      * @ORM\Column(name="slug", type="string")
      */

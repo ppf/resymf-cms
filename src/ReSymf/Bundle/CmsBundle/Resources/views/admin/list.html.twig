@@ -8,7 +8,11 @@
                 {% if table_config.fields %}
                     {% for field in table_config.fields %}
                         <th {% if field.hideOnDevice is defined %} data-hide={{ field.hideOnDevice }}{% endif %}>
-                            {{ field.name }}
+                            {% if field.label is defined%}
+                                {{ field.label }}
+                            {% else %}
+                                {{ field.name }}
+                            {% endif %}
                         </th>
                     {% endfor %}
                 {% endif %}

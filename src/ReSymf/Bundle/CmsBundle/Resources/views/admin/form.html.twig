@@ -1,0 +1,34 @@
+{% extends 'ReSymfCmsBundle:admin:baseAdmin.html.twig' %}
+
+{% block content %}
+    <div class="col-lg-4 col-md-4 col-sm-6 form_container">
+        <div class="well">
+            <form action="" method="POST" class="bs-example form-horizontal">
+                <fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-11">
+                            <legend>Edit Object:</legend>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-lg-3 control-label">{{ 'profile.show.username'|trans }}:</label>
+                        <div class="col-lg-8">
+                            <input type="text"  class="form-control" value="{{ app.user.username }}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-lg-3 control-label">{{ 'profile.show.email'|trans }}:</label>
+                        <div class="col-lg-8">
+                            <input type="text"  class="form-control" value="{{ app.user.email }}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-11 col-md-12 col-sm-12">
+                            <input type="submit" class="btn btn-primary" value="{{ 'profile.edit.submit'|trans }}"/>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}

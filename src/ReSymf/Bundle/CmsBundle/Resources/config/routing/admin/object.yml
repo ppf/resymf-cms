@@ -13,7 +13,6 @@ object_new:
 object_create:
     pattern:  /{type}/create
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:create" }
-    requirements: { _method: post }
 
 object_edit:
     pattern:  /{type}/{id}/edit

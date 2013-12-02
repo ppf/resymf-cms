@@ -2,6 +2,7 @@
 
 namespace ReSymf\Bundle\CmsBundle\Controller;
 
+use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -36,7 +37,6 @@ class AdminMenuController extends Controller
 
     /**
      * Lists all entities.
-     *
      */
     public function listAction($type)
     {
@@ -51,7 +51,7 @@ class AdminMenuController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(100)->getQuery()->getResult();
 
-        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config'=>$tableConfig));
+        return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config' => $tableConfig));
     }
 
     /**
@@ -60,22 +60,31 @@ class AdminMenuController extends Controller
      */
     public function createAction($type, Request $request)
     {
-        $entity = new Post();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
+//        $entity = new Post();
+//        $form = $this->createCreateForm($entity);
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            return $this->redirect($this->generateUrl('object_show', array('id' => $entity->getId())));
+//        }
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
 
-            return $this->redirect($this->generateUrl('object_show', array('id' => $entity->getId())));
-        }
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        $objectMapper = $this->get('resymfcms.object.mapper');
 
-        return $this->render('ReSymfCmsBundle:Post:new.html.twig', array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-        ));
+        $objectType = $objectMapper->getMappedObject($type);
+        $annotationReader = $this->get('resymfcms.annotation.reader');
+
+        $formConfig = $annotationReader->readFormAnnotation($objectType);
+
+        $entity = new \stdClass();
+        return $this->render('ReSymfCmsBundle:admin:form.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entity, 'form_config'=>$formConfig, 'route' => $routeName));
     }
 
 

@@ -23,6 +23,7 @@ class Form
     private $length;
     private $display;
     private $readOnly;
+    private $editLabel;
 
     // read all @Form annotations from Entity
     public function __construct($options)
@@ -77,5 +78,12 @@ class Form
         return $this->type;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEditLabel()
+    {
+        return $this->editLabel;
+    }
 
 } 
