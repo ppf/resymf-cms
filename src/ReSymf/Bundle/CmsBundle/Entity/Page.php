@@ -13,7 +13,7 @@ use ReSymf\Bundle\CmsBundle\Annotation\Form;
  * @ORM\Table()
  * @ORM\Entity
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Page")
+ * @Form(editLabel="Edit Page", createLabel="Create Page")
  *
  * @author Piotr Francuz <francuz256@gmail.com>
  */
@@ -37,7 +37,7 @@ class Page
      * @Table(label="Create Date")
      * @Form(type="date",required=true)
      *
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=true)
      */
     private $createDate;
 
@@ -45,7 +45,7 @@ class Page
      * @var string
      *
      * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(type="text",required=true)
+     * @Form(fieldLabel="Object Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -66,7 +66,7 @@ class Page
      * @Table(hideOnDevice="tablet,phone", label="Author")
      * @Form(display=false)
      *
-     * @ORM\Column(name="author_id", type="integer")
+     * @ORM\Column(name="author_id", type="integer", nullable=true)
      */
     private $authorId;
 
@@ -109,7 +109,11 @@ class Page
      */
     public function getCreateDate()
     {
-        return $this->createDate->format('Y-m-d H:i:s');
+        if($this->createDate){
+            return $this->createDate->format('Y-m-d H:i:s');
+        } else {
+            return 'Not set';
+        }
     }
 
     /**

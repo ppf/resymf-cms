@@ -49,7 +49,7 @@ class AdminMenuController extends Controller
         $tableConfig = $annotationReader->readTableAnnotation($objectType);
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(100)->getQuery()->getResult();
+        $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(220)->getQuery()->getResult();
 
         return $this->render('ReSymfCmsBundle:admin:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config' => $tableConfig));
     }
@@ -65,6 +65,9 @@ class AdminMenuController extends Controller
 //        $form->handleRequest($request);
 //
 //        if ($form->isValid()) {
+
+
+
 //            $em = $this->getDoctrine()->getManager();
 //            $em->persist($entity);
 //            $em->flush();
@@ -83,8 +86,18 @@ class AdminMenuController extends Controller
 
         $formConfig = $annotationReader->readFormAnnotation($objectType);
 
-        $entity = new \stdClass();
-        return $this->render('ReSymfCmsBundle:admin:form.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entity, 'form_config'=>$formConfig, 'route' => $routeName));
+        if ($request->isMethod('POST')) {
+            $object = new $objectType();
+            foreach($formConfig->fields as $field) {
+                $methodName = 'set'.$field['name'];
+                $object->$methodName($request->get($field['name']));
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($object);
+            $em->flush();
+        }
+
+        return $this->render('ReSymfCmsBundle:admin:form.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config'=>$formConfig, 'route' => $routeName));
     }
 
 

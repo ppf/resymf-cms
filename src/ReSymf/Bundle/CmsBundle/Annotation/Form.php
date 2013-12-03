@@ -18,22 +18,22 @@ namespace ReSymf\Bundle\CmsBundle\Annotation;
  */
 class Form
 {
-    private $type;
-    private $required;
+    private $type = 'text';
+    private $required = true;
     private $length;
-    private $display;
+    private $display = true;
     private $readOnly;
-    private $editLabel;
+    private $editLabel = 'Edit Object';
+    private $createLabel = 'Create Object';
+    private $fieldLabel;
 
     // read all @Form annotations from Entity
     public function __construct($options)
     {
-
         foreach ($options as $key => $value) {
             if (!property_exists($this, $key)) {
                 throw new \InvalidArgumentException(sprintf('Property "%s" does not exist', $key));
             }
-
             $this->$key = $value;
         }
     }
@@ -85,5 +85,23 @@ class Form
     {
         return $this->editLabel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCreateLabel()
+    {
+        return $this->createLabel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldLabel()
+    {
+        return $this->fieldLabel;
+    }
+
+
 
 } 

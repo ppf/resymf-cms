@@ -12,3 +12,5 @@ profile:
         email: "Email"
     edit:
         submit: "Save"
+object:
+    save: "Save"

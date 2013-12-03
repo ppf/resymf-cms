@@ -73,6 +73,7 @@ class AnnotationReader
         $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
 
         $formConfig->editLabel = $classAnnotations->getEditLabel();
+        $formConfig->createLabel = $classAnnotations->getCreateLabel();
 
         $properties = $reflectionClass->getProperties();
         $formConfig->fields = array();
@@ -80,10 +81,12 @@ class AnnotationReader
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
             if (null !== $annotation) {
                 if($annotation->getDisplay()) {
-
+                    $type = $annotation->getType();
+                    $fieldLabel = $annotation->getFieldLabel();
+                    $formConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel);
                 }
             } else {
-
+                $formConfig->fields[] = array('name' =>$reflectionProperty->getName());
             }
         }
 
