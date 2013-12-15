@@ -20,6 +20,9 @@ class Table
     private $paging = true;
     private $pageSize = 10;
     private $filtering = true;
+    private $format = 'text';
+    private $dateFormat = 'Y-m-d';
+    private $length = 50;
 
     // read all @Table annotations from Entity
     public function __construct($options)
@@ -69,5 +72,30 @@ class Table
     {
         return $this->label;
     }
+
+    /**
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength()
+    {
+        return $this->length;
+    }
+
 
 }

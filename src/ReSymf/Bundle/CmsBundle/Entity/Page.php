@@ -34,7 +34,7 @@ class Page
     /**
      * @var \DateTime
      *
-     * @Table(label="Create Date")
+     * @Table(label="Create Date", format="date", dateFormat="Y-m-d")
      * @Form(type="date",required=true)
      *
      * @ORM\Column(name="create_date", type="datetime", nullable=true)
@@ -54,6 +54,7 @@ class Page
     /**
      * @var string
      *
+     * @Table(format="html", length=300, label="Content")
      * @Form(type="editor",required=true)
      *
      * @ORM\Column(name="content", type="text")
@@ -63,7 +64,7 @@ class Page
     /**
      * @var integer
      *
-     * @Table(hideOnDevice="tablet,phone", label="Author")
+     * @Table(hideOnDevice="tablet,phone", label="Author", format="numeric")
      * @Form(display=false)
      *
      * @ORM\Column(name="author_id", type="integer", nullable=true)
