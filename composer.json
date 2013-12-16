@@ -18,6 +18,7 @@
         "sensio/distribution-bundle": "2.3.*",
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
+        "ircmaxell/password-compat": "dev-master",
         "incenteev/composer-parameter-handler": "~2.0",
         "components/jquery": "dev-master",
 	"symfony/yaml": "2.3.*@dev"
