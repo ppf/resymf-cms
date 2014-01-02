@@ -7,3 +7,6 @@ resymf_admin_custom_page:
 resymf_admin_profile_show:
     pattern: /profile
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:profile" }
+resymf_admin_settings:
+    pattern: /settings
+    defaults: { _controller: "ReSymfCmsBundle:AdminMenu:settings" }

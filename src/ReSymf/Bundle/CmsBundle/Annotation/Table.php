@@ -24,7 +24,13 @@ class Table
     private $dateFormat = 'Y-m-d';
     private $length = 50;
 
-    // read all @Table annotations from Entity
+
+    /**
+     * save all @Table annotations from Entity to this Table object
+     *
+     * @param $options
+     * @throws \InvalidArgumentException
+     */
     public function __construct($options)
     {
         foreach ($options as $key => $value) {

@@ -1,0 +1,55 @@
+{% extends 'ReSymfCmsBundle:adminmenu:baseAdmin.html.twig' %}
+
+{% block content %}
+    {% if table_config is defined %}
+        <table class="footable metro-blue"
+               data-page-size="{% if table_config.pageSize %}{{ table_config.pageSize }} {% endif %}">
+            <thead>
+            <tr>
+                {% if table_config.fields %}
+                    {% for field in table_config.fields %}
+                        <th {% if field.hideOnDevice is defined %} data-hide={{ field.hideOnDevice }}{% endif %}>
+                            {% if field.label is defined %}
+                                {{ field.label }}
+                            {% else %}
+                                {{ field.name }}
+                            {% endif %}
+                        </th>
+                    {% endfor %}
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% if entities %}
+                {% for entity in entities %}
+                    <tr>
+                        {% if table_config.fields %}
+                            {% for field in table_config.fields %}
+                                <td>
+                                    {% if field.format is not defined or field.format  == 'text' %}
+                                        {{ attribute(entity,field.name) }}
+                                    {% elseif field.format == 'html' %}
+                                        {{ attribute(entity,field.name) | striptags }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        {% endif %}
+
+                        {#<td><a href="#">Boudreaux</a></td>#}
+                        {#<td>Traffic Court Referee</td>#}
+                        {#<td data-value="78025368997">22 Jun 1972</td>#}
+                        {#<td data-value="1"><span class="status-metro status-active" title="Active">Active</span></td>#}
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <div class="{% if table_config.paging %} pagination {% endif %} pagination-centered"></div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    {% endif %}
+{% endblock %}

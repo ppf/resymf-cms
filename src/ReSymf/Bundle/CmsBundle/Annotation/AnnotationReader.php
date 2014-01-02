@@ -28,6 +28,12 @@ class AnnotationReader
         $this->reader = $reader; // set annotations reader
     }
 
+    /**
+     * read @Table annotation from Entity
+     *
+     * @param $classNameSpace
+     * @return bool|\stdClass
+     */
     public function readTableAnnotation($classNameSpace)
     {
         if (!isset($classNameSpace)) {
@@ -37,6 +43,7 @@ class AnnotationReader
 
         $reflectionClass = new \ReflectionClass($classNameSpace);
         $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
+
         $tableConfig->sorting = $classAnnotations->getSorting();
         $tableConfig->paging = $classAnnotations->getPaging();
         $tableConfig->pageSize = $classAnnotations->getPageSize();
@@ -52,16 +59,26 @@ class AnnotationReader
                 if($annotation->getDisplay()) {
                     $hideOnDevice = $annotation->getHideOnDevice();
                     $label = $annotation->getLabel();
-                    $tableConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label);
+                    $format = $annotation->getFormat();
+                    $tableConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label, 'format' => $format);
                 }
             } else {
                 $tableConfig->fields[] = array('name' =>$reflectionProperty->getName());
             }
         }
 
+//        echo '<pre>';
+//        print_r($tableConfig);
+//        echo '</pre>';
         return $tableConfig;
     }
 
+    /**
+     * read @Form annotation from entity
+     *
+     * @param $classNameSpace
+     * @return bool|\stdClass
+     */
     public function readFormAnnotation($classNameSpace)
     {
         if (!isset($classNameSpace)) {
@@ -90,10 +107,6 @@ class AnnotationReader
             }
         }
 
-        //        echo '<pre>';
-//        print_r($configTableObject);
-//        echo '<pre>';
-//        die();
         return $formConfig;
     }
 }

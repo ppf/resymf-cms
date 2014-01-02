@@ -37,6 +37,6 @@ class ObjectMapper
             throw new EntityNotFoundException('class not found in admin config file');
         }
 
-        return false;
+//        return false;
     }
 } 

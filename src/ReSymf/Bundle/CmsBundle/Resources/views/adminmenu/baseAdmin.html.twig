@@ -10,9 +10,14 @@
 
 
 {% block body %}
-    {{ include('ReSymfCmsBundle:admin:menu.html.twig', { 'menu': menu , 'site_config' : site_config}) }}
+    {{ include('ReSymfCmsBundle:adminmenu:menu.html.twig', { 'menu': menu , 'site_config' : site_config}) }}
     {% block content %}
     {% endblock %}
+    {% block credits %}
+        <div class="credits">
+            CMS powered by <a target="_blank" href="bizneslan.pl">BiznesLan.pl</a>
+        </div>
+    {% endblock credits %}
 {% endblock body %}
 
 {% block javascripts %}

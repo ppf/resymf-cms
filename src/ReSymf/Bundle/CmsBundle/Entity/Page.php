@@ -45,7 +45,7 @@ class Page
      * @var string
      *
      * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Object Name",type="text",required=true)
+     * @Form(fieldLabel="Page Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -55,7 +55,7 @@ class Page
      * @var string
      *
      * @Table(format="html", length=300, label="Content")
-     * @Form(type="editor",required=true)
+     * @Form(type="editor",required=true, fieldLabel = "Content")
      *
      * @ORM\Column(name="content", type="text")
      */
@@ -65,8 +65,8 @@ class Page
      * @var integer
      *
      * @Table(hideOnDevice="tablet,phone", label="Author", format="numeric")
-     * @Form(display=false)
-     *
+     * @Form(display=false, type="userLoginId")
+     * TODO: userLoginId type !!!
      * @ORM\Column(name="author_id", type="integer", nullable=true)
      */
     private $authorId;
@@ -74,7 +74,7 @@ class Page
     /**
      * @var string
      *
-     * @Form(type="text",required=true)
+     * @Form(type="text",required=true, fieldLabel="Slug to Page")
      *
      * @ORM\Column(name="slug", type="string")
      */

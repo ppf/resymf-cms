@@ -53,7 +53,7 @@ class AdminConfigurator
     }
 
     /**
-     * set default values to admin configuration
+     * set default values to adminmenu configuration
      *
      * @param $adminConfig
      * @return mixed
@@ -81,7 +81,7 @@ class AdminConfigurator
             }
 
             if ($adminConfig[$key]['type'] == 'custom_page' && !isset($adminConfig[$key]['template'])) {
-                throw new Exception('No template set in ' . $key . ' area in admin.yml file');
+                throw new Exception('No template set in ' . $key . ' area in adminmenu.yml file');
             }
 
             if (!isset($adminConfig[$key]['icon'])) {

@@ -10,5 +10,13 @@ re_symf_cms_admin:
     resource: "@ReSymfCmsBundle/Resources/config/routing/admin/main.yml"
     prefix:   /admin
 
+#on the end of routing document, if no matching url
+re_symf_cms_not_found:
+    pattern: /{slug}
+    defaults: { _controller: "ReSymfCmsBundle:Error:notFound" }
+    requirements:
+        _method: GET
+        slug: ".+"
+
 
 

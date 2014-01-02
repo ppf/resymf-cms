@@ -11,6 +11,12 @@ namespace ReSymf\Bundle\CmsBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 
+/**
+ * Class SecurityController
+ * @package ReSymf\Bundle\CmsBundle\Controller
+ *
+ * @author Piotr Francuz <francuz256@gmail.com>
+ */
 class SecurityController extends Controller
 {
 

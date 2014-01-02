@@ -17,7 +17,7 @@ class AdminCommand extends ContainerAwareCommand
     {
         $this
             ->setName('security:createadmin')
-            ->setDescription('Create admin user')
+            ->setDescription('Create adminmenu user')
             ->addArgument('username', InputArgument::REQUIRED, 'Admin Name')
             ->addArgument('email', InputArgument::REQUIRED, 'Admin Email')
             ->addArgument('password', InputArgument::REQUIRED, 'password');
@@ -46,7 +46,7 @@ class AdminCommand extends ContainerAwareCommand
 
         if (!$role) {
             $role = new Role();
-            $role->setName('admin');
+            $role->setName('adminmenu');
             $role->setRole('ROLE_ADMIN');
         }
         $role->addUser($user);

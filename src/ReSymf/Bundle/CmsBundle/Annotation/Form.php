@@ -27,7 +27,12 @@ class Form
     private $createLabel = 'Create Object';
     private $fieldLabel;
 
-    // read all @Form annotations from Entity
+    /**
+     * save all @Form annotations from Entity to this Form object
+     *
+     * @param $options
+     * @throws \InvalidArgumentException
+     */
     public function __construct($options)
     {
         foreach ($options as $key => $value) {
