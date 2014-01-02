@@ -60,7 +60,8 @@ class AnnotationReader
                     $hideOnDevice = $annotation->getHideOnDevice();
                     $label = $annotation->getLabel();
                     $format = $annotation->getFormat();
-                    $tableConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label, 'format' => $format);
+                    $dateFormat = $annotation->getDateFormat();
+                    $tableConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label, 'format' => $format, 'dateFormat' => $dateFormat);
                 }
             } else {
                 $tableConfig->fields[] = array('name' =>$reflectionProperty->getName());

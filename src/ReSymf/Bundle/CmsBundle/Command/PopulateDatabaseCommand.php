@@ -24,7 +24,7 @@ class PopulateDatabaseCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $createDate = new \DateTime();
-        $content = 'francuz256@mgial.com';
+        $content = 'francuz256@gmail.com';
         $authorId = 1;
         $slug = 'page';
 

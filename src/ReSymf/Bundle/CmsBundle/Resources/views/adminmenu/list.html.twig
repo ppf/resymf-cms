@@ -30,6 +30,8 @@
                                         {{ attribute(entity,field.name) }}
                                     {% elseif field.format == 'html' %}
                                         {{ attribute(entity,field.name) | striptags }}
+                                    {% elseif field.format == 'date' %}
+                                        {{ attribute(entity,field.name) | date(field.dateFormat) }}
                                     {% endif %}
                                 </td>
                             {% endfor %}

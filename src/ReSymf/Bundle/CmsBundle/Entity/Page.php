@@ -5,6 +5,7 @@ namespace ReSymf\Bundle\CmsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ReSymf\Bundle\CmsBundle\Annotation\Table;
 use ReSymf\Bundle\CmsBundle\Annotation\Form;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class Page
@@ -34,7 +35,7 @@ class Page
     /**
      * @var \DateTime
      *
-     * @Table(label="Create Date", format="date", dateFormat="Y-m-d")
+     * @Table(label="Create Date", format="date", dateFormat="Y-m-d H:i:s")
      * @Form(type="date",required=true)
      *
      * @ORM\Column(name="create_date", type="datetime", nullable=true)
@@ -113,7 +114,7 @@ class Page
         if($this->createDate){
             return $this->createDate->format('Y-m-d H:i:s');
         } else {
-            return 'Not set';
+            return null;
         }
     }
 
