@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityNotFoundException;
  * Class ObjectMapper
  * @package ReSymf\Bundle\CmsBundle\Services
  *
- * @author Piotr Francuz <fraencuz256@gmail.com>
+ * @author Piotr Francuz <francuz256@gmail.com>
  */
 class ObjectMapper
 {

@@ -14,6 +14,9 @@ admin:
 #        icon: 'file'
         plural_label: 'Pages'
         singular_label: 'Page'
+
+        #author, time, object values
+        history: 50
 #        role: 'ROLE_ADMIN'
     my_slug:
         type: 'custom_page'

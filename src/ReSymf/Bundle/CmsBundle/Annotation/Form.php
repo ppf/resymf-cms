@@ -27,6 +27,11 @@ class Form
     private $createLabel = 'Create Object';
     private $fieldLabel;
 
+    // can set value as:
+    // 1. 'currentTime' - set current time as value when created
+    // 2. 'currentUser' - set current user id as value when created
+    private $autoInput = false;
+
     /**
      * save all @Form annotations from Entity to this Form object
      *
@@ -107,6 +112,12 @@ class Form
         return $this->fieldLabel;
     }
 
-
+    /**
+     * @return boolean
+     */
+    public function getAutoInput()
+    {
+        return $this->autoInput;
+    }
 
 } 

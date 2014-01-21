@@ -36,7 +36,7 @@ class Page
      * @var \DateTime
      *
      * @Table(label="Create Date", format="date", dateFormat="Y-m-d H:i:s")
-     * @Form(type="date",required=true)
+     * @Form(type="date",required=true, autoInput="currentTime")
      *
      * @ORM\Column(name="create_date", type="datetime", nullable=true)
      */
@@ -66,7 +66,7 @@ class Page
      * @var integer
      *
      * @Table(hideOnDevice="tablet,phone", label="Author", format="numeric")
-     * @Form(display=false, type="userLoginId")
+     * @Form(display=false, autoInput="currentUser")
      * TODO: userLoginId type !!!
      * @ORM\Column(name="author_id", type="integer", nullable=true)
      */
