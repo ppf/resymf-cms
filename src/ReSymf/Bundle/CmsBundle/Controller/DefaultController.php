@@ -16,6 +16,6 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-
+        return $this->render('ReSymfCmsBundle::index.html.twig');
     }
 }
