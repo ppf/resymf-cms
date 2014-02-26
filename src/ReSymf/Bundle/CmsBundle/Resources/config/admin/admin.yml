@@ -3,21 +3,52 @@ site_config:
     description: 'the best of cms'
     domain: 'resymf-cms'
     theme: ''
+    settings_class: 'ReSymf\Bundle\CmsBundle\Entity\Settings'
 
 admin:
     page:
 #        type: 'crud'
-        route_name: ''
         class: 'ReSymf\Bundle\CmsBundle\Entity\Page'
-#        remote: false
         actions: ['list','create','delete','update']
 #        icon: 'file'
         plural_label: 'Pages'
         singular_label: 'Page'
-
         #author, time, object values
-        history: 50
+#        history: 50
 #        role: 'ROLE_ADMIN'
+    project:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Project'
+        actions: ['list','create','delete','update']
+        plural_label: 'Projects'
+        icon: 'briefcase'
+        singular_label: 'Project'
+    sprint:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Sprint'
+        actions: ['list','create','delete','update']
+        plural_label: 'Sprints'
+        icon: 'calendar-o'
+        singular_label: 'Sprint'
+#       history: 50
+    task:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Task'
+        actions: ['list','create','delete','update']
+        plural_label: 'Tasks'
+        icon: 'check-square-o'
+        singular_label: 'Task'
+    issue:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Issue'
+        actions: ['list','create','delete','update']
+        plural_label: 'Issues'
+        icon: 'bug'
+        singular_label: 'Issue'
+#        history: 50
+    contact:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Contact'
+        actions: ['list','create','delete','update']
+        plural_label: 'Contacts'
+        icon: 'envelope'
+        singular_label: 'Contact'
+#        history: 50
     my_slug:
         type: 'custom_page'
         label: 'my custom title'

@@ -96,16 +96,37 @@ class AdminMenuController extends Controller
         return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config'=>$formConfig, 'route' => $routeName));
     }
 
-
     /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function settingsAction()
+    public function settingsAction(Request $request)
     {
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+
         $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        //TODO: set settings class in config
+//        $objectMapper = $this->get('resymfcms.object.mapper');
+//        $objectType = $objectMapper->getSettingsClass($type);
 
+        $objectType =  'ReSymf\Bundle\CmsBundle\Entity\Settings';
+        $annotationReader = $this->get('resymfcms.annotation.reader');
 
-        return $this->render('ReSymfCmsBundle:adminmenu:settings.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig()));
+        $formConfig = $annotationReader->readFormAnnotation($objectType);
+
+        if ($request->isMethod('POST')) {
+            $object = new $objectType();
+            foreach($formConfig->fields as $field) {
+                $methodName = 'set'.$field['name'];
+                $object->$methodName($request->get($field['name']));
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($object);
+            $em->flush();
+        }
+
+        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config'=>$formConfig, 'route' => $routeName));
     }
 
 }

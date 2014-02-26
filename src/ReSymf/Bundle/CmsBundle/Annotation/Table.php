@@ -23,7 +23,8 @@ class Table
     private $format = 'text';
     private $dateFormat = 'Y-m-d';
     private $length = 50;
-
+    private $relation = false;
+    private $class;
 
     /**
      * save all @Table annotations from Entity to this Table object
@@ -39,6 +40,38 @@ class Table
             }
             $this->$key = $value;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param mixed $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRelation()
+    {
+        return $this->relation;
+    }
+
+    /**
+     * @param mixed $relationType
+     */
+    public function setRelation($relationType)
+    {
+        $this->relation = $relationType;
     }
 
     public function getDisplay()

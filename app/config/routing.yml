@@ -1,3 +1,8 @@
+re_symf_project_manager:
+    resource: "@ReSymfProjectManagerBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 re_symf_cms:
     resource: "@ReSymfCmsBundle/Resources/config/routing/routing.yml"
     prefix:   /

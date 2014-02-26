@@ -26,11 +26,9 @@ class Form
     private $editLabel = 'Edit Object';
     private $createLabel = 'Create Object';
     private $fieldLabel;
-
-    // can set value as:
-    // 1. 'currentTime' - set current time as value when created
-    // 2. 'currentUser' - set current user id as value when created
+    private $relationType;
     private $autoInput = false;
+    private $class;
 
     /**
      * save all @Form annotations from Entity to this Form object
@@ -46,6 +44,42 @@ class Form
             }
             $this->$key = $value;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param mixed $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+
+    // can set value as:
+    // 1. 'currentTime' - set current time as value when created
+    // 2. 'currentUser' - set current user id as value when created
+
+    /**
+     * @return mixed
+     */
+    public function getRelationType()
+    {
+        return $this->relationType;
+    }
+
+    /**
+     * @param mixed $relationType
+     */
+    public function setRelationType($relationType)
+    {
+        $this->relationType = $relationType;
     }
 
     /**
