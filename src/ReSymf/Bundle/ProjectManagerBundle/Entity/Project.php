@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use ReSymf\Bundle\CmsBundle\Annotation\Table;
 use ReSymf\Bundle\CmsBundle\Annotation\Form;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class Project
@@ -68,7 +67,7 @@ class Project
      * @Table(hideOnDevice="tablet,phone", label="Suma godzin")
      * @Form(fieldLabel="Suma godzin",type="text",required=true)
      *
-     * @ORM\Column(name="hour_price", type="string", length=255)
+     * @ORM\Column(name="total_hours", type="string", length=255)
      */
     private $totalHours;
 
@@ -83,38 +82,6 @@ class Project
     private $realTotalHours;
 
     /**
-     * @param string $realTotalHours
-     */
-    public function setRealTotalHours($realTotalHours)
-    {
-        $this->realTotalHours = $realTotalHours;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRealTotalHours()
-    {
-        return $this->realTotalHours;
-    }
-
-    /**
-     * @param string $totalHours
-     */
-    public function setTotalHours($totalHours)
-    {
-        $this->totalHours = $totalHours;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTotalHours()
-    {
-        return $this->totalHours;
-    }
-
-    /**
      * @var string
      *
      * @Table(format="html", length=300, label="Opis")
@@ -123,7 +90,6 @@ class Project
      * @ORM\Column(name="description", type="text")
      */
     private $description;
-
 
     /**
      * @var Task
@@ -134,7 +100,6 @@ class Project
      * @ORM\OneToMany(targetEntity="Sprint", mappedBy="project")
      */
     private $sprints;
-
 
     /**
      * @var Contacts
@@ -156,11 +121,46 @@ class Project
      */
     private $documents;
 
+    /**
+     *
+     */
     function __construct()
     {
         $this->contacts = new ArrayCollection();
         $this->sprints = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRealTotalHours()
+    {
+        return $this->realTotalHours;
+    }
+
+    /**
+     * @param string $realTotalHours
+     */
+    public function setRealTotalHours($realTotalHours)
+    {
+        $this->realTotalHours = $realTotalHours;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalHours()
+    {
+        return $this->totalHours;
+    }
+
+    /**
+     * @param string $totalHours
+     */
+    public function setTotalHours($totalHours)
+    {
+        $this->totalHours = $totalHours;
     }
 
     /**
