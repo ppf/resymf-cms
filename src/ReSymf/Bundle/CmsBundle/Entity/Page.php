@@ -3,6 +3,9 @@
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ReSymf\Bundle\CmsBundle\Annotation\Table;
+use ReSymf\Bundle\CmsBundle\Annotation\Form;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class Page
@@ -109,7 +112,7 @@ class Page
      */
     public function getCreateDate()
     {
-        if($this->createDate){
+        if ($this->createDate) {
             return $this->createDate->format('Y-m-d H:i:s');
         } else {
             return null;

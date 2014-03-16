@@ -10,6 +10,9 @@ namespace ReSymf\Bundle\ProjectManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ReSymf\Bundle\CmsBundle\Annotation\Table;
+use ReSymf\Bundle\CmsBundle\Annotation\Form;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 /**
