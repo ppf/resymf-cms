@@ -12,7 +12,7 @@ namespace ReSymf\Bundle\CmsBundle\Services;
  * Class ObjectHistory
  * @package ReSymf\Bundle\CmsBundle\Services
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class ObjectHistory {
 

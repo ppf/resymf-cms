@@ -8,9 +8,9 @@
 
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class User
@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="resymf_users")
  * @ORM\Entity(repositoryClass="ReSymf\Bundle\CmsBundle\Entity\UserRepository")
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class User implements AdvancedUserInterface, \Serializable
 {

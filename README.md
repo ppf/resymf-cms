@@ -4,7 +4,7 @@ ReSymf-CMS
 
 <h3>Documentation:</h3>
 
-see project on <a target="_blank" href="http://resymf-cms.dev.bizneslan.pl">Demo site</a>
+see project on <a target="_blank" href="http://resymf-cms.dev.bizneslan.pl/app_dev.php/admin">Demo site</a>
 
 Login form: /login
 

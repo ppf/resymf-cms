@@ -10,13 +10,10 @@ namespace ReSymf\Bundle\ProjectManagerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use ReSymf\Bundle\CmsBundle\Annotation\Table;
-use ReSymf\Bundle\CmsBundle\Annotation\Form;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class Sprint
- * @package ReSymf\Bundle\CmsBundle\Entity
+ * @package ReSymf\Bundle\ProjectManagerBundle\Entity
  *
  * @ORM\Table()
  * @ORM\Entity
@@ -24,7 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
  * @Form(editLabel="Edit project", createLabel="Create project")
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class Sprint
 {

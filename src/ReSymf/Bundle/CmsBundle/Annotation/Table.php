@@ -8,7 +8,7 @@ namespace ReSymf\Bundle\CmsBundle\Annotation;
  *
  * @Annotation
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class Table
 {

@@ -3,17 +3,17 @@
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Doctrine\ORM\NoResultException;
 
 /**
  * Class UserRepository
  * @package ReSymf\Bundle\CmsBundle\Entity
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class UserRepository extends EntityRepository implements UserProviderInterface
 {

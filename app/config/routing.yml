@@ -3,10 +3,6 @@ re_symf_project_manager:
     type:     annotation
     prefix:   /
 
-re_symf_cms:
-    resource: "@ReSymfCmsBundle/Resources/config/routing/routing.yml"
-    prefix:   /
-
 login:
     path: /login
     defaults: { _controller: ReSymfCmsBundle:Security:login }
@@ -17,4 +13,6 @@ login_check:
 user_logout:
     pattern:   /logout
 
-
+re_symf_cms:
+    resource: "@ReSymfCmsBundle/Resources/config/routing/routing.yml"
+    prefix:   /

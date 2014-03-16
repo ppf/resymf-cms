@@ -1,5 +1,5 @@
 resymf_admin_dashboard:
-    pattern: /dashboard
+    pattern: /
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:dashboard" }
 resymf_admin_custom_page:
     pattern: /page/{slug}

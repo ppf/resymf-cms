@@ -3,27 +3,23 @@ object_list:
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:list" }
 
 object_show:
-    pattern:  /{type}/{id}/show
+    pattern:  /{type}/show/{id}
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:show" }
-
-object_new:
-    pattern:  /{type}/new
-    defaults: { _controller: "ReSymfCmsBundle:AdminMenu:new" }
 
 object_create:
     pattern:  /{type}/create
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:create" }
 
 object_edit:
-    pattern:  /{type}/{id}/edit
+    pattern:  /{type}/edit/{id}
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:edit" }
 
 object_update:
-    pattern:  /{type}/{id}/update
+    pattern:  /{type}/update/{id}
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:update" }
     requirements: { _method: post|put }
 
 object_delete:
-    pattern:  /{type}/{id}/delete
+    pattern:  /{type}/delete/{id}
     defaults: { _controller: "ReSymfCmsBundle:AdminMenus:delete" }
     requirements: { _method: post|delete }

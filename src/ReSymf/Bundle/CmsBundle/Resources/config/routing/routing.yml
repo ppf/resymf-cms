@@ -4,7 +4,7 @@ re_symf_cms_main:
 
 re_symf_cms_object:
     resource: "@ReSymfCmsBundle/Resources/config/routing/admin/object.yml"
-    prefix:   /admin/object
+    prefix:   /admin
 
 re_symf_cms_admin:
     resource: "@ReSymfCmsBundle/Resources/config/routing/admin/main.yml"

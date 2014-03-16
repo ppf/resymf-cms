@@ -13,7 +13,7 @@ namespace ReSymf\Bundle\CmsBundle\Annotation;
  * Class AnnotationReader
  * @package ReSymf\Bundle\CmsBundle\Annotation
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class AnnotationReader
 {

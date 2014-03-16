@@ -9,15 +9,15 @@
 namespace ReSymf\Bundle\CmsBundle\Services;
 
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 
 
 /**
  * Class AdminConfigurator
  * @package ReSymf\Bundle\CmsBundle\Services
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class AdminConfigurator
 {

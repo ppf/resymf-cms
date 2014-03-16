@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\SecurityContext;
  * Class SecurityController
  * @package ReSymf\Bundle\CmsBundle\Controller
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class SecurityController extends Controller
 {

@@ -3,9 +3,6 @@
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ReSymf\Bundle\CmsBundle\Annotation\Table;
-use ReSymf\Bundle\CmsBundle\Annotation\Form;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class Page
@@ -17,7 +14,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
  * @Form(editLabel="Edit Page", createLabel="Create Page")
  *
- * @author Piotr Francuz <francuz256@gmail.com>
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class Page
 {

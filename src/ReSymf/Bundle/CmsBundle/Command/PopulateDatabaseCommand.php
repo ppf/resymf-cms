@@ -2,12 +2,12 @@
 namespace ReSymf\Bundle\CmsBundle\Command;
 
 
+use ReSymf\Bundle\CmsBundle\Entity\Page;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use ReSymf\Bundle\CmsBundle\Entity\Page;
 
 class PopulateDatabaseCommand extends ContainerAwareCommand
 {
@@ -24,7 +24,7 @@ class PopulateDatabaseCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $createDate = new \DateTime();
-        $content = 'francuz256@gmail.com';
+        $content = 'piotr.francuz@bizneslan.pl';
         $authorId = 1;
         $slug = 'page';
 

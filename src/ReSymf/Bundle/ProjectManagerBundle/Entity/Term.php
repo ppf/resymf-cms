@@ -8,13 +8,20 @@
 
 namespace ReSymf\Bundle\ProjectManagerBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use ReSymf\Bundle\CmsBundle\Annotation\Table;
-use ReSymf\Bundle\CmsBundle\Annotation\Form;
-use Symfony\Component\Validator\Constraints\DateTime;
 
-
+/**
+ * Class Task
+ * @package ReSymf\Bundle\ProjectManagerBundle\Entity
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ *
+ * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
+ * @Form(editLabel="Edit project", createLabel="Create project")
+ *
+ * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
+ */
 class Term
 {
 
