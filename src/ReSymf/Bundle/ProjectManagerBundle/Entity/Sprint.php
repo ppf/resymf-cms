@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", createLabel="Create project")
+ * @Form(editLabel="Edit project", createLabel="Create Sprint")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -76,7 +76,7 @@ class Sprint
      * @var Project
      *
      * @Form(type="relation", relationType="one", class="ReSymfCms\Bundle\ProjectManagerBundle\Project")
-     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Project")
+     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Project", fieldLabel = "Project")
      *
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
      */

@@ -67,7 +67,7 @@ class Task
      * @var Project
      *
      * @Form(type="relation", relationType="one", class="ReSymfCms\Bundle\ProjectManagerBundle\Sprint")
-     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Sprint")
+     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Sprint", fieldLabel = "Sprint")
      *
      * @ORM\ManyToOne(targetEntity="Sprint", inversedBy="tasks")
      */
