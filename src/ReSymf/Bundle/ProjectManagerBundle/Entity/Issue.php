@@ -44,7 +44,7 @@ class Issue
      * @var Task
      *
      * @Form(type="relation", relationType="one", class="ReSymfCms\Bundle\ProjectManagerBundle\Task")
-     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Task", fieldLabel = "Zadanie")
+     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Task")
      *
      * @ORM\ManyToOne(targetEntity="Task", inversedBy="issues")
      */

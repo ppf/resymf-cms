@@ -2,10 +2,12 @@
 
 {% block stylesheets %}
     <link href="{{ asset('bundles/resymfcms/css/login.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('bundles/resymfcms/css/prettyCheckable.css') }}" rel="stylesheet"/>
     <link href="{{ asset('bundles/resymfcms/css/admin.css') }}" rel="stylesheet"/>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link href="{{ asset('bundles/resymfcms/css/footable.core.css') }}" rel="stylesheet">
     <link href="{{ asset('bundles/resymfcms/css/footable.metro.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/resymfcms/css/bootstrap-multiselect.css') }}" rel="stylesheet">
 {% endblock %}
 
 
@@ -33,6 +35,15 @@
     <script src=" {{ asset('bundles/resymfcms/js/footable.filter.js') }}" type="text/javascript"></script>
     <script src=" {{ asset('bundles/resymfcms/js/footable.paginate.js') }}" type="text/javascript"></script>
     <script src=" {{ asset('bundles/resymfcms/js/footable.sort.js') }}" type="text/javascript"></script>
+    <script src=" {{ asset('bundles/resymfcms/js/prettyCheckable.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            var inputList = $('input[type="checkbox"]');
+            for (var i = inputList.length - 1; i >= 0; i--) {
+                $(inputList[i]).prettyCheckable();
+            }
+        });
+    </script>
     <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
     <script type="text/javascript">
         tinymce.init({
@@ -64,6 +75,15 @@
                 {title: 'Test template 1', content: 'Test 1'},
                 {title: 'Test template 2', content: 'Test 2'}
             ]
+        });
+    </script>
+    <script src=" {{ asset('bundles/resymfcms/js/bootstrap-multiselect.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.multiselect').multiselect({
+                enableCaseInsensitiveFiltering: true,
+                buttonWidth: 'auto'
+            });
         });
     </script>
 {% endblock %}

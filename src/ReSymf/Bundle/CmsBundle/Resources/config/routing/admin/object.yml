@@ -14,12 +14,12 @@ object_edit:
     pattern:  /{type}/edit/{id}
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:edit" }
 
-object_update:
-    pattern:  /{type}/update/{id}
-    defaults: { _controller: "ReSymfCmsBundle:AdminMenu:update" }
-    requirements: { _method: post|put }
+#object_update:
+#    pattern:  /{type}/update/{id}
+#    defaults: { _controller: "ReSymfCmsBundle:AdminMenu:update" }
+#    requirements: { _method: post|put }
 
 object_delete:
     pattern:  /{type}/delete/{id}
-    defaults: { _controller: "ReSymfCmsBundle:AdminMenus:delete" }
-    requirements: { _method: post|delete }
+    defaults: { _controller: "ReSymfCmsBundle:AdminMenu:delete" }
+#    requirements: { _method: post|delete }

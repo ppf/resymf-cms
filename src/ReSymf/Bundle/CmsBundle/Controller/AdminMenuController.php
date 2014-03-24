@@ -47,6 +47,10 @@ class AdminMenuController extends Controller
      */
     public function listAction($type)
     {
+        if (!$type) {
+            return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
+        }
+
         $adminConfigurator = $this->get('resymfcms.configurator.admin');
         $objectMapper = $this->get('resymfcms.object.mapper');
 
@@ -58,7 +62,7 @@ class AdminMenuController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(220)->getQuery()->getResult();
 
-        return $this->render('ReSymfCmsBundle:adminmenu:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config' => $tableConfig));
+        return $this->render('ReSymfCmsBundle:adminmenu:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config' => $tableConfig, 'object_type' => $type));
     }
 
 
@@ -66,11 +70,14 @@ class AdminMenuController extends Controller
      * Creates a new object base on url and request parameters.
      *
      * @param $type
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction($type, Request $request)
+    public function createAction($type)
     {
+        if (!$type) {
+            return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
+        }
+
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
 
@@ -84,8 +91,55 @@ class AdminMenuController extends Controller
 
         if ($request->isMethod('POST')) {
             $object = new $objectType();
-            foreach($formConfig->fields as $field) {
-                $methodName = 'set'.$field['name'];
+            foreach ($formConfig->fields as $field) {
+                $methodName = 'set' . $field['name'];
+                $object->$methodName($request->get($field['name']));
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($object);
+            $em->flush();
+            return $this->redirect($this->generateUrl('object_edit', array('type' => $type, 'id' => $object->getId())), 301);
+        }
+
+        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName));
+    }
+
+    /**
+     * Edit object base on url and request parameters.
+     *
+     * @param $type
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction($type, $id)
+    {
+        if (!$id) {
+            return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
+        }
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        $objectMapper = $this->get('resymfcms.object.mapper');
+
+        $objectType = $objectMapper->getMappedObject($type);
+        $annotationReader = $this->get('resymfcms.annotation.reader');
+
+        $formConfig = $annotationReader->readFormAnnotation($objectType);
+
+        $em = $this->getDoctrine()->getManager();
+
+//        TODO: if no object display error
+        $editObject = $em->getRepository($objectType)->createQueryBuilder('q')->where('q.id = :id')->setParameter('id', $id)->setMaxResults(1)->getQuery()->getResult();
+//        print_r($editObject[0]);
+//        die();
+
+
+        if ($request->isMethod('POST')) {
+
+            $object = $editObject[0];
+            foreach ($formConfig->fields as $field) {
+                $methodName = 'set' . $field['name'];
                 $object->$methodName($request->get($field['name']));
             }
             $em = $this->getDoctrine()->getManager();
@@ -93,14 +147,34 @@ class AdminMenuController extends Controller
             $em->flush();
         }
 
-        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config'=>$formConfig, 'route' => $routeName));
+        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName, 'edit_object' => $editObject[0]));
+    }
+
+    public function deleteAction($type, $id)
+    {
+
+        if (!$id) {
+            return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
+        }
+        $objectMapper = $this->get('resymfcms.object.mapper');
+        $objectType = $objectMapper->getMappedObject($type);
+        $em = $this->getDoctrine()->getManager();
+
+        // TODO: if no object display error
+        $editObject = $em->getRepository($objectType)->createQueryBuilder('q')->where('q.id = :id')->setParameter('id', $id)->setMaxResults(1)->getQuery()->getResult();
+        if (!isset($editObject[0])) {
+            return $this->redirect($this->generateUrl('object_list', array('type' => $type)), 301);
+        }
+        $em->remove($editObject[0]);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('object_list', array('type' => $type)), 301);
     }
 
     /**
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function settingsAction(Request $request)
+    public function settingsAction()
     {
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -110,15 +184,15 @@ class AdminMenuController extends Controller
 //        $objectMapper = $this->get('resymfcms.object.mapper');
 //        $objectType = $objectMapper->getSettingsClass($type);
 
-        $objectType =  'ReSymf\Bundle\CmsBundle\Entity\Settings';
+        $objectType = 'ReSymf\Bundle\CmsBundle\Entity\Settings';
         $annotationReader = $this->get('resymfcms.annotation.reader');
 
         $formConfig = $annotationReader->readFormAnnotation($objectType);
 
         if ($request->isMethod('POST')) {
             $object = new $objectType();
-            foreach($formConfig->fields as $field) {
-                $methodName = 'set'.$field['name'];
+            foreach ($formConfig->fields as $field) {
+                $methodName = 'set' . $field['name'];
                 $object->$methodName($request->get($field['name']));
             }
             $em = $this->getDoctrine()->getManager();
@@ -126,7 +200,7 @@ class AdminMenuController extends Controller
             $em->flush();
         }
 
-        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config'=>$formConfig, 'route' => $routeName));
+        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName));
     }
 
 }
