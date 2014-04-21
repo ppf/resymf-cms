@@ -60,7 +60,11 @@ class AdminMenuController extends Controller
         $tableConfig = $annotationReader->readTableAnnotation($objectType);
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository($objectType)->createQueryBuilder('q')->setMaxResults(220)->getQuery()->getResult();
+        $entities = $em->getRepository($objectType)
+            ->createQueryBuilder('q')
+            ->setMaxResults(220)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('ReSymfCmsBundle:adminmenu:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config' => $tableConfig, 'object_type' => $type));
     }
@@ -82,6 +86,8 @@ class AdminMenuController extends Controller
         $routeName = $request->get('_route');
 
         $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        $objectConfigurator = $this->get('resymfcms.configurator.object');
+
         $objectMapper = $this->get('resymfcms.object.mapper');
 
         $objectType = $objectMapper->getMappedObject($type);
@@ -95,6 +101,8 @@ class AdminMenuController extends Controller
                 $methodName = 'set' . $field['name'];
                 $object->$methodName($request->get($field['name']));
             }
+
+            $objectConfigurator->setInitialValuesFromAnnotations($objectType, $object, $type);
             $em = $this->getDoctrine()->getManager();
             $em->persist($object);
             $em->flush();
@@ -104,12 +112,12 @@ class AdminMenuController extends Controller
         return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName));
     }
 
+
     /**
-     * Edit object base on url and request parameters.
-     *
      * @param $type
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
     public function editAction($type, $id)
     {
@@ -129,25 +137,33 @@ class AdminMenuController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-//        TODO: if no object display error
-        $editObject = $em->getRepository($objectType)->createQueryBuilder('q')->where('q.id = :id')->setParameter('id', $id)->setMaxResults(1)->getQuery()->getResult();
-//        print_r($editObject[0]);
-//        die();
+        $editObject = $em->getRepository($objectType)
+            ->createQueryBuilder('q')
+            ->where('q.id = :id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
 
-        if ($request->isMethod('POST')) {
+        if (!$editObject) {
+            // TODO: może redirect do tworzenia ?
+            throw new \Exception('Object not found');
+        }
 
-            $object = $editObject[0];
+
+        if ($request->isMethod('POST') && $editObject) {
+
             foreach ($formConfig->fields as $field) {
                 $methodName = 'set' . $field['name'];
-                $object->$methodName($request->get($field['name']));
+                $editObject->$methodName($request->get($field['name']));
             }
             $em = $this->getDoctrine()->getManager();
-            $em->persist($object);
+            $em->persist($editObject);
             $em->flush();
         }
 
-        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName, 'edit_object' => $editObject[0]));
+        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName, 'edit_object' => $editObject));
     }
 
     public function deleteAction($type, $id)

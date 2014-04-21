@@ -13,6 +13,7 @@ admin:
 #        icon: 'file'
         plural_label: 'Pages'
         singular_label: 'Page'
+        slug: ''
         #author, time, object values
 #        history: 50
 #        role: 'ROLE_ADMIN'

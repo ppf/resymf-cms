@@ -41,7 +41,6 @@ class Sprint
      */
     private $id;
 
-
     /**
      * @var string
      *

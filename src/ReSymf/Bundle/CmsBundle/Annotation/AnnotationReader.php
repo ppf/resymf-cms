@@ -20,8 +20,10 @@ class AnnotationReader
 
     private $reader;
 
+
     /**
      * @param $reader
+     * @param $objectConfigurator
      */
     public function __construct($reader)
     {
@@ -68,9 +70,6 @@ class AnnotationReader
             }
         }
 
-//        echo '<pre>';
-//        print_r($tableConfig);
-//        echo '</pre>';
         return $tableConfig;
     }
 

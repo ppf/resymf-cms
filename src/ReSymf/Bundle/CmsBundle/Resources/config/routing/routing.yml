@@ -1,6 +1,6 @@
-re_symf_cms_main:
-    pattern: /
-    defaults: { _controller: "ReSymfCmsBundle:Default:index" }
+#re_symf_cms_main:
+#    pattern: /
+#    defaults: { _controller: "ReSymfCmsBundle:Default:index" }
 
 re_symf_cms_object:
     resource: "@ReSymfCmsBundle/Resources/config/routing/admin/object.yml"
@@ -13,10 +13,10 @@ re_symf_cms_admin:
 #on the end of routing document, if no matching url
 re_symf_cms_not_found:
     pattern: /{slug}
-    defaults: { _controller: "ReSymfCmsBundle:Error:notFound" }
+    defaults: { _controller: "ReSymfCmsBundle:CmsRouting:index" }
     requirements:
         _method: GET
-        slug: ".+"
+        slug: ".*"
 
 
 

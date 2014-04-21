@@ -1,5 +1,5 @@
 {% macro autolink(url,name,class) %}
-    <a href="{{ url | default('http:bizneslan.pl') }}">
-        {{ name | url | default('http:bizneslan.pl') }}
+    <a href="{{ url | default('http://bizneslan.pl') }}">
+        {{ name | url | default('http://bizneslan.pl') }}
     </a>
 {% endmacro %}
