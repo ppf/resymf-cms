@@ -77,6 +77,42 @@ class ObjectConfigurator
         return $object;
     }
 
+ public function checkUniqueValuesFromAnnotations($classNameSpace, $object, $adminConfigKey)
+    {
+        if (!isset($classNameSpace)) {
+            return false;
+        }
+        $formConfig = new \stdClass;
+
+        $reflectionClass = new \ReflectionClass($classNameSpace);
+
+        $properties = $reflectionClass->getProperties();
+        $formConfig->fields = array();
+        foreach ($properties as $reflectionProperty) {
+            $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
+            if (null !== $annotation) {
+                if ($annotation->getAutoInput()) {
+                    $autoInputType = $annotation->getAutoInput();
+                    $newValue = '';
+                    switch ($autoInputType) {
+                        case 'uniqueSlug' :
+                            $fieldName = $reflectionProperty->getName();
+                            $getMethodName = 'get' . $fieldName;
+                            $slug = $object->$getMethodName();
+                            $newValue = $this->generateUniqueSlug($adminConfigKey, $slug);
+                            $setMethodName = 'set' . $fieldName;
+                            $object->$setMethodName($newValue);
+                            break;
+                        default :
+                            // do nothing
+                            break;
+                    }
+                }
+            }
+        }
+        return $object;
+    }
+
     public function generateUniqueSlug($adminConfigKey, $slug)
     {
 
@@ -102,11 +138,12 @@ class ObjectConfigurator
         $entities = array();
         $adminConfig = $this->adminConfigurator->getAdminConfig();
 
-        $baseEntity = $adminConfig['$adminConfigKey'];
+        $baseEntity = $adminConfig[$adminConfigKey];
         $baseSlug = $baseEntity['slug'];
 
         foreach ($adminConfig as $key => $value) {
-            if (!isset($adminConfig[$key]['slug']) && $adminConfig[$key]['slug'] ==  $baseSlug) {
+
+            if (isset($value['slug']) && $value['slug'] ==  $baseSlug) {
                 $entities[] = $adminConfig[$key]['class'];
             }
         }

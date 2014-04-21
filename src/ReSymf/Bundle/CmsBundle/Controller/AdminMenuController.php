@@ -130,6 +130,8 @@ class AdminMenuController extends Controller
         $adminConfigurator = $this->get('resymfcms.configurator.admin');
         $objectMapper = $this->get('resymfcms.object.mapper');
 
+        $objectConfigurator = $this->get('resymfcms.configurator.object');
+
         $objectType = $objectMapper->getMappedObject($type);
         $annotationReader = $this->get('resymfcms.annotation.reader');
 
@@ -158,6 +160,8 @@ class AdminMenuController extends Controller
                 $methodName = 'set' . $field['name'];
                 $editObject->$methodName($request->get($field['name']));
             }
+            $objectConfigurator->checkUniqueValuesFromAnnotations($objectType, $editObject, $type);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($editObject);
             $em->flush();
