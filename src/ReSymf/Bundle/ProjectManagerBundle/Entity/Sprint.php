@@ -64,7 +64,7 @@ class Sprint
     /**
      * @var Task
      *
-     * @Form(type="relation", relationType="many", class="ReSymfCms\Bundle\ProjectManagerBundle\Task")
+     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Task")
      * @Table(display=false)
      *
      * @ORM\OneToMany(targetEntity="Task", mappedBy="sprint")
@@ -74,8 +74,8 @@ class Sprint
     /**
      * @var Project
      *
-     * @Form(type="relation", relationType="one", class="ReSymfCms\Bundle\ProjectManagerBundle\Project")
-     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Project")
+     * @Form(type="relation", relationType="one", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project")
+     * @Table(format="text", relation=true, class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project")
      *
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
      */
@@ -95,7 +95,7 @@ class Sprint
      * @var Documents
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymfCms\Bundle\ProjectManagerBundle\Document")
+     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */
@@ -115,7 +115,7 @@ class Sprint
      * @var Terms
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymfCms\Bundle\ProjectManagerBundle\Term")
+     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Term")
      *
      * @ORM\ManyToMany(targetEntity="Term")
      */

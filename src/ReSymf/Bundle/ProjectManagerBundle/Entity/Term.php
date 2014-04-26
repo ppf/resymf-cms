@@ -41,6 +41,16 @@ class Term
     private $id;
 
     /**
+     * @var string
+     *
+     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Form(fieldLabel="Page Name",type="text",required=true)
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
      * @var \DateTime
      *
      * @Table(label="Date", format="date", dateFormat="Y-m-d H:i:s")
@@ -91,4 +101,37 @@ class Term
     {
         $this->description = $description;
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 } 

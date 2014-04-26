@@ -160,6 +160,7 @@ class AdminMenuController extends Controller
                 $methodName = 'set' . $field['name'];
                 $editObject->$methodName($request->get($field['name']));
             }
+
             $objectConfigurator->checkUniqueValuesFromAnnotations($objectType, $editObject, $type);
 
             $em = $this->getDoctrine()->getManager();
@@ -167,7 +168,20 @@ class AdminMenuController extends Controller
             $em->flush();
         }
 
-        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName, 'edit_object' => $editObject));
+        $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $editObject);
+//        print_r($multiSelectValues);
+//        die();
+
+        return $this->render(
+            'ReSymfCmsBundle:adminmenu:create.html.twig',
+            array(
+                'menu' => $adminConfigurator->getAdminConfig(),
+                'site_config' => $adminConfigurator->getSiteConfig(),
+                'form_config' => $formConfig, 'route' => $routeName,
+                'edit_object' => $editObject,
+                'multi_select' => $multiSelectValues
+            )
+        );
     }
 
     public function deleteAction($type, $id)

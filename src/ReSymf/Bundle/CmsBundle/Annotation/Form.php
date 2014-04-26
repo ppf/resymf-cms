@@ -29,6 +29,7 @@ class Form
     private $relationType;
     private $autoInput = false;
     private $class;
+    private $displayField;
 
     /**
      * save all @Form annotations from Entity to this Form object
@@ -152,6 +153,22 @@ class Form
     public function getAutoInput()
     {
         return $this->autoInput;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayField()
+    {
+        return $this->displayField;
+    }
+
+    /**
+     * @param mixed $displayField
+     */
+    public function setDisplayField($displayField)
+    {
+        $this->displayField = $displayField;
     }
 
 } 

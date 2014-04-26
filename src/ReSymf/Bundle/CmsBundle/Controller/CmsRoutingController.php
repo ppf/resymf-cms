@@ -29,7 +29,7 @@ class CmsRoutingController extends Controller
             ->getQuery()
             ->getOneOrNullResult();
 
-        if($pageObject){
+        if($pageObject) {
             return $this->render('ReSymfCmsBundle::index.html.twig', array( 'pageObject' => $pageObject ));
         } else {
             return $this->notFoundAction();
