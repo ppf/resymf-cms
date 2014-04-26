@@ -39,6 +39,8 @@ class ObjectConfigurator
     public function  generateMultiSelectOptions($classNameSpace, $object)
     {
         $multiSelect = array();
+        $displayMethodName = 'getName';
+
         $fields = array('q.id');
 
         if (!isset($classNameSpace)) {
@@ -54,39 +56,94 @@ class ObjectConfigurator
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
             if (null !== $annotation) {
                 if ($annotation->getType() == 'relation') {
+
+                    // get name of current field
                     $fieldName = $reflectionProperty->getName();
+
+                    // get relation type
                     $relationType = $annotation->getRelationType();
                     $class = $annotation->getClass();
                     $displayField = $annotation->getDisplayField();
-                    if($displayField) {
-                        $fields[] = 'q.'.$displayField;
+                    if ($displayField) {
+                        $fields[] = 'q.' . $displayField;
+                        $displayMethodName = 'get' . $displayField;
                     } else {
                         $fields[] = 'q.name';
                     }
 
-                    // get all options to select
-                    $allMultiSelectObjects = $this->entityManager->getRepository($class)->createQueryBuilder('q')->select($fields)->getQuery()->getResult();
-
-                    //get selected options
                     $methodName = 'get' . $fieldName;
-                    $selectedOptions = $object->$methodName();
-                    print_r($selectedOptions);
-                    die();
-                    $multiSelect[$fieldName]['all'] = $allMultiSelectObjects;
-                    $multiSelect[$fieldName]['selected'] = $selectedOptions;
+                    $selectedOptionsObjects = $object->$methodName();
 
-                    switch($relationType){
+                    if (count($selectedOptionsObjects) > 0) {
+//print_r()
+                        $selectedOptions = array();
+
+                        foreach ($selectedOptionsObjects as $option) {
+                            $tempOption = array();
+                            $tempOption['name'] = $option->$displayMethodName();
+                            $tempOption['id'] = $option->getId();
+                            $selectedOptions[$fieldName] = $tempOption;
+                        }
+
+                        $selectedIds = $this->array_value_recursive('id', $selectedOptions[$fieldName]);
+
+                        // get all options to select
+                        $allMultiSelectObjects = $this->entityManager
+                            ->getRepository($class)
+                            ->createQueryBuilder('q')
+                            ->select($fields)
+                            ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
+                            ->getQuery()
+                            ->getResult();
+                        $multiSelect[$fieldName]['selected'] = $selectedOptions;
+                    } else {
+                        $multiSelect[$fieldName]['selected'] = array();
+
+                        $allMultiSelectObjects = $this->entityManager
+                            ->getRepository($class)
+                            ->createQueryBuilder('q')
+                            ->select($fields)
+                            ->getQuery()
+                            ->getResult();
+                    }
+//                    print_r($allMultiSelectObjects);
+//                    die();
+//
+
+                    $multiSelect[$fieldName]['all'] = $allMultiSelectObjects;
+
+
+                    switch ($relationType) {
                         case 'manyToMany':
+                            // can check many
                             break;
                         case 'oneToMany':
+                            // can check many
                             break;
                         case 'oneToOne':
+                            // can check one
                             break;
                     }
                 }
             }
         }
         return $multiSelect;
+    }
+
+    /**
+     * Get all values from specific key in a multidimensional array
+     *
+     * @param $key string
+     * @param $arr array
+     * @return null|string|array
+     */
+    public function array_value_recursive($key, array $arr)
+    {
+        $val = array();
+        array_walk_recursive($arr, function ($v, $k) use ($key, &$val) {
+            if ($k == $key) array_push($val, $v);
+        });
+        return $val;
     }
 
     public function setInitialValuesFromAnnotations($classNameSpace, $object, $adminConfigKey)
