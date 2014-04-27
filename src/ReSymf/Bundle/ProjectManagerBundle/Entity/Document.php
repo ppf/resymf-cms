@@ -22,6 +22,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Table()
  * @ORM\Entity
  *
+ * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
+ * @Form(editLabel="Edit Document", createLabel="Create Document")
+ *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class Document

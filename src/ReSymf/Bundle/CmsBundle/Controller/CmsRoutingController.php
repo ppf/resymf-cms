@@ -30,7 +30,7 @@ class CmsRoutingController extends Controller
             ->getOneOrNullResult();
 
         if($pageObject) {
-            return $this->render('ReSymfCmsBundle::index.html.twig', array( 'pageObject' => $pageObject ));
+            return $this->render('ReSymfCmsBundle:cms:index.html.twig', array( 'pageObject' => $pageObject ));
         } else {
             return $this->notFoundAction();
         }
@@ -38,11 +38,11 @@ class CmsRoutingController extends Controller
 
     public function notFoundAction()
     {
-        return $this->render('ReSymfCmsBundle:error:notfound.html.twig');
+        return $this->render('ReSymfCmsBundle:cms:notfound.html.twig');
     }
 
     public function accessDeniedAction()
     {
-        return $this->render('ReSymfCmsBundle:error:accessdenied.html.twig');
+        return $this->render('ReSymfCmsBundle:cms:accessdenied.html.twig');
     }
 } 

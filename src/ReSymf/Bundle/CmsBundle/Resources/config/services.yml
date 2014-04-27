@@ -4,7 +4,7 @@ services:
         arguments: []
     resymfcms.configurator.object:
         class: ReSymf\Bundle\CmsBundle\Services\ObjectConfigurator
-        arguments: ["@resymfcms.configurator.admin", @annotation_reader, @security.context, @doctrine.orm.entity_manager]
+        arguments: ["@resymfcms.configurator.admin", @annotation_reader, "@resymfcms.annotation.reader", @security.context, @doctrine.orm.entity_manager]
     resymfcms.object.mapper:
         class: ReSymf\Bundle\CmsBundle\Services\ObjectMapper
         arguments: ["@resymfcms.configurator.admin"]

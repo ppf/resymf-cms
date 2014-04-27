@@ -18,6 +18,7 @@ class ObjectConfigurator
 
     private $adminConfigurator;
     private $reader;
+    private $resymfReader;
     private $security;
     private $entityManager;
 
@@ -28,15 +29,16 @@ class ObjectConfigurator
      * @param $security
      * @param $entityManager
      */
-    public function __construct(AdminConfigurator $adminConfigurator, $reader, SecurityContext $security, EntityManager $entityManager)
+    public function __construct(AdminConfigurator $adminConfigurator, $annotationReader, $resymfAnnotationReader, SecurityContext $security, EntityManager $entityManager)
     {
         $this->adminConfigurator = $adminConfigurator;
-        $this->reader = $reader; // set annotations reader
+        $this->reader = $annotationReader; // set annotations reader
+        $this->resymfReader = $resymfAnnotationReader; // set annotations reader
         $this->security = $security;
         $this->entityManager = $entityManager;
     }
 
-    public function  generateMultiSelectOptions($classNameSpace, $object)
+    public function  generateMultiSelectOptions($classNameSpace, $object, $single = false)
     {
         $multiSelect = array();
         $displayMethodName = 'getName';
@@ -62,6 +64,12 @@ class ObjectConfigurator
 
                     // get relation type
                     $relationType = $annotation->getRelationType();
+
+//                    if (
+//                        ($single && ($relationType == 'oneToOne' || $relationType == 'manyToOne')) ||
+//                        (!$single)
+//                    ) {
+
                     $class = $annotation->getClass();
                     $displayField = $annotation->getDisplayField();
                     if ($displayField) {
@@ -74,56 +82,88 @@ class ObjectConfigurator
                     $methodName = 'get' . $fieldName;
                     $selectedOptionsObjects = $object->$methodName();
 
-                    if (count($selectedOptionsObjects) > 0) {
-//print_r()
-                        $selectedOptions = array();
+//                    if(!is_array($selectedOptionsObjects)){
+//                        $selectedOptionsObjects = array($selectedOptionsObjects);
+//                    }
 
-                        foreach ($selectedOptionsObjects as $option) {
-                            $tempOption = array();
-                            $tempOption['name'] = $option->$displayMethodName();
-                            $tempOption['id'] = $option->getId();
+                    if ($relationType == 'oneToOne' || $relationType == 'manyToOne') {
+
+                        $selectedOptions = array();
+                        if($selectedOptionsObjects){
+                            $tempOption['name'] = $selectedOptionsObjects->$displayMethodName();
+                            $tempOption['id'] = $selectedOptionsObjects->getId();
                             $selectedOptions[$fieldName] = $tempOption;
                         }
 
-                        $selectedIds = $this->array_value_recursive('id', $selectedOptions[$fieldName]);
-
-                        // get all options to select
-                        $allMultiSelectObjects = $this->entityManager
-                            ->getRepository($class)
-                            ->createQueryBuilder('q')
-                            ->select($fields)
-                            ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
-                            ->getQuery()
-                            ->getResult();
-                        $multiSelect[$fieldName]['selected'] = $selectedOptions;
                     } else {
-                        $multiSelect[$fieldName]['selected'] = array();
 
-                        $allMultiSelectObjects = $this->entityManager
-                            ->getRepository($class)
-                            ->createQueryBuilder('q')
-                            ->select($fields)
-                            ->getQuery()
-                            ->getResult();
+                        if (count($selectedOptionsObjects) > 0) {
+
+                            $selectedOptions = array();
+
+                            foreach ($selectedOptionsObjects as $option) {
+                                $tempOption = array();
+//                            if(!method_exists ( $option, $displayMethodName )) {
+//                                print_r($selectedOptionsObjects);
+//                                echo '<br/>';
+//                                die();
+//                            }
+                                $tempOption['name'] = $option->$displayMethodName();
+                                $tempOption['id'] = $option->getId();
+                                $selectedOptions[$fieldName] = $tempOption;
+                            }
+
+                            $selectedIds = $this->array_value_recursive('id', $selectedOptions[$fieldName]);
+
+                            // get all options to select
+                            $allMultiSelectObjects = $this->entityManager
+                                ->getRepository($class)
+                                ->createQueryBuilder('q')
+                                ->select($fields)
+                                ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
+                                ->getQuery()
+                                ->getResult();
+                            $multiSelect[$fieldName]['selected'] = $selectedOptions;
+
+                        } else {
+                            $multiSelect[$fieldName]['selected'] = false;
+
+                            $allMultiSelectObjects = $this->entityManager
+                                ->getRepository($class)
+                                ->createQueryBuilder('q')
+                                ->select($fields)
+                                ->getQuery()
+                                ->getResult();
+
+                        }
                     }
-//                    print_r($allMultiSelectObjects);
-//                    die();
-//
-
                     $multiSelect[$fieldName]['all'] = $allMultiSelectObjects;
+                    if ($relationType == 'oneToOne' || $relationType == 'manyToOne') continue;
+//                    }
 
+                    // for toMany relations
+                    $multiSelect[$fieldName]['entities'] = $selectedOptionsObjects->toArray();
+                    $tableConfig = $this->resymfReader->readTableAnnotation($class);
+                    $multiSelect[$fieldName]['table_config'] = $tableConfig;
+                    $multiSelect[$fieldName]['object_type'] = $this->getAdminConfigKeyByClassNAme($class);
 
-                    switch ($relationType) {
-                        case 'manyToMany':
-                            // can check many
-                            break;
-                        case 'oneToMany':
-                            // can check many
-                            break;
-                        case 'oneToOne':
-                            // can check one
-                            break;
-                    }
+//                    print_r($multiSelect[$fieldName]['entities']);
+//                    die();
+//                    switch ($relationType) {
+//                        case 'manyToMany':
+//                            // can check many
+//                        case 'oneToMany':
+//                            // can check many
+//                            //maybe in one var always
+//
+//                            break;
+//                        case 'oneToOne':
+//                            // can check one
+//                            break;
+//                        case 'oneToOne':
+//                            // can check one
+//                            break;
+//                    }
                 }
             }
         }
@@ -146,8 +186,25 @@ class ObjectConfigurator
         return $val;
     }
 
-    public function setInitialValuesFromAnnotations($classNameSpace, $object, $adminConfigKey)
+    private function getAdminConfigKeyByClassNAme($className)
     {
+        $entities = array();
+        $adminConfig = $this->adminConfigurator->getAdminConfig();
+
+        foreach ($adminConfig as $key => $value) {
+
+            if (isset($value['class']) && $value['class'] == $className) {
+                return $key;
+            }
+        }
+
+        return false;
+    }
+
+    public function setInitialValuesFromAnnotations($classNameSpace, $object)
+    {
+        $adminConfigKey = $this->getAdminConfigKeyByClassNAme($classNameSpace);
+
         if (!isset($classNameSpace)) {
             return false;
         }

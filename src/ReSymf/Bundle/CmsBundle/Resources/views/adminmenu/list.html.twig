@@ -1,72 +1,7 @@
 {% extends 'ReSymfCmsBundle:adminmenu:baseAdmin.html.twig' %}
 
 {% block content %}
-    {% if table_config is defined %}
-        <table class="footable metro-blue"
-               data-page-size="{% if table_config.pageSize %}{{ table_config.pageSize }} {% endif %}">
-            <thead>
-            <tr>
-                {% if table_config.fields %}
-                    <th class="fooEditable" data-sort-ignore="true" data-hide="phone" data-ft-control="checkbox"></th>
-                    {% for field in table_config.fields %}
-                        <th {% if field.hideOnDevice is defined %} data-hide={{ field.hideOnDevice }}{% endif %}>
-                            {% if field.label is defined %}
-                                {{ field.label }}
-                            {% else %}
-                                {{ field.name }}
-                            {% endif %}
-                        </th>
-                    {% endfor %}
-                    <th data-sort-ignore="true"></th>
-                {% endif %}
-            </tr>
-            </thead>
-            <tbody>
-            {% if entities %}
-                {% for entity in entities %}
-                    <tr>
-                        <td>
-                                <input type="checkbox" value="check" name="check" class="prettyCheckbox" />
-                        </td>
-                        {% if table_config.fields %}
 
-                            {% for field in table_config.fields %}
-                                <td>
-                                    {% if field.format is not defined or field.format  == 'text' %}
-                                        {{ attribute(entity,field.name) }}
-                                    {% elseif field.format == 'html' %}
-                                        {{ attribute(entity,field.name) | striptags }}
-                                    {% elseif field.format == 'date' %}
-                                        {{ attribute(entity,field.name) | date(field.dateFormat) }}
-                                    {% else %}
-                                        'Not set'
-                                    {% endif %}
-                                </td>
-                            {% endfor %}
-                            <td>
-                                {# TODO: check actions and roles #}
-                                <a href="{{ path('object_edit', {'type' : object_type, 'id' : entity.id }) }}" class="action-link"><i class="fa fa-edit fa-2x"></i></a>
-                                <a href="{{ path('object_delete', {'type' : object_type, 'id' : entity.id }) }}" class="action-link"><i class="fa fa-trash-o fa-2x"></i></a>
-                            </td>
+    {% include 'ReSymfCmsBundle:adminmenu:table.html.twig' with {'table_config':table_config, 'entities': entities} %}
 
-
-                        {% endif %}
-
-
-                        {#<td>Traffic Court Referee</td>#}
-                        {#<td data-value="78025368997">22 Jun 1972</td>#}
-                        {#<td data-value="1"><span class="status-metro status-active" title="Active">Active</span></td>#}
-                    </tr>
-                {% endfor %}
-            {% endif %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="{{  table_config.fields|length +2 }}">
-                    <div class="{% if table_config.paging %} pagination {% endif %} pagination-centered"></div>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
-    {% endif %}
 {% endblock %}

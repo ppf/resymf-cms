@@ -46,6 +46,9 @@ class AnnotationReader
         $reflectionClass = new \ReflectionClass($classNameSpace);
         $classAnnotations = $this->reader->getClassAnnotation($reflectionClass, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
 
+//        print_r($classAnnotations);
+//        die();
+
         $tableConfig->sorting = $classAnnotations->getSorting();
         $tableConfig->paging = $classAnnotations->getPaging();
         $tableConfig->pageSize = $classAnnotations->getPageSize();

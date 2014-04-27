@@ -13,28 +13,29 @@
                             <div class="col-lg-9">
                                 {# TODO: wstawić z ustawień #}
                                 <legend>
-                                    {% if edit_object is defined and form_config.editLabel is defined %}
+                                    {% if edit_object is defined and form_config.showLabel is defined %}
                                         {{ form_config.editLabel }}
-                                    {% elseif form_config.createLabel is defined %}
-                                        {{ form_config.createLabel }}
                                     {% else %}
-                                        Edit Object:
+                                        Show Object:
                                     {% endif %}
                                 </legend>
                                 <hr style="border-top: 1px dotted #616161;"/>
                             </div>
                         </div>
-                       {% include 'ReSymfCmsBundle:adminmenu:formFields.html.twig' with {'fields': form_config.fields } %}
-                        <div class="form-group">
-                            <div class="col-lg-2 col-md-2 col-sm-2">
-                            </div>
-                            <div class="col-lg-9 col-md-9 col-sm-9">
-                                <input type="submit" class="btn btn-primary" value="{{ 'object.save'|trans }}"/>
-                            </div>
-                        </div>
+                        {% include 'ReSymfCmsBundle:adminmenu:showFields.html.twig' with {'fields': form_config.fields } %}
+
                     </fieldset>
                 </form>
             </div>
+            {% if form_config.fields %}
+                {% for field in form_config.fields %}
+                    {% if (field.relationType == 'manyToMany') or (field.relationType == 'oneToMany') %}
+                        {% if multi_select[field.name]['table_config'] is defined %}
+                            {% include 'ReSymfCmsBundle:adminmenu:table.html.twig' with {'table_config': multi_select[field.name]['table_config'], 'entities': multi_select[field.name]['entities'], 'object_type':  multi_select[field.name]['object_type']} %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="col-lg-2 col-md-2"></div>
     {% endif %}

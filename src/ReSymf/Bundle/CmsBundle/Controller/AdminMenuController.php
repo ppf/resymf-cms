@@ -66,7 +66,13 @@ class AdminMenuController extends Controller
             ->getQuery()
             ->getResult();
 
-        return $this->render('ReSymfCmsBundle:adminmenu:list.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'entities' => $entities, 'table_config' => $tableConfig, 'object_type' => $type));
+        return $this->render('ReSymfCmsBundle:adminmenu:list.html.twig', array(
+            'menu' => $adminConfigurator->getAdminConfig(),
+            'site_config' => $adminConfigurator->getSiteConfig(),
+            'entities' => $entities,
+            'table_config' => $tableConfig,
+            'object_type' => $type)
+        );
     }
 
 
@@ -161,7 +167,7 @@ class AdminMenuController extends Controller
                 $editObject->$methodName($request->get($field['name']));
             }
 
-            $objectConfigurator->checkUniqueValuesFromAnnotations($objectType, $editObject, $type);
+            $objectConfigurator->checkUniqueValuesFromAnnotations($objectType, $editObject);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($editObject);
@@ -174,6 +180,62 @@ class AdminMenuController extends Controller
 
         return $this->render(
             'ReSymfCmsBundle:adminmenu:create.html.twig',
+            array(
+                'menu' => $adminConfigurator->getAdminConfig(),
+                'site_config' => $adminConfigurator->getSiteConfig(),
+                'form_config' => $formConfig, 'route' => $routeName,
+                'edit_object' => $editObject,
+                'multi_select' => $multiSelectValues
+            )
+        );
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function showAction($type, $id)
+    {
+        if (!$id) {
+            return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
+        }
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        $objectMapper = $this->get('resymfcms.object.mapper');
+
+        $objectConfigurator = $this->get('resymfcms.configurator.object');
+
+        $objectType = $objectMapper->getMappedObject($type);
+        $annotationReader = $this->get('resymfcms.annotation.reader');
+
+        $formConfig = $annotationReader->readFormAnnotation($objectType);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $editObject = $em->getRepository($objectType)
+            ->createQueryBuilder('q')
+            ->where('q.id = :id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+
+        if (!$editObject) {
+            // TODO: może redirect do tworzenia ?
+            throw new \Exception('Object not found');
+        }
+
+        $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $editObject);
+//        print_r($multiSelectValues);
+//        die();
+
+        return $this->render(
+            'ReSymfCmsBundle:adminmenu:show.html.twig',
             array(
                 'menu' => $adminConfigurator->getAdminConfig(),
                 'site_config' => $adminConfigurator->getSiteConfig(),

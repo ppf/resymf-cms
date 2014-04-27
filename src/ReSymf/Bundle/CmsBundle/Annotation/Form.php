@@ -30,6 +30,7 @@ class Form
     private $autoInput = false;
     private $class;
     private $displayField;
+    private $multiSelectInEditForm = false;
 
     /**
      * save all @Form annotations from Entity to this Form object
@@ -169,6 +170,22 @@ class Form
     public function setDisplayField($displayField)
     {
         $this->displayField = $displayField;
+    }
+
+    /**
+     * @param boolean $multiSelectInEditForm
+     */
+    public function setMultiSelectInEditForm($multiSelectInEditForm)
+    {
+        $this->multiSelectInEditForm = $multiSelectInEditForm;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getMultiSelectInEditForm()
+    {
+        return $this->multiSelectInEditForm;
     }
 
 } 
