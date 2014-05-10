@@ -94,6 +94,7 @@ class AnnotationReader
 
         $formConfig->editLabel = $classAnnotations->getEditLabel();
         $formConfig->createLabel = $classAnnotations->getCreateLabel();
+        $formConfig->showLabel = $classAnnotations->getShowLabel();
 
         $properties = $reflectionClass->getProperties();
         $formConfig->fields = array();

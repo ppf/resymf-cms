@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", createLabel="Create Sprint")
+ * @Form(editLabel="Edit Sprint", showLabel="Show Sprint", createLabel="Create Sprint")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -74,7 +74,7 @@ class Sprint
     /**
      * @var Project
      *
-     * @Form(type="relation", relationType="one", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project")
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project")
      * @Table(display=false)
      *
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
@@ -97,7 +97,7 @@ class Sprint
      * @var Documents
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */
@@ -117,7 +117,7 @@ class Sprint
      * @var Terms
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Term")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Term")
      *
      * @ORM\ManyToMany(targetEntity="Term")
      */

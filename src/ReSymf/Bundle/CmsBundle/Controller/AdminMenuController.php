@@ -234,6 +234,7 @@ class AdminMenuController extends Controller
 //        print_r($multiSelectValues);
 //        die();
 
+//        $multiSelectValues
         return $this->render(
             'ReSymfCmsBundle:adminmenu:show.html.twig',
             array(

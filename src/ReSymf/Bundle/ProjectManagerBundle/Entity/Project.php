@@ -22,14 +22,12 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", createLabel="Create project")
+ * @Form(editLabel="Edit project", showLabel="Show Project", createLabel="Create project")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
 class Project
 {
-
-
     /**
      * @var integer
      *
@@ -106,7 +104,7 @@ class Project
      * @var Contacts
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="ManyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Contact", displayField="name", fieldLabel="Contacts")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Contact", displayField="name", fieldLabel="Contacts")
      *
      * @ORM\ManyToMany(targetEntity="Contact")
      */
@@ -116,7 +114,7 @@ class Project
      * @var Files
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */

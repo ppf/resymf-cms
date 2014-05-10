@@ -25,6 +25,7 @@ class Form
     private $readOnly;
     private $editLabel = 'Edit Object';
     private $createLabel = 'Create Object';
+    private $showLabel = 'Show Object';
     private $fieldLabel;
     private $relationType;
     private $autoInput = false;
@@ -46,6 +47,22 @@ class Form
             }
             $this->$key = $value;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShowLabel()
+    {
+        return $this->showLabel;
+    }
+
+    /**
+     * @param string $showLabel
+     */
+    public function setShowLabel($showLabel)
+    {
+        $this->showLabel = $showLabel;
     }
 
     /**
@@ -173,19 +190,19 @@ class Form
     }
 
     /**
-     * @param boolean $multiSelectInEditForm
-     */
-    public function setMultiSelectInEditForm($multiSelectInEditForm)
-    {
-        $this->multiSelectInEditForm = $multiSelectInEditForm;
-    }
-
-    /**
      * @return boolean
      */
     public function getMultiSelectInEditForm()
     {
         return $this->multiSelectInEditForm;
+    }
+
+    /**
+     * @param boolean $multiSelectInEditForm
+     */
+    public function setMultiSelectInEditForm($multiSelectInEditForm)
+    {
+        $this->multiSelectInEditForm = $multiSelectInEditForm;
     }
 
 } 

@@ -34,7 +34,7 @@
 
                 <div class="col-lg-9">
                     <span class="" name="{{ field.name }}"
-                              value=""> {{ value | raw }}</span>
+                          value=""> {{ value | raw }}</span>
                 </div>
             </div>
         {% endif %}
@@ -52,13 +52,17 @@
                     <div class="col-lg-9">
 
                         <select class="multiselect multiselect-search" multiple="multiple" name="{{ field.name }}">
-                            {% for option in multi_select[field.name]['all'] %}
-                                <option value="{{ option.id }}">{{ option.name }}</option>
-                            {% endfor %}
+                            {% if multi_select[field.name]['all'] is  defined %}
+                                {% for option in multi_select[field.name]['all'] %}
+                                    <option value="{{ option.id }}">{{ option.name }}</option>
+                                {% endfor %}
+                            {% endif %}
 
-                            {% for option in multi_select[field.name]['selected'] %}
-                                <option value="{{ option.id }}" selected="selected">{{ option.name }}</option>
-                            {% endfor %}
+                            {% if multi_select[field.name]['selected'] is  defined %}
+                                {% for option in multi_select[field.name]['selected'] %}
+                                    <option value="{{ option.id }}" selected="selected">{{ option.name }}</option>
+                                {% endfor %}
+                            {% endif %}
 
                             {#<option value="tomatoes">Tomatoes</option>#}
                             {#<option value="mozarella">Mozzarella</option>#}

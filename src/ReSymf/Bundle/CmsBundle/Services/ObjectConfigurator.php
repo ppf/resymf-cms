@@ -108,6 +108,7 @@ class ObjectConfigurator
 //                                echo '<br/>';
 //                                die();
 //                            }
+//                                var_dump($fieldName);
                                 $tempOption['name'] = $option->$displayMethodName();
                                 $tempOption['id'] = $option->getId();
                                 $selectedOptions[$fieldName] = $tempOption;
@@ -126,7 +127,7 @@ class ObjectConfigurator
                             $multiSelect[$fieldName]['selected'] = $selectedOptions;
 
                         } else {
-                            $multiSelect[$fieldName]['selected'] = false;
+                            $multiSelect[$fieldName]['selected'] = array();
 
                             $allMultiSelectObjects = $this->entityManager
                                 ->getRepository($class)
