@@ -88,12 +88,24 @@ class ObjectConfigurator
 
                     if ($relationType == 'oneToOne' || $relationType == 'manyToOne') {
 
+                        $selectedIds = array();
                         $selectedOptions = array();
-                        if($selectedOptionsObjects){
+                        if($selectedOptionsObjects) {
                             $tempOption['name'] = $selectedOptionsObjects->$displayMethodName();
                             $tempOption['id'] = $selectedOptionsObjects->getId();
                             $selectedOptions[$fieldName] = $tempOption;
+
+                            $selectedIds[] = $selectedOptionsObjects->getId();
                         }
+
+                        $allMultiSelectObjects = $this->entityManager
+                            ->getRepository($class)
+                            ->createQueryBuilder('q')
+                            ->select($fields)
+                            ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
+                            ->getQuery()
+                            ->getResult();
+                        $multiSelect[$fieldName]['selected'] = $selectedOptions;
 
                     } else {
 
@@ -138,6 +150,7 @@ class ObjectConfigurator
 
                         }
                     }
+
                     $multiSelect[$fieldName]['all'] = $allMultiSelectObjects;
                     if ($relationType == 'oneToOne' || $relationType == 'manyToOne') continue;
 //                    }
@@ -299,8 +312,13 @@ class ObjectConfigurator
         return $pageObject;
     }
 
-    public function checkUniqueValuesFromAnnotations($classNameSpace, $object, $adminConfigKey)
+    public function checkUniqueValuesFromAnnotations($object, $adminConfigKey)
     {
+        $adminConfig = $this->adminConfigurator->getAdminConfig();
+
+        $baseEntity = $adminConfig[$adminConfigKey];
+        $classNameSpace = $baseEntity['class'];
+
         if (!isset($classNameSpace)) {
             return false;
         }

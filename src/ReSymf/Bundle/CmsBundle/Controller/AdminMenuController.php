@@ -167,7 +167,7 @@ class AdminMenuController extends Controller
                 $editObject->$methodName($request->get($field['name']));
             }
 
-            $objectConfigurator->checkUniqueValuesFromAnnotations($objectType, $editObject);
+            $objectConfigurator->checkUniqueValuesFromAnnotations($editObject, $type);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($editObject);

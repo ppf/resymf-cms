@@ -39,6 +39,7 @@
                                 {% endif %}
                                 :</label><br/>
                             {% include 'ReSymfCmsBundle:adminmenu:table.html.twig' with {'table_config': multi_select[field.name]['table_config'], 'entities': multi_select[field.name]['entities'], 'object_type':  multi_select[field.name]['object_type']} %}
+                            <button class="btn btn-info" style="float:right; margin-top: 15px;">Dodaj obiekt</button><br/><br/>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
