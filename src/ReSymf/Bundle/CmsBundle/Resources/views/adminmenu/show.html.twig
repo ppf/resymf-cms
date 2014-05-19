@@ -39,7 +39,10 @@
                                 {% endif %}
                                 :</label><br/>
                             {% include 'ReSymfCmsBundle:adminmenu:table.html.twig' with {'table_config': multi_select[field.name]['table_config'], 'entities': multi_select[field.name]['entities'], 'object_type':  multi_select[field.name]['object_type']} %}
-                            <button class="btn btn-info" style="float:right; margin-top: 15px;">Dodaj obiekt</button><br/><br/>
+                            {% set path = 'object' ~ '_' ~ 'create' %}
+            {% if  multi_select[field.name]['object_type'] %}
+                            <a href="{{ path( path, { 'type': multi_select[field.name]['object_type'] }  ) }}" class="btn btn-info" style="float:right; margin-top: 15px;">Add {{ field.name }}</a><br/><br/>
+                            {% endif  %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}

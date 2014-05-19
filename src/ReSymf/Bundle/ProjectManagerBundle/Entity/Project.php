@@ -226,6 +226,10 @@ class Project
         $this->sprints = $tasks;
     }
 
+    public function addSprint($sprint)
+    {
+        $this->sprints->add($sprint);
+    }
 
     /**
      * @return string

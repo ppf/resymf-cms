@@ -74,7 +74,7 @@ class AdminConfigurator
                 if (!isset($adminConfig[$key]['remote'])) {
                     $adminConfig[$key]['remote'] = false;
                 }
-
+                
                 if (!isset($adminConfig[$key]['object_prefix'])) {
                     $adminConfig[$key]['object_prefix'] = 'object';
                 }
@@ -84,6 +84,9 @@ class AdminConfigurator
                 throw new Exception('No template set in ' . $key . ' area in adminmenu.yml file');
             }
 
+                if (!isset($adminConfig[$key]['hidden'])) {
+                    $adminConfig[$key]['hidden'] = false;
+                }
             if (!isset($adminConfig[$key]['icon'])) {
                 $adminConfig[$key]['icon'] = 'file';
             }

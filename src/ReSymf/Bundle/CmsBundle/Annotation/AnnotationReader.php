@@ -104,8 +104,9 @@ class AnnotationReader
                 if($annotation->getDisplay()) {
                     $type = $annotation->getType();
                     $relationType = $annotation->getRelationType();
+                    $class = $annotation->getClass();
                     $fieldLabel = $annotation->getFieldLabel();
-                    $formConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType);
+                    $formConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class);
                 }
             } else {
                 $formConfig->fields[] = array('name' =>$reflectionProperty->getName());

@@ -64,7 +64,7 @@ class Sprint
     /**
      * @var Task
      *
-     * @Form(type="relation", relationType="many", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Task")
+     * @Form(type="relation", relationType="oneToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Task", fieldLabel="Tasks")
      * @Table(display=false)
      *
      * @ORM\OneToMany(targetEntity="Task", mappedBy="sprint")
@@ -270,5 +270,10 @@ class Sprint
     public function setTasks($tasks)
     {
         $this->tasks = $tasks;
+    }
+
+    public function addTask($task)
+    {
+        $this->tasks->add($task);
     }
 } 

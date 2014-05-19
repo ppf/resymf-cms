@@ -39,6 +39,16 @@ class Issue
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string
+     *
+     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Form(fieldLabel="Page Name",type="text",required=true)
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
 
     /**
      * @var Task
@@ -79,6 +89,22 @@ class Issue
      * @ORM\ManyToMany(targetEntity="Document")
      */
     private $documents;
+   
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 
     /**
      * @return \ReSymf\Bundle\ProjectManagerBundle\Entity\Documents

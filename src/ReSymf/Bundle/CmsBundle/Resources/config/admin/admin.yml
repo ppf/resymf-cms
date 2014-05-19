@@ -29,6 +29,7 @@ admin:
         plural_label: 'Sprints'
         icon: 'calendar-o'
         singular_label: 'Sprint'
+        hidden: true
 #       history: 50
     task:
         class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Task'
@@ -36,12 +37,29 @@ admin:
         plural_label: 'Tasks'
         icon: 'check-square-o'
         singular_label: 'Task'
+        hidden: true
     issue:
         class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Issue'
         actions: ['list','create','delete','update']
         plural_label: 'Issues'
         icon: 'bug'
         singular_label: 'Issue'
+        hidden: true
+#        history: 50
+    document:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Document'
+        actions: ['list','create','delete','update']
+        plural_label: 'Documents'
+        icon: 'envelope'
+        hidden: true
+        singular_label: 'Document'
+    term:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Term'
+        hidden: true
+        actions: ['list','create','delete','update']
+        plural_label: 'Terms'
+        icon: 'envelope'
+        singular_label: 'Term'
 #        history: 50
     contact:
         class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Contact'
@@ -49,7 +67,7 @@ admin:
         plural_label: 'Contacts'
         icon: 'envelope'
         singular_label: 'Contact'
-#        history: 50
+
     my_slug:
         type: 'custom_page'
         label: 'my custom title'

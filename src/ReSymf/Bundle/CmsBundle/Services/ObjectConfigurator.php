@@ -43,7 +43,6 @@ class ObjectConfigurator
         $multiSelect = array();
         $displayMethodName = 'getName';
 
-        $fields = array('q.id');
 
         if (!isset($classNameSpace)) {
             return false;
@@ -55,10 +54,13 @@ class ObjectConfigurator
         $properties = $reflectionClass->getProperties();
         $formConfig->fields = array();
         foreach ($properties as $reflectionProperty) {
+            $fields = array('q.id');
+
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
             if (null !== $annotation) {
                 if ($annotation->getType() == 'relation') {
 
+                    $selectedIds = array();
                     // get name of current field
                     $fieldName = $reflectionProperty->getName();
 
@@ -79,34 +81,25 @@ class ObjectConfigurator
                         $fields[] = 'q.name';
                     }
 
+                    if($object){
                     $methodName = 'get' . $fieldName;
                     $selectedOptionsObjects = $object->$methodName();
-
-//                    if(!is_array($selectedOptionsObjects)){
-//                        $selectedOptionsObjects = array($selectedOptionsObjects);
-//                    }
+                    } else {
+                    $selectedOptionsObjects = array();
+                    }
 
                     if ($relationType == 'oneToOne' || $relationType == 'manyToOne') {
 
-                        $selectedIds = array();
                         $selectedOptions = array();
-                        if($selectedOptionsObjects) {
+                        if ($selectedOptionsObjects) {
                             $tempOption['name'] = $selectedOptionsObjects->$displayMethodName();
                             $tempOption['id'] = $selectedOptionsObjects->getId();
                             $selectedOptions[$fieldName] = $tempOption;
 
                             $selectedIds[] = $selectedOptionsObjects->getId();
+
                         }
-
-                        $allMultiSelectObjects = $this->entityManager
-                            ->getRepository($class)
-                            ->createQueryBuilder('q')
-                            ->select($fields)
-                            ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
-                            ->getQuery()
-                            ->getResult();
                         $multiSelect[$fieldName]['selected'] = $selectedOptions;
-
                     } else {
 
                         if (count($selectedOptionsObjects) > 0) {
@@ -115,12 +108,6 @@ class ObjectConfigurator
 
                             foreach ($selectedOptionsObjects as $option) {
                                 $tempOption = array();
-//                            if(!method_exists ( $option, $displayMethodName )) {
-//                                print_r($selectedOptionsObjects);
-//                                echo '<br/>';
-//                                die();
-//                            }
-//                                var_dump($fieldName);
                                 $tempOption['name'] = $option->$displayMethodName();
                                 $tempOption['id'] = $option->getId();
                                 $selectedOptions[$fieldName] = $tempOption;
@@ -129,34 +116,43 @@ class ObjectConfigurator
                             $selectedIds = $this->array_value_recursive('id', $selectedOptions[$fieldName]);
 
                             // get all options to select
-                            $allMultiSelectObjects = $this->entityManager
-                                ->getRepository($class)
-                                ->createQueryBuilder('q')
-                                ->select($fields)
-                                ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
-                                ->getQuery()
-                                ->getResult();
+
                             $multiSelect[$fieldName]['selected'] = $selectedOptions;
 
                         } else {
                             $multiSelect[$fieldName]['selected'] = array();
-
-                            $allMultiSelectObjects = $this->entityManager
-                                ->getRepository($class)
-                                ->createQueryBuilder('q')
-                                ->select($fields)
-                                ->getQuery()
-                                ->getResult();
-
                         }
                     }
 
+                    if ($selectedIds) {
+                        $allMultiSelectObjects = $this->entityManager
+                            ->getRepository($class)
+                            ->createQueryBuilder('q')
+                            ->select($fields)
+                            ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
+                            ->getQuery()
+                            ->getResult();
+                       
+                    } else {
+                        $allMultiSelectObjects = $this->entityManager
+                            ->getRepository($class)
+                            ->createQueryBuilder('q')
+                            ->select($fields)
+                            ->getQuery()
+                            ->getResult();
+                    }
+
                     $multiSelect[$fieldName]['all'] = $allMultiSelectObjects;
+
                     if ($relationType == 'oneToOne' || $relationType == 'manyToOne') continue;
 //                    }
 
                     // for toMany relations
-                    $multiSelect[$fieldName]['entities'] = $selectedOptionsObjects->toArray();
+                    if($selectedOptionsObjects){
+                        $multiSelect[$fieldName]['entities'] = $selectedOptionsObjects->toArray();
+                    } else {
+                        $multiSelect[$fieldName]['entities'] = array();
+                    }
                     $tableConfig = $this->resymfReader->readTableAnnotation($class);
                     $multiSelect[$fieldName]['table_config'] = $tableConfig;
                     $multiSelect[$fieldName]['object_type'] = $this->getAdminConfigKeyByClassNAme($class);
@@ -178,6 +174,7 @@ class ObjectConfigurator
 //                            // can check one
 //                            break;
 //                    }
+
                 }
             }
         }
@@ -191,7 +188,8 @@ class ObjectConfigurator
      * @param $arr array
      * @return null|string|array
      */
-    public function array_value_recursive($key, array $arr)
+    public
+    function array_value_recursive($key, array $arr)
     {
         $val = array();
         array_walk_recursive($arr, function ($v, $k) use ($key, &$val) {
@@ -200,7 +198,8 @@ class ObjectConfigurator
         return $val;
     }
 
-    private function getAdminConfigKeyByClassNAme($className)
+    private
+    function getAdminConfigKeyByClassNAme($className)
     {
         $entities = array();
         $adminConfig = $this->adminConfigurator->getAdminConfig();
@@ -215,7 +214,8 @@ class ObjectConfigurator
         return false;
     }
 
-    public function setInitialValuesFromAnnotations($classNameSpace, $object)
+    public
+    function setInitialValuesFromAnnotations($classNameSpace, $object)
     {
         $adminConfigKey = $this->getAdminConfigKeyByClassNAme($classNameSpace);
 
@@ -262,7 +262,8 @@ class ObjectConfigurator
         return $object;
     }
 
-    public function generateUniqueSlug($adminConfigKey, $slug)
+    public
+    function generateUniqueSlug($adminConfigKey, $slug)
     {
 
         $entities = $this->getEntitiesWithTheSameBaseSlug($adminConfigKey);
@@ -282,7 +283,8 @@ class ObjectConfigurator
         }
     }
 
-    private function getEntitiesWithTheSameBaseSlug($adminConfigKey)
+    private
+    function getEntitiesWithTheSameBaseSlug($adminConfigKey)
     {
         $entities = array();
         $adminConfig = $this->adminConfigurator->getAdminConfig();
@@ -300,7 +302,8 @@ class ObjectConfigurator
         return $entities;
     }
 
-    public function getObjectFromSlug($className, $slug)
+    public
+    function getObjectFromSlug($className, $slug)
     {
         $pageObject = $this->entityManager->getRepository($className)->createQueryBuilder('p')
             ->select('p')
@@ -312,7 +315,8 @@ class ObjectConfigurator
         return $pageObject;
     }
 
-    public function checkUniqueValuesFromAnnotations($object, $adminConfigKey)
+    public
+    function checkUniqueValuesFromAnnotations($object, $adminConfigKey)
     {
         $adminConfig = $this->adminConfigurator->getAdminConfig();
 
@@ -352,4 +356,4 @@ class ObjectConfigurator
         }
         return $object;
     }
-} 
+}

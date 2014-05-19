@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", createLabel="Create project")
+ * @Form(editLabel="Edit Task", createLabel="Create project")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -66,8 +66,8 @@ class Task
     /**
      * @var Project
      *
-     * @Form(type="relation", relationType="one", class="ReSymfCms\Bundle\ProjectManagerBundle\Sprint")
-     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Sprint")
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Sprint")
+     * @Table(display=false)
      *
      * @ORM\ManyToOne(targetEntity="Sprint", inversedBy="tasks")
      */
@@ -77,7 +77,7 @@ class Task
      * @var Documents
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymfCms\Bundle\ProjectManagerBundle\Document")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */
@@ -126,7 +126,7 @@ class Task
     /**
      * @var Issue
      *
-     * @Form(type="relation", relationType="many", class="ReSymfCms\Bundle\ProjectManagerBundle\Issue")
+     * @Form(type="relation", relationType="oneToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Issue")
      * @Table(display=false)
      *
      * @ORM\OneToMany(targetEntity="Issue", mappedBy="task")
