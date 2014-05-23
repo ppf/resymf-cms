@@ -1,5 +1,5 @@
 site_config:
-    name: 'refymf cms'
+    name: 'resymf cms'
     description: 'the best of cms'
     domain: 'resymf-cms'
     theme: ''
@@ -67,6 +67,18 @@ admin:
         plural_label: 'Contacts'
         icon: 'envelope'
         singular_label: 'Contact'
+    user:
+#        type: 'crud'
+        class: 'ReSymf\Bundle\CmsBundle\Entity\User'
+        actions: ['list','create','delete','update']
+#        icon: 'file'
+        plural_label: 'Users'
+        singular_label: 'User'
+        slug: ''
+        #author, time, object values
+#        history: 50
+#        role: 'ROLE_ADMIN'
+
 
     my_slug:
         type: 'custom_page'

@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Sprint", showLabel="Show Sprint", createLabel="Create Sprint")
+ * @Form(editLabel="Edit Sprint", showLabel="Show Sprint", createLabel="Create Sprint", showLabel="Show Sprint")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -44,7 +44,7 @@ class Sprint
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Table(label="Name")
      * @Form(fieldLabel="Page Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
@@ -54,8 +54,8 @@ class Sprint
     /**
      * @var string
      *
-     * @Table(format="html", length=300, label="Opis")
-     * @Form(type="editor",required=true, fieldLabel = "Opis")
+     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Description")
+     * @Form(type="editor",required=true, fieldLabel = "Description")
      *
      * @ORM\Column(name="description", type="text")
      */
@@ -74,7 +74,7 @@ class Sprint
     /**
      * @var Project
      *
-     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project")
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project", fieldLabel="Project")
      * @Table(display=false)
      *
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
@@ -86,8 +86,8 @@ class Sprint
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Suma godzin")
-     * @Form(fieldLabel="Suma godzin",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Priced hours")
+     * @Form(fieldLabel="Priced hours",type="text",required=true)
      *
      * @ORM\Column(name="hour_price", type="string", length=255)
      */
@@ -97,7 +97,7 @@ class Sprint
      * @var Documents
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */
@@ -106,22 +106,13 @@ class Sprint
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Rzeczywista suma godzin")
-     * @Form(fieldLabel="Rzeczywista suma godzin",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Worked hours")
+     * @Form(fieldLabel="Worked hours",type="text",required=true)
      *
      * @ORM\Column(name="real_total_hours", type="string", length=255)
      */
     private $realTotalHours;
 
-    /**
-     * @var Terms
-     *
-     * @Table(display=false)
-     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Term")
-     *
-     * @ORM\ManyToMany(targetEntity="Term")
-     */
-    private $terms;
 
     function __construct()
     {
@@ -224,21 +215,6 @@ class Sprint
         $this->name = $name;
     }
 
-    /**
-     * @return \ReSymf\Bundle\ProjectManagerBundle\Entity\Terms
-     */
-    public function getTerms()
-    {
-        return $this->terms;
-    }
-
-    /**
-     * @param \ReSymf\Bundle\ProjectManagerBundle\Entity\Terms $terms
-     */
-    public function setTerms($terms)
-    {
-        $this->terms = $terms;
-    }
 
     /**
      * @return \ReSymf\Bundle\ProjectManagerBundle\Entity\Project

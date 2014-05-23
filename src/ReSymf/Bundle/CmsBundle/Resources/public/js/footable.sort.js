@@ -123,7 +123,7 @@
             if (column.sort.ignore === true) return true;
 
             //raise a pre-sorting event so that we can cancel the sorting if needed
-            var event = ft.raise(evt.sorting, { column: column, direction: ascending ? 'ASC' : 'DESC' });
+            var event = ft.raise(evt.sorting, {column: column, direction: ascending ? 'ASC' : 'DESC'});
             if (event && event.result === false) return;
 
             $table.data('sorted', column.index);
@@ -143,7 +143,7 @@
             p.sort(ft, $tbody, column, ascending);
 
             ft.bindToggleSelectors();
-            ft.raise(evt.sorted, { column: column, direction: ascending ? 'ASC' : 'DESC' });
+            ft.raise(evt.sorted, {column: column, direction: ascending ? 'ASC' : 'DESC'});
         };
 
         p.rows = function (ft, tbody, column) {
@@ -154,7 +154,7 @@
                 if ($row.next().hasClass(ft.options.classes.detail)) {
                     $next = $row.next().get(0);
                 }
-                var row = { 'row': $row, 'detail': $next };
+                var row = {'row': $row, 'detail': $next};
                 if (column !== undefined) {
                     row.value = ft.parse(this.cells[column.sort.match], column);
                 }

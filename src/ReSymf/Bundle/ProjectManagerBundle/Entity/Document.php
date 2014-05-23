@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Document", createLabel="Create Document")
+ * @Form(editLabel="Edit Document", createLabel="Create Document", showLabel="Show Document")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -38,12 +38,18 @@ class Document
     private $id;
 
     /**
+     * @Table(hideOnDevice="", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
+     *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
     private $name;
 
     /**
+     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $path;

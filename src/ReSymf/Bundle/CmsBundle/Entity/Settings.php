@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity(repositoryClass="ReSymf\Bundle\CmsBundle\Entity\SettingsRepository")
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Settings", createLabel="Create Settings")
+ * @Form(editLabel="Edit Settings", createLabel="Create Settings", showLabel="Show Settings")
  *
  */
 class Settings
@@ -74,8 +74,8 @@ class Settings
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Google Analytics Key")
-     * @Form(fieldLabel="Google Analytics Key",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="GA Key")
+     * @Form(fieldLabel="GA Key",type="text",required=true)
      *
      * @ORM\Column(name="ga_key", type="string", length=255)
      */
@@ -85,11 +85,21 @@ class Settings
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get appName
+     *
+     * @return string
+     */
+    public function getAppName()
+    {
+        return $this->appName;
     }
 
     /**
@@ -101,18 +111,18 @@ class Settings
     public function setAppName($appName)
     {
         $this->appName = $appName;
-    
+
         return $this;
     }
 
     /**
-     * Get appName
+     * Get seoDescription
      *
-     * @return string 
+     * @return string
      */
-    public function getAppName()
+    public function getSeoDescription()
     {
-        return $this->appName;
+        return $this->seoDescription;
     }
 
     /**
@@ -124,18 +134,18 @@ class Settings
     public function setSeoDescription($seoDescription)
     {
         $this->seoDescription = $seoDescription;
-    
+
         return $this;
     }
 
     /**
-     * Get seoDescription
+     * Get seoKeywords
      *
-     * @return string 
+     * @return string
      */
-    public function getSeoDescription()
+    public function getSeoKeywords()
     {
-        return $this->seoDescription;
+        return $this->seoKeywords;
     }
 
     /**
@@ -147,18 +157,18 @@ class Settings
     public function setSeoKeywords($seoKeywords)
     {
         $this->seoKeywords = $seoKeywords;
-    
+
         return $this;
     }
 
     /**
-     * Get seoKeywords
+     * Get seoSeparator
      *
-     * @return string 
+     * @return string
      */
-    public function getSeoKeywords()
+    public function getSeoSeparator()
     {
-        return $this->seoKeywords;
+        return $this->seoSeparator;
     }
 
     /**
@@ -170,18 +180,18 @@ class Settings
     public function setSeoSeparator($seoSeparator)
     {
         $this->seoSeparator = $seoSeparator;
-    
+
         return $this;
     }
 
     /**
-     * Get seoSeparator
+     * Get gaKey
      *
-     * @return string 
+     * @return string
      */
-    public function getSeoSeparator()
+    public function getGaKey()
     {
-        return $this->seoSeparator;
+        return $this->gaKey;
     }
 
     /**
@@ -193,17 +203,7 @@ class Settings
     public function setGaKey($gaKey)
     {
         $this->gaKey = $gaKey;
-    
-        return $this;
-    }
 
-    /**
-     * Get gaKey
-     *
-     * @return string 
-     */
-    public function getGaKey()
-    {
-        return $this->gaKey;
+        return $this;
     }
 }

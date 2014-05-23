@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", showLabel="Show Project", createLabel="Create project")
+ * @Form(editLabel="Edit project", showLabel="Show Project", createLabel="Create project", showLabel="Show Project")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -43,8 +43,8 @@ class Project
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Page Name",type="text",required=true)
+     * @Table(hideOnDevice="", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -53,8 +53,29 @@ class Project
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Cena za godzinę")
-     * @Form(fieldLabel="Cena za godzinę",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Start date")
+     * @Form(fieldLabel="Start Date",type="date",required=true)
+     *
+     * @ORM\Column(name="start_date", type="string", length=255)
+     */
+    private $startDate;
+
+    /**
+     * @var string
+     *
+     * @Table(hideOnDevice="tablet,phone", label="End date")
+     * @Form(fieldLabel="End Date",type="date",required=true)
+     *
+     * @ORM\Column(name="end_date", type="string", length=255)
+     */
+    private $endDate;
+
+
+    /**
+     * @var string
+     *
+     * @Table(hideOnDevice="tablet,phone", label="Hour price")
+     * @Form(fieldLabel="Hour price",type="text",required=true)
      *
      * @ORM\Column(name="hour_price", type="string", length=255)
      */
@@ -63,8 +84,8 @@ class Project
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Suma godzin")
-     * @Form(fieldLabel="Suma godzin",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Priced hours")
+     * @Form(fieldLabel="Priced hours",type="text",required=true)
      *
      * @ORM\Column(name="total_hours", type="string", length=255)
      */
@@ -73,8 +94,8 @@ class Project
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Rzeczywista suma godzin")
-     * @Form(fieldLabel="Rzeczywista suma godzin",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Worked hours")
+     * @Form(fieldLabel="Worked hours",type="text",required=true)
      *
      * @ORM\Column(name="real_total_hours", type="string", length=255)
      */
@@ -83,8 +104,8 @@ class Project
     /**
      * @var string
      *
-     * @Table(format="html", length=300, label="Opis")
-     * @Form(type="editor",required=true, fieldLabel = "Opis")
+     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Description")
+     * @Form(type="editor",required=true, fieldLabel = "Description")
      *
      * @ORM\Column(name="description", type="text")
      */
@@ -120,6 +141,17 @@ class Project
      */
     private $documents;
 
+
+    /**
+     * @var Terms
+     *
+     * @Table(display=false)
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Term", fieldLabel="Terms")
+     *
+     * @ORM\ManyToMany(targetEntity="Term")
+     */
+    private $terms;
+
     /**
      *
      */
@@ -129,6 +161,55 @@ class Project
         $this->sprints = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
+
+    /**
+     * @return string
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param string $realTotalHours
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return \ReSymf\Bundle\ProjectManagerBundle\Entity\Terms
+     */
+    public function getTerms()
+    {
+        return $this->terms;
+    }
+
+    /**
+     * @param \ReSymf\Bundle\ProjectManagerBundle\Entity\Terms $terms
+     */
+    public function setTerms($terms)
+    {
+        $this->terms = $terms;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param string $realTotalHours
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
 
     /**
      * @return string

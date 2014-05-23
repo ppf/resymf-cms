@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", createLabel="Create project")
+ * @Form(editLabel="Edit issue", createLabel="Create issue", showLabel="Show Issue")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -39,12 +39,12 @@ class Issue
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Page Name",type="text",required=true)
+     * @Table(hideOnDevice="", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -53,8 +53,8 @@ class Issue
     /**
      * @var Task
      *
-     * @Form(type="relation", relationType="one", class="ReSymfCms\Bundle\ProjectManagerBundle\Task")
-     * @Table(format="text", relation=true, class="ReSymfCms\Bundle\ProjectManagerBundle\Task")
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Task", fieldLabel="Task")
+     * @Table(display="false")
      *
      * @ORM\ManyToOne(targetEntity="Task", inversedBy="issues")
      */
@@ -63,8 +63,8 @@ class Issue
     /**
      * @var string
      *
-     * @Table(format="html", length=300, label="Opis")
-     * @Form(type="editor",required=true, fieldLabel = "Opis")
+     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Description")
+     * @Form(type="editor",required=true, fieldLabel = "Description")
      *
      * @ORM\Column(name="description", type="text")
      */
@@ -84,12 +84,12 @@ class Issue
      * @var Documents
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="many", class="ReSymfCms\Bundle\ProjectManagerBundle\Document")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */
     private $documents;
-   
+
     /**
      * @return string
      */

@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit project", createLabel="Create project")
+ * @Form(editLabel="Edit Term", createLabel="Create Term", showLabel="Show Term")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -43,8 +43,8 @@ class Term
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Page Name",type="text",required=true)
+     * @Table(hideOnDevice="", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -63,8 +63,8 @@ class Term
     /**
      * @var string
      *
-     * @Table(format="html", length=300, label="Opis")
-     * @Form(type="editor",required=true, fieldLabel = "Opis")
+     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Description")
+     * @Form(type="editor",required=true, fieldLabel = "Description")
      *
      * @ORM\Column(name="description", type="text")
      */

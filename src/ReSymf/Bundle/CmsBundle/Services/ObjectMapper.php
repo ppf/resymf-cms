@@ -31,7 +31,7 @@ class ObjectMapper
     {
         $adminConfig = $this->adminConfigurator->getAdminConfig();
 
-        if (is_array($adminConfig[$objectName]) && isset($adminConfig[$objectName]['class'])) {
+        if (isset($adminConfig[$objectName]) && is_array($adminConfig[$objectName]) && isset($adminConfig[$objectName]['class'])) {
             return $adminConfig[$objectName]['class'];
         } else {
             throw new EntityNotFoundException('class not found in admin config file');

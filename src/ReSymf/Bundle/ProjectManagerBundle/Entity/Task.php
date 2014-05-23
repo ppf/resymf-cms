@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Task", createLabel="Create project")
+ * @Form(editLabel="Edit task", createLabel="Create task", showLabel="Show Task")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -46,7 +46,7 @@ class Task
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Table(hideOnDevice="", label="Name")
      * @Form(fieldLabel="Page Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
@@ -56,7 +56,7 @@ class Task
     /**
      * @var string
      *
-     * @Table(format="html", length=300, label="Opis")
+     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Opis")
      * @Form(type="editor",required=true, fieldLabel = "Opis")
      *
      * @ORM\Column(name="description", type="text")
@@ -66,7 +66,7 @@ class Task
     /**
      * @var Project
      *
-     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Sprint")
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Sprint", fieldLabel="Sprint")
      * @Table(display=false)
      *
      * @ORM\ManyToOne(targetEntity="Sprint", inversedBy="tasks")
@@ -77,7 +77,7 @@ class Task
      * @var Documents
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document")
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
      *
      * @ORM\ManyToMany(targetEntity="Document")
      */
@@ -86,8 +86,8 @@ class Task
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Suma godzin")
-     * @Form(fieldLabel="Suma godzin",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Priced hours")
+     * @Form(fieldLabel="Priced hours",type="text",required=true)
      *
      * @ORM\Column(name="total_hours", type="string", length=255)
      */
@@ -96,8 +96,8 @@ class Task
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Rzeczywista suma godzin")
-     * @Form(fieldLabel="Rzeczywista suma godzin",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Worked hours")
+     * @Form(fieldLabel="Worked hours",type="text",required=true)
      *
      * @ORM\Column(name="real_total_hours", type="string", length=255)
      */
@@ -106,8 +106,8 @@ class Task
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Priorytet")
-     * @Form(fieldLabel="Priorytet",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Priority")
+     * @Form(fieldLabel="Priority",type="text",required=true)
      *
      * @ORM\Column(name="priority", type="string", length=255)
      */
@@ -126,7 +126,7 @@ class Task
     /**
      * @var Issue
      *
-     * @Form(type="relation", relationType="oneToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Issue")
+     * @Form(type="relation", relationType="oneToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Issue", fieldLabel="Issues")
      * @Table(display=false)
      *
      * @ORM\OneToMany(targetEntity="Issue", mappedBy="task")

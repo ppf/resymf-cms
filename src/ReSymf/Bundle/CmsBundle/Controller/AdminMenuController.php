@@ -22,9 +22,43 @@ class AdminMenuController extends Controller
      */
     public function profileAction()
     {
-        $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+        $em = $this->getDoctrine()->getManager();
 
-        return $this->render('ReSymfCmsBundle:adminmenu:profile.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig()));
+        $objectType = 'ReSymf\Bundle\CmsBundle\Entity\User';
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $adminConfigurator = $this->get('resymfcms.configurator.admin');
+        //TODO: set settings class in config
+//        $objectMapper = $this->get('resymfcms.object.mapper');
+//        $objectType = $objectMapper->getSettingsClass($type);
+
+        $annotationReader = $this->get('resymfcms.annotation.reader');
+
+        $formConfig = $annotationReader->readFormAnnotation($objectType);
+
+        if ($request->isMethod('POST')) {
+            foreach ($formConfig->fields as $field) {
+                $methodName = 'set' . $field['name'];
+                $user->$methodName($request->get($field['name']));
+            }
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render(
+            'ReSymfCmsBundle:adminmenu:create.html.twig',
+            array(
+                'menu' => $adminConfigurator->getAdminConfig(),
+                'site_config' => $adminConfigurator->getSiteConfig(),
+                'form_config' => $formConfig, 'route' => $routeName,
+                'edit_object' => $user,
+                'multi_select' => array()
+            )
+        );
+
     }
 
     /**
@@ -87,6 +121,7 @@ class AdminMenuController extends Controller
         if (!$type) {
             return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
         }
+        $em = $this->getDoctrine()->getManager();
 
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
@@ -103,21 +138,62 @@ class AdminMenuController extends Controller
 
         if ($request->isMethod('POST')) {
             $object = new $objectType();
+
+//            echo '<pre>';
+//            print_r($formConfig->fields);
+//            die();
             foreach ($formConfig->fields as $field) {
+                $fieldType = $field['type'];
+                $fieldRelationType = $field['relationType'];
                 $methodName = 'set' . $field['name'];
-                $object->$methodName($request->get($field['name']));
+
+//                if()
+                switch ($fieldType) {
+                    case 'relation':
+                        $class = $field['class'];
+                        $relationObjects = $em->getRepository($class)
+                            ->createQueryBuilder('q')
+                            ->where('q.id IN(:id)')
+                            ->setParameter('id', $request->get($field['name']))
+//                            ->setMaxResults()
+                            ->getQuery()
+                            ->getResult();
+//                        print_r($relationObject);
+
+                        foreach ($relationObjects as $relationObject) {
+                            if ($relationObject) {
+
+                                $addMethodName = 'set' . $type;
+                                $addMethodName2 = 'set' . $field['name'];
+
+                                if ($fieldRelationType == 'manyToOne' || $fieldRelationType == 'manyToMany') {
+                                    $addMethodName = 'add' . $type;
+                                } else {
+                                    $addMethodName2 = 'add' . $field['name'];
+                                }
+                                $relationObject->$addMethodName($object);
+                                $object->$addMethodName2($relationObject);
+
+                            }
+                        }
+
+                        break;
+                    default:
+                        $object->$methodName($request->get($field['name']));
+                }
+
             }
 
             $objectConfigurator->setInitialValuesFromAnnotations($objectType, $object, $type);
-            $em = $this->getDoctrine()->getManager();
             $em->persist($object);
             $em->flush();
             return $this->redirect($this->generateUrl('object_edit', array('type' => $type, 'id' => $object->getId())), 301);
         }
-        if(!isset($object)){
+
+        if (!isset($object)) {
             $object = false;
         }
-           $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $object);
+        $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $object);
 
         return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName, 'multi_select' => $multiSelectValues));
     }
@@ -146,6 +222,7 @@ class AdminMenuController extends Controller
         $annotationReader = $this->get('resymfcms.annotation.reader');
 
         $formConfig = $annotationReader->readFormAnnotation($objectType);
+        $formConfig->objectKey = $type;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -186,17 +263,17 @@ class AdminMenuController extends Controller
                             ->getQuery()
                             ->getResult();
 //                        print_r($relationObject);
-                        
-                        foreach($relationObjects as $relationObject) {
-                            if($relationObject){
 
-                                $addMethodName = 'set'.$type;
-                                $addMethodName2 = 'set'.$field['name'];
+                        foreach ($relationObjects as $relationObject) {
+                            if ($relationObject) {
 
-                                if($fieldRelationType == 'manyToOne' || $fieldRelationType == 'manyToMany'){
-                                    $addMethodName = 'add'.$type;
+                                $addMethodName = 'set' . $type;
+                                $addMethodName2 = 'set' . $field['name'];
+
+                                if ($fieldRelationType == 'manyToOne' || $fieldRelationType == 'manyToMany') {
+                                    $addMethodName = 'add' . $type;
                                 } else {
-                                    $addMethodName2 = 'add'.$field['name'];
+                                    $addMethodName2 = 'add' . $field['name'];
                                 }
                                 $relationObject->$addMethodName($editObject);
                                 $editObject->$addMethodName2($relationObject);
@@ -258,6 +335,7 @@ class AdminMenuController extends Controller
 
         $formConfig = $annotationReader->readFormAnnotation($objectType);
         $formConfig->objectType = $objectType;
+        $formConfig->objectKey = $type;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -276,6 +354,8 @@ class AdminMenuController extends Controller
         }
 
         $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $editObject);
+        //print_r($multiSelectValues);
+        //die();
 //        $multiSelectValues
         return $this->render(
             'ReSymfCmsBundle:adminmenu:show.html.twig',
@@ -291,7 +371,10 @@ class AdminMenuController extends Controller
 
     public function deleteAction($type, $id)
     {
-
+        $request = $this->container->get('request');
+        $url = $request->headers->get('referer');
+        print_r($url);
+        die();
         if (!$id) {
             return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
         }
@@ -307,7 +390,8 @@ class AdminMenuController extends Controller
         $em->remove($editObject[0]);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('object_list', array('type' => $type)), 301);
+        //return $this->redirect($this->generateUrl('object_list', array('type' => $type)), 301);
+        return $this->redirect($url, 301);
     }
 
     /**
@@ -317,29 +401,51 @@ class AdminMenuController extends Controller
     {
         $request = $this->container->get('request');
         $routeName = $request->get('_route');
+        $em = $this->getDoctrine()->getManager();
+
+        $objectType = 'ReSymf\Bundle\CmsBundle\Entity\Settings';
+
+        // ALways first object
+        $settingsObject = $em->getRepository($objectType)
+            ->createQueryBuilder('q')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+//        print_r($settingsObject);
+        //      die();
+        if (!$settingsObject) {
+            $settingsObject = new $objectType();
+        }
 
         $adminConfigurator = $this->get('resymfcms.configurator.admin');
         //TODO: set settings class in config
 //        $objectMapper = $this->get('resymfcms.object.mapper');
 //        $objectType = $objectMapper->getSettingsClass($type);
 
-        $objectType = 'ReSymf\Bundle\CmsBundle\Entity\Settings';
         $annotationReader = $this->get('resymfcms.annotation.reader');
 
         $formConfig = $annotationReader->readFormAnnotation($objectType);
 
         if ($request->isMethod('POST')) {
-            $object = new $objectType();
             foreach ($formConfig->fields as $field) {
                 $methodName = 'set' . $field['name'];
-                $object->$methodName($request->get($field['name']));
+                $settingsObject->$methodName($request->get($field['name']));
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($object);
+            $em->persist($settingsObject);
             $em->flush();
         }
 
-        return $this->render('ReSymfCmsBundle:adminmenu:create.html.twig', array('menu' => $adminConfigurator->getAdminConfig(), 'site_config' => $adminConfigurator->getSiteConfig(), 'form_config' => $formConfig, 'route' => $routeName));
+        return $this->render(
+            'ReSymfCmsBundle:adminmenu:create.html.twig',
+            array(
+                'menu' => $adminConfigurator->getAdminConfig(),
+                'site_config' => $adminConfigurator->getSiteConfig(),
+                'form_config' => $formConfig, 'route' => $routeName,
+                'edit_object' => $settingsObject,
+                'multi_select' => array()
+            )
+        );
+
     }
 
 }

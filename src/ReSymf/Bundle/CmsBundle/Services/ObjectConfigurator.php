@@ -25,9 +25,10 @@ class ObjectConfigurator
 
     /**
      * @param AdminConfigurator $adminConfigurator
-     * @param $reader
-     * @param $security
-     * @param $entityManager
+     * @param $annotationReader
+     * @param $resymfAnnotationReader
+     * @param SecurityContext $security
+     * @param EntityManager $entityManager
      */
     public function __construct(AdminConfigurator $adminConfigurator, $annotationReader, $resymfAnnotationReader, SecurityContext $security, EntityManager $entityManager)
     {
@@ -81,11 +82,11 @@ class ObjectConfigurator
                         $fields[] = 'q.name';
                     }
 
-                    if($object){
-                    $methodName = 'get' . $fieldName;
-                    $selectedOptionsObjects = $object->$methodName();
+                    if ($object) {
+                        $methodName = 'get' . $fieldName;
+                        $selectedOptionsObjects = $object->$methodName();
                     } else {
-                    $selectedOptionsObjects = array();
+                        $selectedOptionsObjects = array();
                     }
 
                     if ($relationType == 'oneToOne' || $relationType == 'manyToOne') {
@@ -132,7 +133,7 @@ class ObjectConfigurator
                             ->where('q.id NOT IN (' . implode(',', $selectedIds) . ')')
                             ->getQuery()
                             ->getResult();
-                       
+
                     } else {
                         $allMultiSelectObjects = $this->entityManager
                             ->getRepository($class)
@@ -148,7 +149,7 @@ class ObjectConfigurator
 //                    }
 
                     // for toMany relations
-                    if($selectedOptionsObjects){
+                    if ($selectedOptionsObjects) {
                         $multiSelect[$fieldName]['entities'] = $selectedOptionsObjects->toArray();
                     } else {
                         $multiSelect[$fieldName]['entities'] = array();
@@ -156,24 +157,6 @@ class ObjectConfigurator
                     $tableConfig = $this->resymfReader->readTableAnnotation($class);
                     $multiSelect[$fieldName]['table_config'] = $tableConfig;
                     $multiSelect[$fieldName]['object_type'] = $this->getAdminConfigKeyByClassNAme($class);
-
-//                    print_r($multiSelect[$fieldName]['entities']);
-//                    die();
-//                    switch ($relationType) {
-//                        case 'manyToMany':
-//                            // can check many
-//                        case 'oneToMany':
-//                            // can check many
-//                            //maybe in one var always
-//
-//                            break;
-//                        case 'oneToOne':
-//                            // can check one
-//                            break;
-//                        case 'oneToOne':
-//                            // can check one
-//                            break;
-//                    }
 
                 }
             }
@@ -188,8 +171,7 @@ class ObjectConfigurator
      * @param $arr array
      * @return null|string|array
      */
-    public
-    function array_value_recursive($key, array $arr)
+    public function array_value_recursive($key, array $arr)
     {
         $val = array();
         array_walk_recursive($arr, function ($v, $k) use ($key, &$val) {
@@ -198,10 +180,8 @@ class ObjectConfigurator
         return $val;
     }
 
-    private
-    function getAdminConfigKeyByClassNAme($className)
+    private function getAdminConfigKeyByClassNAme($className)
     {
-        $entities = array();
         $adminConfig = $this->adminConfigurator->getAdminConfig();
 
         foreach ($adminConfig as $key => $value) {
@@ -214,8 +194,7 @@ class ObjectConfigurator
         return false;
     }
 
-    public
-    function setInitialValuesFromAnnotations($classNameSpace, $object)
+    public function setInitialValuesFromAnnotations($classNameSpace, $object)
     {
         $adminConfigKey = $this->getAdminConfigKeyByClassNAme($classNameSpace);
 
@@ -262,8 +241,7 @@ class ObjectConfigurator
         return $object;
     }
 
-    public
-    function generateUniqueSlug($adminConfigKey, $slug)
+    public function generateUniqueSlug($adminConfigKey, $slug)
     {
 
         $entities = $this->getEntitiesWithTheSameBaseSlug($adminConfigKey);
@@ -283,8 +261,7 @@ class ObjectConfigurator
         }
     }
 
-    private
-    function getEntitiesWithTheSameBaseSlug($adminConfigKey)
+    private function getEntitiesWithTheSameBaseSlug($adminConfigKey)
     {
         $entities = array();
         $adminConfig = $this->adminConfigurator->getAdminConfig();
@@ -302,8 +279,7 @@ class ObjectConfigurator
         return $entities;
     }
 
-    public
-    function getObjectFromSlug($className, $slug)
+    public function getObjectFromSlug($className, $slug)
     {
         $pageObject = $this->entityManager->getRepository($className)->createQueryBuilder('p')
             ->select('p')
@@ -315,8 +291,7 @@ class ObjectConfigurator
         return $pageObject;
     }
 
-    public
-    function checkUniqueValuesFromAnnotations($object, $adminConfigKey)
+    public function checkUniqueValuesFromAnnotations($object, $adminConfigKey)
     {
         $adminConfig = $this->adminConfigurator->getAdminConfig();
 
@@ -329,7 +304,6 @@ class ObjectConfigurator
         $formConfig = new \stdClass;
 
         $reflectionClass = new \ReflectionClass($classNameSpace);
-
         $properties = $reflectionClass->getProperties();
         $formConfig->fields = array();
         foreach ($properties as $reflectionProperty) {

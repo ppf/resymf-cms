@@ -37,12 +37,12 @@
             detailSeparator: ':', //the separator character used when building up the detail row
             toggleHTMLElement: '<span />', // override this if you want to insert a click target rather than use a background image.
             createGroupedDetail: function (data) {
-                var groups = { '_none': { 'name': null, 'data': [] } };
+                var groups = {'_none': {'name': null, 'data': []}};
                 for (var i = 0; i < data.length; i++) {
                     var groupid = data[i].group;
                     if (groupid !== null) {
                         if (!(groupid in groups))
-                            groups[groupid] = { 'name': data[i].groupName || data[i].group, 'data': [] };
+                            groups[groupid] = {'name': data[i].groupName || data[i].group, 'data': []};
 
                         groups[groupid].data.push(data[i]);
                     } else {
@@ -303,7 +303,7 @@
 
             // Create a nice friendly array to work with out of the breakpoints object.
             for (var name in opt.breakpoints) {
-                ft.breakpoints.push({ 'name': name, 'width': opt.breakpoints[name] });
+                ft.breakpoints.push({'name': name, 'width': opt.breakpoints[name]});
                 ft.breakpointNames += (name + ' ');
             }
 
@@ -446,21 +446,21 @@
             });
             var data = {
                 'index': index,
-                'hide': { },
+                'hide': {},
                 'type': $th.data('type') || 'alpha',
                 'name': $th.data('name') || $.trim($th.text()),
                 'ignore': $th.data('ignore') || false,
                 'toggle': $th.data('toggle') || false,
                 'className': $th.data('class') || null,
                 'matches': [],
-                'names': { },
+                'names': {},
                 'group': $th.data('group') || null,
                 'groupName': null
             };
 
             if (data.group !== null) {
                 var $group = $(ft.table).find('> thead > tr.footable-group-row > th[data-group="' + data.group + '"], > thead > tr.footable-group-row > td[data-group="' + data.group + '"]').first();
-                data.groupName = ft.parse($group, { 'type': 'alpha' });
+                data.groupName = ft.parse($group, {'type': 'alpha'});
             }
 
             var pcolspan = parseInt($th.prev().attr('colspan') || 0, 10);
@@ -486,7 +486,7 @@
                 hasBreakpoint = hasBreakpoint || data.hide[name];
             }
             data.hasBreakpoint = hasBreakpoint;
-            var e = ft.raise(evt.columnData, { 'column': { 'data': data, 'th': th } });
+            var e = ft.raise(evt.columnData, {'column': {'data': data, 'th': th}});
             return e.column.data;
         };
 
@@ -545,7 +545,7 @@
 
             var pinfo = $table.data('footable_info');
             $table.data('footable_info', info);
-            ft.raise(evt.resizing, { 'old': pinfo, 'info': info });
+            ft.raise(evt.resizing, {'old': pinfo, 'info': info});
 
             // This (if) statement is here purely to make sure events aren't raised twice as mobile safari seems to do
             if (!pinfo || (pinfo && pinfo.width && pinfo.width !== info.width)) {
@@ -573,11 +573,11 @@
                     //trigger a redraw
                     $table.trigger(trg.redraw);
                     //raise a breakpoint event
-                    ft.raise(evt.breakpoint, { 'breakpoint': breakpointName, 'info': info });
+                    ft.raise(evt.breakpoint, {'breakpoint': breakpointName, 'info': info});
                 }
             }
 
-            ft.raise(evt.resized, { 'old': pinfo, 'info': info });
+            ft.raise(evt.resized, {'old': pinfo, 'info': info});
         };
 
         ft.redraw = function () {
@@ -666,14 +666,14 @@
                 //only hide the next row if it's a detail row
                 if ($next.hasClass(cls.detail)) $next.hide();
 
-                ft.raise(evt.rowCollapsed, { 'row': $row[0] });
+                ft.raise(evt.rowCollapsed, {'row': $row[0]});
 
             } else {
                 ft.createOrUpdateDetailRow($row[0]);
                 $row.addClass(cls.detailShow)
                     .next().show();
 
-                ft.raise(evt.rowExpanded, { 'row': $row[0] });
+                ft.raise(evt.rowExpanded, {'row': $row[0]});
             }
         };
 
@@ -720,13 +720,19 @@
             if ($row.data('detail_created') === true) return true;
 
             if ($row.is(':hidden')) return false; //if the row is hidden for some reason (perhaps filtered) then get out of here
-            ft.raise(evt.rowDetailUpdating, { 'row': $row, 'detail': $next });
+            ft.raise(evt.rowDetailUpdating, {'row': $row, 'detail': $next});
             $row.find('> td:hidden').each(function () {
                 var index = $(this).index(), column = ft.getColumnFromTdIndex(index), name = column.name;
                 if (column.ignore === true) return true;
 
                 if (index in column.names) name = column.names[index];
-                values.push({ 'name': name, 'value': ft.parse(this, column), 'display': $.trim($(this).html()), 'group': column.group, 'groupName': column.groupName });
+                values.push({
+                    'name': name,
+                    'value': ft.parse(this, column),
+                    'display': $.trim($(this).html()),
+                    'group': column.group,
+                    'groupName': column.groupName
+                });
                 return true;
             });
             if (values.length === 0) return false; //return if we don't have any data to show
@@ -740,7 +746,7 @@
             $detail = $next.find('.' + cls.detailInner).empty();
             opt.createDetail($detail, values, opt.createGroupedDetail, opt.detailSeparator, cls);
             $row.data('detail_created', true);
-            ft.raise(evt.rowDetailUpdated, { 'row': $row, 'detail': $next });
+            ft.raise(evt.rowDetailUpdated, {'row': $row, 'detail': $next});
             return !exists;
         };
 
@@ -748,8 +754,8 @@
 
             if (ft.options.debug === true && $.isFunction(ft.options.log)) ft.options.log(eventName, 'event');
 
-            args = args || { };
-            var def = { 'ft': ft };
+            args = args || {};
+            var def = {'ft': ft};
             $.extend(true, def, args);
             var e = $.Event(eventName, def);
             if (!e.ft) {

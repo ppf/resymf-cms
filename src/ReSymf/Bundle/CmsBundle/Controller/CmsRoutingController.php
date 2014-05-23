@@ -29,8 +29,8 @@ class CmsRoutingController extends Controller
             ->getQuery()
             ->getOneOrNullResult();
 
-        if($pageObject) {
-            return $this->render('ReSymfCmsBundle:cms:index.html.twig', array( 'pageObject' => $pageObject ));
+        if ($pageObject) {
+            return $this->render('ReSymfCmsBundle:cms:index.html.twig', array('pageObject' => $pageObject));
         } else {
             return $this->notFoundAction();
         }

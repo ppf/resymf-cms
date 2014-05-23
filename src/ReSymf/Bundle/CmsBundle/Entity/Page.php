@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Page", createLabel="Create Page")
+ * @Form(editLabel="Edit Page", createLabel="Create Page", showLabel="Show Page")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */

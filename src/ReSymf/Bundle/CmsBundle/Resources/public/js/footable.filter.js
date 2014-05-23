@@ -89,7 +89,7 @@
                 clear = !filterString;
 
             //raise a pre-filter event so that we can cancel the filtering if needed
-            var event = ft.raise('footable_filtering', { filter: filterString, clear: clear });
+            var event = ft.raise('footable_filtering', {filter: filterString, clear: clear});
             if (event && event.result === false) return;
             if (event.filter && event.filter.length < minimum) {
                 return; //if we do not have the minimum chars then do nothing
@@ -113,7 +113,7 @@
                     $(this).removeClass('footable-filtered');
                 });
                 $table.data('filter-string', event.filter);
-                ft.raise('footable_filtered', { filter: event.filter, clear: false });
+                ft.raise('footable_filtered', {filter: event.filter, clear: false});
             }
         };
 
@@ -125,7 +125,7 @@
                 p.showRow(this, ft);
             });
             $table.removeData('filter-string');
-            ft.raise('footable_filtered', { clear: true });
+            ft.raise('footable_filtered', {clear: true});
         };
 
         p.showRow = function (row, ft) {

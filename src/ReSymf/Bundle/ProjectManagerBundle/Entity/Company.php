@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Company", createLabel="Create Company")
+ * @Form(editLabel="Edit Company", createLabel="Create Company", showLabel="Show Company")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -42,8 +42,8 @@ class Company
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Company Name",type="text",required=true)
+     * @Table(hideOnDevice="", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -52,7 +52,7 @@ class Company
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Table(hideOnDevice="tablet,phone", label="Zip code")
      * @Form(fieldLabel="Zip code",type="text",required=true)
      *
      * @ORM\Column(name="zip", type="string", length=255)
@@ -62,7 +62,7 @@ class Company
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Table(hideOnDevice="tablet,phone", label="Street")
      * @Form(fieldLabel="Street",type="text",required=true)
      *
      * @ORM\Column(name="street", type="string", length=255)
@@ -72,8 +72,8 @@ class Company
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Nip",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="NIP")
+     * @Form(fieldLabel="NIP",type="text",required=true)
      *
      * @ORM\Column(name="nip", type="string", length=255)
      */

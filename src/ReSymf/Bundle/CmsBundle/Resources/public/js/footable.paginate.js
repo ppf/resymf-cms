@@ -147,7 +147,7 @@
                 var $tbody = $(ft.table).find('> tbody');
 
                 //raise a pre-pagin event so that we can cancel the paging if needed
-                var event = ft.raise('footable_paging', { page: newPage, size: info.pageSize });
+                var event = ft.raise('footable_paging', {page: newPage, size: info.pageSize});
                 if (event && event.result === false) return;
 
                 p.fillPage(ft, $tbody, newPage);

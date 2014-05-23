@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Entity
  *
  * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
- * @Form(editLabel="Edit Contact", createLabel="Create Contact")
+ * @Form(editLabel="Edit Contact", createLabel="Create Contact", showLabel="Show Contact")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -43,8 +43,8 @@ class Contact
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Page Name",type="text",required=true)
+     * @Table(hideOnDevice="", label="Name")
+     * @Form(fieldLabel="Name",type="text",required=true)
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -54,6 +54,7 @@ class Contact
      * @var string
      *
      * @Form(type="text",required=true, fieldLabel="Last Name")
+     * @Table(hideOnDevice="tablet,phone", label="Last")
      *
      * @ORM\Column(name="last_name", type="string")
      */
@@ -62,7 +63,7 @@ class Contact
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Table(hideOnDevice="tablet,phone", label="Phone")
      * @Form(fieldLabel="Phone",type="text",required=true)
      *
      * @ORM\Column(name="phone", type="string", length=255)
@@ -72,7 +73,7 @@ class Contact
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Name")
+     * @Table(hideOnDevice="tablet,phone", label="Email")
      * @Form(fieldLabel="Email",type="text",required=true)
      *
      * @ORM\Column(name="email", type="string", length=255)
@@ -82,8 +83,8 @@ class Contact
     /**
      * @var string
      *
-     * @Table(format="html", length=300, label="Opis")
-     * @Form(type="editor",required=true, fieldLabel = "Opis")
+     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Description")
+     * @Form(type="editor",required=true, fieldLabel = "Description")
      *
      * @ORM\Column(name="description", type="text")
      */

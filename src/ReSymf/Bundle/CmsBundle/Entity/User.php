@@ -10,7 +10,10 @@ namespace ReSymf\Bundle\CmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use ReSymf\Bundle\CmsBundle\Annotation\Table;
+use ReSymf\Bundle\CmsBundle\Annotation\Form;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+
 
 /**
  * Class User
@@ -18,6 +21,9 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *
  * @ORM\Table(name="resymf_users")
  * @ORM\Entity(repositoryClass="ReSymf\Bundle\CmsBundle\Entity\UserRepository")
+ *
+ * @Table(sorting=true, paging=true, pageSize=10, filtering=true)
+ * @Form(editLabel="Edit Profile", createLabel="Create Profile", showLabel="Show Profile")
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
@@ -27,36 +33,56 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Table(display=false)
+     * @Form(display=false)
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     *
+     * @Table(hideOnDevice="tablet,phone", label="username")
+     * @Form(fieldLabel="Username",type="text",required=true)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=32)
+     *
+     * @Table(display=false)
+     * @Form(display=false)
      */
     private $salt;
 
     /**
      * @ORM\Column(type="string", length=64)
+     *
+     * @Table(display=false)
+     * @Form(display=false)
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
+     *
+     * @Table(hideOnDevice="tablet,phone", label="email")
+     * @Form(fieldLabel="email",type="text",required=true)
      */
     private $email;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
+     *
+     * @Table(hideOnDevice="tablet,phone", label="active")
+     * @Form(fieldLabel="Active",type="text",required=true)
      */
     private $isActive;
 
     /**
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="users")
+     *
+     * @Table(display=false)
+     * @Form(display=false)
      *
      */
     private $roles;
@@ -78,6 +104,19 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Set username
+     *
+     * @param string $username
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getSalt()
@@ -86,11 +125,37 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -157,55 +222,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $username
-     * @return User
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     * @return User
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
      * Set email
      *
      * @param string $email
@@ -219,16 +235,18 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set isActive
+     * Get id
      *
-     * @param boolean $isActive
-     * @return User
+     * @return integer
      */
-    public function setIsActive($isActive)
+    public function getId()
     {
-        $this->isActive = $isActive;
+        return $this->id;
+    }
 
-        return $this;
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -239,6 +257,19 @@ class User implements AdvancedUserInterface, \Serializable
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return User
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
     }
 
     /**

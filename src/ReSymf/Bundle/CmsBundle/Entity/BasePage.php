@@ -32,7 +32,7 @@ class BasePage
      * @var \DateTime
      *
      * @Table(label="Create Date", format="date", dateFormat="Y-m-d H:i:s")
-     * @Form(type="date",required=true, autoInput="currentDateTime")
+     * @Form(type="date",required=true, autoInput="currentDateTime", fieldLabel="Create date")
      *
      * @ORM\Column(name="create_date", type="datetime", nullable=true)
      */

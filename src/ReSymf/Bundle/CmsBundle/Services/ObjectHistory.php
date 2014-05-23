@@ -14,7 +14,8 @@ namespace ReSymf\Bundle\CmsBundle\Services;
  *
  * @author Piotr Francuz <piotr.francuz@bizneslan.pl>
  */
-class ObjectHistory {
+class ObjectHistory
+{
 
     function __construct()
     {

@@ -28,7 +28,7 @@ class PopulateDatabaseCommand extends ContainerAwareCommand
         $authorId = 1;
         $slug = 'page';
 
-        for($i = 0; $i<200; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $page = new Page();
             $page->setAuthorId($authorId);
             $page->setContent($content);

@@ -53,6 +53,19 @@ class Role implements RoleInterface
     }
 
     /**
+     * Set role
+     *
+     * @param string $role
+     * @return Role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -60,19 +73,6 @@ class Role implements RoleInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Role
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -86,14 +86,14 @@ class Role implements RoleInterface
     }
 
     /**
-     * Set role
+     * Set name
      *
-     * @param string $role
+     * @param string $name
      * @return Role
      */
-    public function setRole($role)
+    public function setName($name)
     {
-        $this->role = $role;
+        $this->name = $name;
 
         return $this;
     }

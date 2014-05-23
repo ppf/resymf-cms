@@ -47,11 +47,6 @@ class AdminConfigurator
         }
     }
 
-    public function readConfig()
-    {
-
-    }
-
     /**
      * set default values to adminmenu configuration
      *
@@ -74,7 +69,7 @@ class AdminConfigurator
                 if (!isset($adminConfig[$key]['remote'])) {
                     $adminConfig[$key]['remote'] = false;
                 }
-                
+
                 if (!isset($adminConfig[$key]['object_prefix'])) {
                     $adminConfig[$key]['object_prefix'] = 'object';
                 }
@@ -84,9 +79,9 @@ class AdminConfigurator
                 throw new Exception('No template set in ' . $key . ' area in adminmenu.yml file');
             }
 
-                if (!isset($adminConfig[$key]['hidden'])) {
-                    $adminConfig[$key]['hidden'] = false;
-                }
+            if (!isset($adminConfig[$key]['hidden'])) {
+                $adminConfig[$key]['hidden'] = false;
+            }
             if (!isset($adminConfig[$key]['icon'])) {
                 $adminConfig[$key]['icon'] = 'file';
             }
@@ -95,11 +90,16 @@ class AdminConfigurator
                 $adminConfig[$key]['label'] = 'No Label';
             }
 
-            if(!isset($adminConfig[$key]['role']) || empty($adminConfig[$key]['role'])) {
+            if (!isset($adminConfig[$key]['role']) || empty($adminConfig[$key]['role'])) {
                 $adminConfig[$key]['role'] = 'ROLE_ADMIN';
             }
         }
         return $adminConfig;
+    }
+
+    public function readConfig()
+    {
+
     }
 
     public function getAdminConfig()

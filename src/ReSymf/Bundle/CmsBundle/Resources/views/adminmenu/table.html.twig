@@ -1,6 +1,7 @@
 {% if table_config is defined %}
+    <br/><input type="text" id="filter" class="form-control show-filter" placeholder="Search"/>
     <table class="footable metro-blue"
-           data-page-size="{% if table_config.pageSize %}{{ table_config.pageSize }} {% endif %}">
+           data-page-size="{% if table_config.pageSize %}{{ table_config.pageSize }} {% endif %}" data-filter=#filter>
         <thead>
         <tr>
             {% if table_config.fields %}
@@ -23,7 +24,7 @@
             {% for entity in entities %}
                 <tr>
                     <td>
-                        <input type="checkbox" value="check" name="check" class="prettyCheckbox" />
+                        <input type="checkbox" value="check" name="check" class="prettyCheckbox"/>
                     </td>
                     {% if table_config.fields %}
 
@@ -42,9 +43,12 @@
                         {% endfor %}
                         <td>
                             {# TODO: check actions and roles #}
-                            <a href="{{ path('object_show', {'type' : object_type, 'id' : entity.id }) }}" class="action-link"><i class="fa fa-arrow-circle-right fa-2x"></i></a>
-                            <a href="{{ path('object_edit', {'type' : object_type, 'id' : entity.id }) }}" class="action-link"><i class="fa fa-edit fa-2x"></i></a>
-                            <a href="{{ path('object_delete', {'type' : object_type, 'id' : entity.id }) }}" class="action-link"><i class="fa fa-trash-o fa-2x"></i></a>
+                            <a href="{{ path('object_show', {'type' : object_type, 'id' : entity.id }) }}"
+                               class="action-link"><i class="fa fa-arrow-circle-right fa-2x"></i></a>
+                            <a href="{{ path('object_edit', {'type' : object_type, 'id' : entity.id }) }}"
+                               class="action-link"><i class="fa fa-edit fa-2x"></i></a>
+                            <a href="{{ path('object_delete', {'type' : object_type, 'id' : entity.id }) }}"
+                               class="action-link"><i class="fa fa-trash-o fa-2x"></i></a>
                         </td>
 
 
@@ -59,7 +63,7 @@
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="{{  table_config.fields|length +2 }}">
+            <td colspan="{{ table_config.fields|length +2 }}">
                 <div class="{% if table_config.paging %} pagination {% endif %} pagination-centered"></div>
             </td>
         </tr>

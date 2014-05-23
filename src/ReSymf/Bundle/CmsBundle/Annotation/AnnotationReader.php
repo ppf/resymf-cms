@@ -61,15 +61,15 @@ class AnnotationReader
 
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Table');
             if (null !== $annotation) {
-                if($annotation->getDisplay()) {
+                if ($annotation->getDisplay()) {
                     $hideOnDevice = $annotation->getHideOnDevice();
                     $label = $annotation->getLabel();
                     $format = $annotation->getFormat();
                     $dateFormat = $annotation->getDateFormat();
-                    $tableConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label, 'format' => $format, 'dateFormat' => $dateFormat);
+                    $tableConfig->fields[] = array('name' => $reflectionProperty->getName(), 'hideOnDevice' => $hideOnDevice, 'label' => $label, 'format' => $format, 'dateFormat' => $dateFormat);
                 }
             } else {
-                $tableConfig->fields[] = array('name' =>$reflectionProperty->getName());
+                $tableConfig->fields[] = array('name' => $reflectionProperty->getName());
             }
         }
 
@@ -101,15 +101,15 @@ class AnnotationReader
         foreach ($properties as $reflectionProperty) {
             $annotation = $this->reader->getPropertyAnnotation($reflectionProperty, 'ReSymf\Bundle\CmsBundle\Annotation\Form');
             if (null !== $annotation) {
-                if($annotation->getDisplay()) {
+                if ($annotation->getDisplay()) {
                     $type = $annotation->getType();
                     $relationType = $annotation->getRelationType();
                     $class = $annotation->getClass();
                     $fieldLabel = $annotation->getFieldLabel();
-                    $formConfig->fields[] = array('name' =>$reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class);
+                    $formConfig->fields[] = array('name' => $reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class);
                 }
             } else {
-                $formConfig->fields[] = array('name' =>$reflectionProperty->getName());
+                $formConfig->fields[] = array('name' => $reflectionProperty->getName());
             }
         }
 

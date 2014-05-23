@@ -16,36 +16,36 @@
         <ul class="nav navbar-nav">
             {% for key, element in menu %}
                 {% if element.hidden != true %}
-                {% if element.type == 'crud' %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                    class="fa fa-{{ element.icon }} fa-lg"></i> {{ element.plural_label }} <b
-                                    class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            {% if element.actions %}
-                                {% for action in element.actions if action=='list' %}
-                                    <li>
-                                        {% set path = element.object_prefix ~ '_' ~ action %}
-                                        <a href="{{ path( path, { 'type': key }  ) }}"><i
-                                                    class="fa fa-list fa-lg"></i> {{ action }}</a>
-                                    </li>
-                                {% endfor %}
-                                {% for action in element.actions if action=='create' %}
-                                    <li>
-                                        {% set path = element.object_prefix ~ '_' ~ action %}
-                                        <a href="{{ path( path, { 'type': key }  ) }}"><i
-                                                    class="fa fa-plus-square fa-lg"></i> {{ action }}</a>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
-                        </ul>
-                    </li>
-                {% elseif element.type == 'page' %}
-                    <li>
-                        <a href="{{ path('resymf_admin_custom_page', {'slug': element.slug}) }}"><i
-                                    class="fa fa-{{ element.icon }} fa-lg"></i> {{ element.label }}</a>
-                    </li>
-                {% endif %}
+                    {% if element.type == 'crud' %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-{{ element.icon }} fa-lg"></i> {{ element.plural_label }} <b
+                                        class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                {% if element.actions %}
+                                    {% for action in element.actions if action=='list' %}
+                                        <li>
+                                            {% set path = element.object_prefix ~ '_' ~ action %}
+                                            <a href="{{ path( path, { 'type': key }  ) }}"><i
+                                                        class="fa fa-list fa-lg"></i> {{ action }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    {% for action in element.actions if action=='create' %}
+                                        <li>
+                                            {% set path = element.object_prefix ~ '_' ~ action %}
+                                            <a href="{{ path( path, { 'type': key }  ) }}"><i
+                                                        class="fa fa-plus-square fa-lg"></i> {{ action }}</a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% elseif element.type == 'page' %}
+                        <li>
+                            <a href="{{ path('resymf_admin_custom_page', {'slug': element.slug}) }}"><i
+                                        class="fa fa-{{ element.icon }} fa-lg"></i> {{ element.label }}</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
 
