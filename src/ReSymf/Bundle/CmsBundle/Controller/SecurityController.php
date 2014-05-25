@@ -22,7 +22,7 @@ class SecurityController extends Controller
 
     public function loginAction()
     {
-        $request = $this->getRequest();
+        $request = $this->container->get('request');
         $session = $request->getSession();
 
         // get the login error if there is one
