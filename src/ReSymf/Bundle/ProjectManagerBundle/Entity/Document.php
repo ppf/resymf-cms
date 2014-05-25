@@ -31,6 +31,10 @@ class Document
 {
 
     /**
+     *
+     * @Form(display=false)
+     * @Table(display=false)
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -47,8 +51,8 @@ class Document
     private $name;
 
     /**
-     * @Table(hideOnDevice="tablet,phone", label="Name")
-     * @Form(fieldLabel="Name",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Files")
+     * @Form(fieldLabel="Files",type="file",required=true)
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */

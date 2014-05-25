@@ -22,7 +22,7 @@ class Form
     private $required = true;
     private $length;
     private $display = true;
-    private $readOnly;
+    private $readOnly = false;
     private $editLabel = 'Edit Object';
     private $createLabel = 'Create Object';
     private $showLabel = 'Show Object';

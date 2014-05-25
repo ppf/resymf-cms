@@ -10,3 +10,8 @@ resymf_admin_profile_show:
 resymf_admin_settings:
     pattern: /settings
     defaults: { _controller: "ReSymfCmsBundle:AdminMenu:settings" }
+resymf_admin_upload:
+    pattern: /upload-file
+    defaults: { _controller: "ReSymfCmsBundle:FileManager:upload" }
+    requirements:
+        _method: POST|GET
