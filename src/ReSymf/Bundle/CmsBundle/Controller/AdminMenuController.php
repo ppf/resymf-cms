@@ -294,6 +294,9 @@ class AdminMenuController extends Controller
             $em->persist($editObject);
             $em->flush();
         }
+//        echo '<pre>';
+//        print_r($formConfig);
+//        die();
 
         $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $editObject);
 //        print_r($multiSelectValues);
@@ -373,8 +376,8 @@ class AdminMenuController extends Controller
     {
         $request = $this->container->get('request');
         $url = $request->headers->get('referer');
-        print_r($url);
-        die();
+//        print_r($url);
+//        die();
         if (!$id) {
             return $this->redirect($this->generateUrl('resymf_admin_dashboard'), 301);
         }
@@ -445,7 +448,5 @@ class AdminMenuController extends Controller
                 'multi_select' => array()
             )
         );
-
     }
-
 }

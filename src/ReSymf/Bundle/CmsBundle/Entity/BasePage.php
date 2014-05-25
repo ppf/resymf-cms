@@ -28,15 +28,6 @@ class BasePage
      */
     protected $id;
 
-    /**
-     * @var \DateTime
-     *
-     * @Table(label="Create Date", format="date", dateFormat="Y-m-d H:i:s")
-     * @Form(type="date",required=true, autoInput="currentDateTime", fieldLabel="Create date")
-     *
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
-     */
-    protected $createDate;
 
     /**
      * @var string
@@ -59,23 +50,35 @@ class BasePage
     protected $content;
 
     /**
+     * @var string
+     *
+     * @Form(type="text",required=true, fieldLabel="Slug to page", autoInput="uniqueSlug")
+     *
+     * @ORM\Column(name="slug", type="string")
+     */
+    protected $slug;
+
+    /**
+     * @var \DateTime
+     *
+     * @Table(label="Create Date", format="date", dateFormat="Y-m-d H:i:s")
+     * @Form(type="text", readOnly=true, required=true, autoInput="currentDateTime", fieldLabel="Create date")
+     *
+     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     */
+    protected $createDate;
+
+
+    /**
      * @var integer
      *
      * @Table(hideOnDevice="tablet,phone", label="Author", format="text")
-     * @Form(display=false, autoInput="currentUserId")
+     * @Form(display="text", readOnly=true, autoInput="currentUserId", fieldLabel="Author")
      *
      * @ORM\ManyToOne(targetEntity="User")
      */
     protected $author;
 
-    /**
-     * @var string
-     *
-     * @Form(type="text",required=true, fieldLabel="Slug to Page", autoInput="uniqueSlug")
-     *
-     * @ORM\Column(name="slug", type="string")
-     */
-    protected $slug;
 
     /**
      * Get id

@@ -4,7 +4,7 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": {"": "src/"}
     },
     "require": {
         "php": ">=5.3.3",
@@ -21,7 +21,7 @@
         "ircmaxell/password-compat": "dev-master",
         "incenteev/composer-parameter-handler": "~2.0",
         "components/jquery": "dev-master",
-	"symfony/yaml": "2.3.*@dev"
+        "symfony/yaml": "2.3.*@dev"
     },
     "scripts": {
         "post-install-cmd": [
