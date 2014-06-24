@@ -8,10 +8,6 @@ ReSymf-CMS
  - project manager bundle to manage your projects. This bundle help You to improve Your project management system on Scrum
  - crm bundle where you can manage clients, generate invoices, check your tasks, meetings, employees etc.
 
-<h4>See project on <a target="_blank" href="http://resymf-cms.bizneslan.pl/admin">Demo Site</a></h4>
-
-<h5>Test login:</h5>
- - login: admin
- - password: peterson
+<h4>See project on <a target="_blank" href="http://resymf-cms.pl">Project Site</a></h4>
 
 

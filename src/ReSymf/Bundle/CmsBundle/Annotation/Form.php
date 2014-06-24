@@ -27,6 +27,7 @@ class Form
     private $createLabel = 'Create Object';
     private $showLabel = 'Show Object';
     private $fieldLabel;
+    private $dateFormat ="Y-m-d H:i:s";
     private $relationType;
     private $autoInput = false;
     private $class;
@@ -63,6 +64,22 @@ class Form
     public function setShowLabel($showLabel)
     {
         $this->showLabel = $showLabel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormat;
+    }
+
+    /**
+     * @param string $dateFormat
+     */
+    public function setDateFormat($dateFormat)
+    {
+        $this->dateFormat = $dateFormat;
     }
 
     /**

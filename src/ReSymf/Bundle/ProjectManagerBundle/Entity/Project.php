@@ -74,8 +74,8 @@ class Project
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Hour price")
-     * @Form(fieldLabel="Hour price",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Hour price[zl]")
+     * @Form(fieldLabel="Hour price[zl]",type="text",required=true)
      *
      * @ORM\Column(name="hour_price", type="string", length=255)
      */
@@ -84,32 +84,49 @@ class Project
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Priced hours")
-     * @Form(fieldLabel="Priced hours",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Paid hours")
+     * @Form(fieldLabel="Paid hours",type="text",readOnly=true, required=true)
      *
-     * @ORM\Column(name="total_hours", type="string", length=255)
      */
     private $totalHours;
 
     /**
      * @var string
      *
-     * @Table(hideOnDevice="tablet,phone", label="Worked hours")
-     * @Form(fieldLabel="Worked hours",type="text",required=true)
+     * @Table(hideOnDevice="tablet,phone", label="Total cost[zl]")
+     * @Form(fieldLabel="Total cost[zl]",readOnly=true, type="text",required=true)
      *
-     * @ORM\Column(name="real_total_hours", type="string", length=255)
+     */
+    private $totalCost;
+
+    /**
+     * @var string
+     *
+     * @Table(hideOnDevice="tablet,phone", label="Worked hours")
+     * @Form(fieldLabel="Worked hours",readOnly=true, type="text",required=true)
+     *
      */
     private $realTotalHours;
 
     /**
      * @var string
      *
-     * @Table(format="html", hideOnDevice="tablet,phone", length=300, label="Description")
+     * @Table(format="html", hideOnDevice="all", length=300, label="Description")
      * @Form(type="editor",required=true, fieldLabel = "Description")
      *
      * @ORM\Column(name="description", type="text")
      */
     private $description;
+
+    /**
+     * @var string
+     *
+     * @Table(format="html", hideOnDevice="all", length=300, label="Data Access")
+     * @Form(type="editor",required=true, fieldLabel = "Data Access")
+     *
+     * @ORM\Column(name="data_access", type="text")
+     */
+    private $dataAccess;
 
     /**
      * @var Task
@@ -127,7 +144,7 @@ class Project
      * @Table(display=false)
      * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Contact", displayField="name", fieldLabel="Contacts")
      *
-     * @ORM\ManyToMany(targetEntity="Contact")
+     * @ORM\OneToMany(targetEntity="Contact", mappedBy="project")
      */
     private $contacts;
 
@@ -135,9 +152,9 @@ class Project
      * @var Files
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
+     * @Form(type="relation", relationType="oneToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Document", fieldLabel="Documents")
      *
-     * @ORM\ManyToMany(targetEntity="Document")
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="project")
      */
     private $documents;
 
@@ -148,7 +165,7 @@ class Project
      * @Table(display=false)
      * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Term", fieldLabel="Terms")
      *
-     * @ORM\ManyToMany(targetEntity="Term")
+     * @ORM\OneToMany(targetEntity="Term", mappedBy="project")
      */
     private $terms;
 
@@ -160,6 +177,38 @@ class Project
         $this->contacts = new ArrayCollection();
         $this->sprints = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataAccess()
+    {
+        return $this->dataAccess;
+    }
+
+    /**
+     * @param string $dataAccess
+     */
+    public function setDataAccess($dataAccess)
+    {
+        $this->dataAccess = $dataAccess;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalCost()
+    {
+        return ($this->getTotalHours() * $this->getHourPrice());
+    }
+
+    /**
+     * @param string $total_cost
+     */
+    public function setTotalCost($total_cost)
+    {
+        $this->totalCost = $total_cost;
     }
 
     /**
@@ -216,7 +265,11 @@ class Project
      */
     public function getRealTotalHours()
     {
-        return $this->realTotalHours;
+        $sum = 0;
+        foreach($this->sprints as $sprint){
+            $sum += $sprint->getRealTotalHours();
+        };
+        return $sum;
     }
 
     /**
@@ -232,7 +285,11 @@ class Project
      */
     public function getTotalHours()
     {
-        return $this->totalHours;
+        $sum = 0;
+        foreach($this->sprints as $sprint){
+            $sum += $sprint->getTotalHours();
+        };
+        return $sum;
     }
 
     /**
@@ -310,6 +367,21 @@ class Project
     public function addSprint($sprint)
     {
         $this->sprints->add($sprint);
+    }
+
+    public function addDocument($document)
+    {
+        $this->documents->add($document);
+    }
+
+    public function addTerm($term)
+    {
+        $this->terms->add($term);
+    }
+
+    public function addContact($contact)
+    {
+        $this->contacts->add($contact);
     }
 
     /**

@@ -53,8 +53,8 @@ class Term
     /**
      * @var \DateTime
      *
-     * @Table(label="Date", format="date", dateFormat="Y-m-d H:i:s")
-     * @Form(type="date",required=true, autoInput="currentTime")
+     * @Table(label="Date", format="date", dateFormat="Y-m-d")
+     * @Form(type="date",required=true, dateFormat="DD-MM-YYYY")
      *
      * @ORM\Column(name="create_date", type="datetime", nullable=true)
      */
@@ -71,11 +71,26 @@ class Term
     private $description;
 
     /**
+     * @var Project
+     *
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project", fieldLabel="Project")
+     * @Table(display=false)
+     *
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
+     */
+    private $project;
+
+
+    /**
      * @return \DateTime
      */
     public function getDate()
     {
-        return $this->date;
+        if ($this->date) {
+            return $this->date->format('Y-m-d');
+        } else {
+            return new \DateTime('now');
+        }
     }
 
     /**
@@ -84,6 +99,22 @@ class Term
     public function setDate($date)
     {
         $this->date = $date;
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param Project $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
     }
 
     /**

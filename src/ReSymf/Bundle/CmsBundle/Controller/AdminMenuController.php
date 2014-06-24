@@ -170,6 +170,7 @@ class AdminMenuController extends Controller
                                     $addMethodName = 'add' . $type;
                                 } else {
                                     $addMethodName2 = 'add' . $field['name'];
+                                    $addMethodName2 = 'add' . $field['name'];
                                 }
                                 $relationObject->$addMethodName($object);
                                 $object->$addMethodName2($relationObject);
@@ -178,6 +179,14 @@ class AdminMenuController extends Controller
                         }
 
                         break;
+                    case 'date':
+                        $object->$methodName(new \DateTime($request->get($field['name'])));
+                        break;
+                    case 'file':
+//                        echo $field['name'];
+//                        print_r($request->get($field['name']));
+//                        die();
+                        $object->$methodName(json_encode($request->get($field['name'])));
                     default:
                         $object->$methodName($request->get($field['name']));
                 }
@@ -282,6 +291,15 @@ class AdminMenuController extends Controller
                         }
 
                         break;
+                    case 'date':
+                        $editObject->$methodName(new \DateTime($request->get($field['name'])));
+                        break;
+                    case 'file':
+//                        echo $field['name'];
+//                        print_r(json_encode($request->get($field['name'])));
+//                        die();
+                        $editObject->$methodName($request->get($field['name']));
+
                     default:
                         $editObject->$methodName($request->get($field['name']));
                 }
@@ -293,6 +311,7 @@ class AdminMenuController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($editObject);
             $em->flush();
+//            die();
         }
 //        echo '<pre>';
 //        print_r($formConfig);

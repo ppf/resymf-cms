@@ -87,9 +87,8 @@ class Sprint
      * @var string
      *
      * @Table(hideOnDevice="tablet,phone", label="Priced hours")
-     * @Form(fieldLabel="Priced hours",type="text",required=true)
+     * @Form(fieldLabel="Priced hours",readOnly=true, type="text",required=true)
      *
-     * @ORM\Column(name="hour_price", type="string", length=255)
      */
     private $totalHours;
 
@@ -107,9 +106,8 @@ class Sprint
      * @var string
      *
      * @Table(hideOnDevice="tablet,phone", label="Worked hours")
-     * @Form(fieldLabel="Worked hours",type="text",required=true)
+     * @Form(fieldLabel="Worked hours",readOnly=true, type="text",required=true)
      *
-     * @ORM\Column(name="real_total_hours", type="string", length=255)
      */
     private $realTotalHours;
 
@@ -124,7 +122,11 @@ class Sprint
      */
     public function getRealTotalHours()
     {
-        return $this->realTotalHours;
+        $sum = 0;
+        foreach($this->tasks as $task){
+            $sum += $task->getRealTotalHours();
+        };
+        return $sum;
     }
 
     /**
@@ -140,7 +142,11 @@ class Sprint
      */
     public function getTotalHours()
     {
-        return $this->totalHours;
+        $sum = 0;
+        foreach($this->tasks as $task){
+            $sum += $task->getTotalHours();
+        };
+        return $sum;
     }
 
     /**

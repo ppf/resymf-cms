@@ -33,4 +33,14 @@ class Page extends BasePage
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var Terms
+     *
+     * @Table(display=false)
+     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\CmsBundle\Entity\Category", fieldLabel="Categories")
+     *
+     * @ORM\ManyToMany(targetEntity="Category")
+     */
+    private $categories;
 }

@@ -54,9 +54,19 @@ class Document
      * @Table(hideOnDevice="tablet,phone", label="Files")
      * @Form(fieldLabel="Files",type="file",required=true)
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="array", length=255, nullable=true)
      */
     private $path;
+
+    /**
+     * @var Project
+     *
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project", fieldLabel="Project")
+     * @Table(display=false)
+     *
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
+     */
+    private $project;
 
     /**
      * @return mixed
@@ -72,6 +82,22 @@ class Document
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param Project $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
     }
 
     /**

@@ -91,6 +91,15 @@ class Contact
     private $description;
 
     /**
+     * @var Project
+     *
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project", fieldLabel="Project")
+     * @Table(display=false)
+     *
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
+     */
+    private $project;
+    /**
      * @return string
      */
     public function getDescription()
@@ -104,6 +113,22 @@ class Contact
     public function setDescription($content)
     {
         $this->description = $content;
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param Project $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
     }
 
     /**

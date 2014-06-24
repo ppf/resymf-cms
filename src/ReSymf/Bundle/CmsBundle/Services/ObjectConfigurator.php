@@ -270,7 +270,6 @@ class ObjectConfigurator
         $baseSlug = $baseEntity['slug'];
 
         foreach ($adminConfig as $key => $value) {
-
             if (isset($value['slug']) && $value['slug'] == $baseSlug) {
                 $entities[] = $adminConfig[$key]['class'];
             }

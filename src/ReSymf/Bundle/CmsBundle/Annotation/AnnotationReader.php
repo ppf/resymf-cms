@@ -107,7 +107,9 @@ class AnnotationReader
                     $class = $annotation->getClass();
                     $fieldLabel = $annotation->getFieldLabel();
                     $readOnly = $annotation->getReadOnly();
-                    $formConfig->fields[] = array('name' => $reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class, 'readOnly' => $readOnly);
+                    $dateFormat = $annotation->getDateFormat();
+
+                    $formConfig->fields[] = array('name' => $reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class, 'readOnly' => $readOnly, 'dateFormat' => $dateFormat);
                 }
             } else {
                 $formConfig->fields[] = array('name' => $reflectionProperty->getName());

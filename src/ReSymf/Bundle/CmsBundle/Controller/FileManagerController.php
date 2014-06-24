@@ -37,7 +37,7 @@ class FileManagerController extends Controller
         $name = preg_replace("([^\w\s\d\-_~,;:\[\]\(\].]|[\.]{2,})", '', $name);
 
         if (move_uploaded_file($file->getPathName(), $uploadDir.$name)) {
-            echo json_encode(array('status'=>'File was uploaded successfuly!'));
+            echo json_encode(array('status'=>'File was uploaded successfuly!', 'fileName' => $name));
         } else {
             echo json_encode(array('status' => 'Something went wrong with your upload!'));
         }

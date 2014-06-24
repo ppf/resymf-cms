@@ -5,7 +5,7 @@
         <div class="col-lg-2 col-md-2"></div>
         <div class="col-lg-8 col-md-8 col-sm-12 ">
             <div class="well">
-                <form action="" method="POST" class="bs-example form-horizontal">
+                <form action="" method="POST" class="bs-example form-horizontal" enctype="multipart/form-data">
                     <fieldset>
                         <div class="form-group">
                             <div class="col-lg-2">
@@ -31,9 +31,11 @@
                                 <input type="submit" class="btn btn-primary" value="{{ 'object.save'|trans }}"/>
 
                                 {% if edit_object is defined %}
-                                    {% set id = attribute(edit_object,'id') %}
-                                    <a class="btn btn-success show-button"
-                                       href="{{ path('object_show', {type: form_config.objectKey, 'id': id}) }}">Show</a>
+                                    {% if form_config.objectKey is defined %}
+                                        {% set id = attribute(edit_object,'id') %}
+                                        <a class="btn btn-success show-button"
+                                           href="{{ path('object_show', {type: form_config.objectKey, 'id': id}) }}">Show</a>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>

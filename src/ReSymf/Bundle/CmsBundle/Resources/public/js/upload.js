@@ -2,6 +2,7 @@ $(function(){
 	
 	var dropbox = $('#dropbox'),
 		message = $('.message', dropbox),
+        fileFieldName = $('input[name="fileFieldName"]').val(),
         globalFile = '';
 	
 	dropbox.filedrop({
@@ -13,6 +14,7 @@ $(function(){
 		url: '/app_dev.php/admin/upload-file',
 		
 		uploadFinished:function(i,file,response) {
+            $('.files').append('<h4>'+response.fileName+'</h4><input type="hidden" value="'+response.fileName+'" name="'+fileFieldName +'"/>');
 			$.data(file).addClass('done');
 			// response is the JSON object that post_file.php returns
 		},

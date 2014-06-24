@@ -17,7 +17,7 @@ textarea {
 }
 
 .action-link {
-    padding: 10px;
+    padding: 8px;
 }
 
 .form-group .col-lg-9 {
@@ -46,4 +46,14 @@ textarea {
     padding-left: 0px;
     width: 100%;
     margin-bottom: 10px;
+}
+body {
+padding-top: 65px;
+}
+.footable-last-column {
+    min-width:150px;
+}
+.footable-toggle {
+    position: relative;
+    bottom: 9px;
 }

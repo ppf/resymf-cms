@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8"/>
     <title>
-        {#{% block title %}#}
-        {#{% if pageObject.title %}#}
-        {#{{ attribute(pageObject,'title') }}#}
-        {#{% endif %}#}
-        {#{% endblock %}#}
-        {#| Resymf app#}
+        {% block title %}
+            {% if pageObject is defined %}
+                {% if pageObject.title %}
+                    {{ attribute(pageObject,'title') }}
+                {% endif %}
+            {% else %}
+                ADMIN
+            {% endif %}
+        {% endblock %}
+        | ReSymf-CMS
     </title>
     <link href="{{ asset('bundles/resymfcms/css/bootstrap.min.css') }}" rel="stylesheet"/>
     {% block stylesheets %}{% endblock %}

@@ -41,7 +41,7 @@
 
                 <div class="col-lg-9">
                     <input type="text" class="form-control datepicker" name="{{ field.name }}"
-                           value="{{ value }}" data-date-format="DD-MM-YYYY" {{ disabled }}/>
+                           value="{{ value }}" data-date-format="{{ field.dateFormat }}" {{ disabled }}/>
                 </div>
             </div>
         {% endif %}
@@ -55,14 +55,17 @@
                     {% endif %}
                     :</label>
 
-                <div class="col-lg-9">
+                <div class="col-lg-9 files">
+                    <input type="hidden" value="{{ field.name }}[]" name="fileFieldName">
                     {% if value %}
-                        {% for file in value %}
-                            <input type="text" class="form-control" name="{{ field.name }}"
-                                   value="{{ file }}" disabled="disabled"/>
+                        {% set files = value  %}
+                        {% for file in files %}
+                            <input type="hidden" class="form-control" class="" name="{{ field.name }}[]"
+                                   value="{{ file }}"/>
+                            <h4>{{ file }}</h4>
                         {% endfor %}
                      {% else %}
-                        No files uploaded
+                        {#No files uploaded#}
                     {% endif %}
                 </div>
             </div>
