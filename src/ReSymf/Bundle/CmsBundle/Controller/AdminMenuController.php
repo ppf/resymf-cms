@@ -100,6 +100,8 @@ class AdminMenuController extends Controller
             ->getQuery()
             ->getResult();
 
+//        print_r('aaa');
+//        die();
         return $this->render('ReSymfCmsBundle:adminmenu:list.html.twig', array(
                 'menu' => $adminConfigurator->getAdminConfig(),
                 'site_config' => $adminConfigurator->getSiteConfig(),
@@ -151,6 +153,7 @@ class AdminMenuController extends Controller
                 switch ($fieldType) {
                     case 'relation':
                         $class = $field['class'];
+                        $targetEntityField = $field['targetEntityField'];
                         $relationObjects = $em->getRepository($class)
                             ->createQueryBuilder('q')
                             ->where('q.id IN(:id)')
@@ -166,13 +169,15 @@ class AdminMenuController extends Controller
                                 $addMethodName = 'set' . $type;
                                 $addMethodName2 = 'set' . $field['name'];
 
-                                if ($fieldRelationType == 'manyToOne' || $fieldRelationType == 'manyToMany') {
-                                    $addMethodName = 'add' . $type;
-                                } else {
+                                if ($fieldRelationType == 'oneToMany') {
                                     $addMethodName2 = 'add' . $field['name'];
-                                    $addMethodName2 = 'add' . $field['name'];
+
+                                } if($fieldRelationType = 'manyToMany' || $fieldRelationType = 'multiselect') {
+                                    $addMethodName2 = 'add' . $targetEntityField;
+                                } else {  ///toOne
+                                    $relationObject->$addMethodName($object);
                                 }
-                                $relationObject->$addMethodName($object);
+//
                                 $object->$addMethodName2($relationObject);
 
                             }
@@ -259,51 +264,58 @@ class AdminMenuController extends Controller
                 $fieldType = $field['type'];
                 $fieldRelationType = $field['relationType'];
                 $methodName = 'set' . $field['name'];
-
+                $targetEntityField = $field['targetEntityField'];
+                $autoInput = $field['autoInput'];
+//                print_r($field);
+//                die();
 //                if()
-                switch ($fieldType) {
-                    case 'relation':
-                        $class = $field['class'];
-                        $relationObjects = $em->getRepository($class)
-                            ->createQueryBuilder('q')
-                            ->where('q.id IN(:id)')
-                            ->setParameter('id', $request->get($field['name']))
-//                            ->setMaxResults()
-                            ->getQuery()
-                            ->getResult();
-//                        print_r($relationObject);
+                if(!$autoInput) {
+                    switch ($fieldType) {
+                        case 'relation':
+                            $class = $field['class'];
+                            $parameters = $request->get($field['name']);
 
-                        foreach ($relationObjects as $relationObject) {
-                            if ($relationObject) {
+                            $relationObjects = $em->getRepository($class)
+                                ->createQueryBuilder('q')
+                                ->where('q.id IN(:id)')
+                                ->setParameter('id', $parameters)
+                                ->getQuery()
+                                ->getResult();
 
-                                $addMethodName = 'set' . $type;
-                                $addMethodName2 = 'set' . $field['name'];
+                            $addMethodName2 = 'set' . $field['name'];
+                            $editObject->$addMethodName2($relationObjects);
+                            foreach ($relationObjects as $relationObject) {
 
-                                if ($fieldRelationType == 'manyToOne' || $fieldRelationType == 'manyToMany') {
-                                    $addMethodName = 'add' . $type;
-                                } else {
-                                    $addMethodName2 = 'add' . $field['name'];
+                                if ($relationObject) {
+
+                                    $addMethodName = 'set' . $type;
+                                    $addMethodName2 = 'set' . $field['name'];
+
+                                    if ($fieldRelationType == 'oneToMany') {
+                                        $addMethodName2 = 'add' . $field['name'];
+
+                                    }
+                                    if ($fieldRelationType = 'manyToMany' || $fieldRelationType = 'multiselect') {
+                                        $addMethodName2 = 'add' . $targetEntityField;
+                                    } else { ///toOne
+                                        $relationObject->$addMethodName($editObject);
+                                    }
+
                                 }
-                                $relationObject->$addMethodName($editObject);
-                                $editObject->$addMethodName2($relationObject);
-
                             }
-                        }
 
-                        break;
-                    case 'date':
-                        $editObject->$methodName(new \DateTime($request->get($field['name'])));
-                        break;
-                    case 'file':
-//                        echo $field['name'];
-//                        print_r(json_encode($request->get($field['name'])));
-//                        die();
-                        $editObject->$methodName($request->get($field['name']));
 
-                    default:
-                        $editObject->$methodName($request->get($field['name']));
+                            break;
+                        case 'date':
+                            $editObject->$methodName(new \DateTime($request->get($field['name'])));
+                            break;
+                        case 'file':
+                            $editObject->$methodName($request->get($field['name']));
+
+                        default:
+                            $editObject->$methodName($request->get($field['name']));
+                    }
                 }
-
             }
 
             $objectConfigurator->checkUniqueValuesFromAnnotations($editObject, $type);
@@ -376,9 +388,10 @@ class AdminMenuController extends Controller
         }
 
         $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $editObject);
-        //print_r($multiSelectValues);
-        //die();
+//        print_r($multiSelectValues);
+//        die();
 //        $multiSelectValues
+
         return $this->render(
             'ReSymfCmsBundle:adminmenu:show.html.twig',
             array(

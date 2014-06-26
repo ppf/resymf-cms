@@ -16,7 +16,13 @@ admin:
         slug: ''
         #author, time, object values
 #        history: 50
-#        role: 'ROLE_ADMIN'
+#        role: 'ROLE_ADMI
+    category:
+        class: 'ReSymf\Bundle\CmsBundle\Entity\Category'
+        actions: ['list','create','delete','update']
+        plural_label: 'Categories'
+        icon: 'cubes'
+        singular_label: 'Category'
     project:
         class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Project'
         actions: ['list','create','delete','update']

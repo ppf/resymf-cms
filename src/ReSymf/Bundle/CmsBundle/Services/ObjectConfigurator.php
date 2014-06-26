@@ -85,6 +85,8 @@ class ObjectConfigurator
                     if ($object) {
                         $methodName = 'get' . $fieldName;
                         $selectedOptionsObjects = $object->$methodName();
+//                        print_r(count($selectedOptionsObjects));
+//                        die();
                     } else {
                         $selectedOptionsObjects = array();
                     }
@@ -111,14 +113,19 @@ class ObjectConfigurator
                                 $tempOption = array();
                                 $tempOption['name'] = $option->$displayMethodName();
                                 $tempOption['id'] = $option->getId();
-                                $selectedOptions[$fieldName] = $tempOption;
+                                if($annotation->getTargetEntityField()) {
+                                    $tempOption['targetEntityField'] = $annotation->getTargetEntityField();
+                                }
+                                $selectedOptions[] = $tempOption;
                             }
 
-                            $selectedIds = $this->array_value_recursive('id', $selectedOptions[$fieldName]);
+                            $selectedIds = $this->array_value_recursive('id', $selectedOptions);
 
                             // get all options to select
 
                             $multiSelect[$fieldName]['selected'] = $selectedOptions;
+//                            print_r(count($selectedOptions));
+//                        die();
 
                         } else {
                             $multiSelect[$fieldName]['selected'] = array();
@@ -156,7 +163,7 @@ class ObjectConfigurator
                     }
                     $tableConfig = $this->resymfReader->readTableAnnotation($class);
                     $multiSelect[$fieldName]['table_config'] = $tableConfig;
-                    $multiSelect[$fieldName]['object_type'] = $this->getAdminConfigKeyByClassNAme($class);
+                    $multiSelect[$fieldName]['object_type'] = $this->getAdminConfigKeyByClassName($class);
 
                 }
             }
@@ -180,7 +187,7 @@ class ObjectConfigurator
         return $val;
     }
 
-    private function getAdminConfigKeyByClassNAme($className)
+    private function getAdminConfigKeyByClassName($className)
     {
         $adminConfig = $this->adminConfigurator->getAdminConfig();
 
@@ -196,7 +203,7 @@ class ObjectConfigurator
 
     public function setInitialValuesFromAnnotations($classNameSpace, $object)
     {
-        $adminConfigKey = $this->getAdminConfigKeyByClassNAme($classNameSpace);
+        $adminConfigKey = $this->getAdminConfigKeyByClassName($classNameSpace);
 
         if (!isset($classNameSpace)) {
             return false;
@@ -285,7 +292,7 @@ class ObjectConfigurator
             ->where('p.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getFirstResult();
 
         return $pageObject;
     }

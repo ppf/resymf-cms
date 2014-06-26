@@ -19,6 +19,7 @@ use ReSymf\Bundle\CmsBundle\Annotation\Form;
  */
 class Category
 {
+
     /**
      * @var integer
      *
@@ -30,7 +31,6 @@ class Category
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var string
      *
@@ -40,6 +40,32 @@ class Category
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @Table(format="html", length=300, label="Description")
+     * @Form(type="editor",required=true, fieldLabel = "Description")
+     *
+     * @ORM\Column(name="content", type="text")
+     */
+    private $description;
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
 
     /**
      * @return int

@@ -2,6 +2,7 @@
 
 namespace ReSymf\Bundle\CmsBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\Expr\Base;
 use ReSymf\Bundle\CmsBundle\Annotation\Table;
@@ -38,9 +39,39 @@ class Page extends BasePage
      * @var Terms
      *
      * @Table(display=false)
-     * @Form(type="relation", relationType="manyToMany", class="ReSymf\Bundle\CmsBundle\Entity\Category", fieldLabel="Categories")
+     * @Form(type="relation", relationType="multiselect", class="ReSymf\Bundle\CmsBundle\Entity\Category", fieldLabel="Categories", targetEntityField="category")
      *
      * @ORM\ManyToMany(targetEntity="Category")
      */
     private $categories;
+
+    function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
+
+    /**
+     * @return Terms
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param Terms $categories
+     */
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+
+    public function addCategory($category)
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+    }
+
 }

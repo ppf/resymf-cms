@@ -33,7 +33,7 @@ class Form
     private $class;
     private $displayField;
     private $multiSelectInEditForm = false;
-
+    private $targetEntityField;
     /**
      * save all @Form annotations from Entity to this Form object
      *
@@ -48,6 +48,22 @@ class Form
             }
             $this->$key = $value;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTargetEntityField()
+    {
+        return $this->targetEntityField;
+    }
+
+    /**
+     * @param mixed $targetEntityField
+     */
+    public function setTargetEntityField($targetEntityField)
+    {
+        $this->targetEntityField = $targetEntityField;
     }
 
     /**

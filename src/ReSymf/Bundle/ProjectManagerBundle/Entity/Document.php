@@ -51,7 +51,7 @@ class Document
     private $name;
 
     /**
-     * @Table(hideOnDevice="tablet,phone", label="Files")
+     * @Table(display=false)
      * @Form(fieldLabel="Files",type="file",required=true)
      *
      * @ORM\Column(type="array", length=255, nullable=true)

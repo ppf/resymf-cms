@@ -94,7 +94,7 @@
             </div>
         {% endif %}
         {% if field.type == 'relation' %}
-            {% if (field.relationType == 'manyToOne') or (field.relationType == 'oneToOne') %}
+            {% if (field.relationType == 'manyToOne') or (field.relationType == 'oneToOne') or (field.relationType == 'multiselect') %}
                 <div class="form-group">
                     <label for="" class="col-lg-2 control-label">
                         {% if field.fieldLabel %}
@@ -106,11 +106,21 @@
 
                     <div class="col-lg-9">
 
-                        <select class="multiselect multiselect-search" data-toggle="dropdown"
-                                name="{{ field.name }}" {{ disabled }}>
+                        <select class="multiselect multiselect-search "
+                                data-toggle="dropdown"
+                                {% if  field.relationType == 'multiselect' %}
+                                    multiple="multiple"
+                                {% endif %}
+                                name="{{ field.name }}[]"
+                                {{ disabled }}>
                             {% if multi_select[field.name]['all'] is  defined %}
                                 {% for option in multi_select[field.name]['all'] %}
-                                    <option value="{{ option.id }}">{{ option.name }}</option>
+                                    {% if app.request.get(field.name) == option.id %}
+                                        {% set selected='selected="selected"' %}
+                                    {% else %}
+                                        {% set selected='' %}
+                                    {% endif %}
+                                    <option value="{{ option.id }}" {{ selected }}>{{ option.name }}</option>
                                 {% endfor %}
                             {% endif %}
                             {% if multi_select[field.name]['selected'] is  defined %}

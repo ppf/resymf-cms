@@ -19,7 +19,7 @@
                     {% if element.type == 'crud' %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-{{ element.icon }} fa-lg"></i> {{ element.plural_label }} <b
+                                        class="fa fa-{{ element.icon }} "></i> {{ element.plural_label }} <b
                                         class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 {% if element.actions %}
@@ -27,14 +27,14 @@
                                         <li>
                                             {% set path = element.object_prefix ~ '_' ~ action %}
                                             <a href="{{ path( path, { 'type': key }  ) }}"><i
-                                                        class="fa fa-list fa-lg"></i> {{ action }}</a>
+                                                        class="fa fa-list "></i> {{ action }}</a>
                                         </li>
                                     {% endfor %}
                                     {% for action in element.actions if action=='create' %}
                                         <li>
                                             {% set path = element.object_prefix ~ '_' ~ action %}
                                             <a href="{{ path( path, { 'type': key }  ) }}"><i
-                                                        class="fa fa-plus-square fa-lg"></i> {{ action }}</a>
+                                                        class="fa fa-plus-square"></i> {{ action }}</a>
                                         </li>
                                     {% endfor %}
                                 {% endif %}
@@ -43,7 +43,7 @@
                     {% elseif element.type == 'page' %}
                         <li>
                             <a href="{{ path('resymf_admin_custom_page', {'slug': element.slug}) }}"><i
-                                        class="fa fa-{{ element.icon }} fa-lg"></i> {{ element.label }}</a>
+                                        class="fa fa-{{ element.icon }}"></i> {{ element.label }}</a>
                         </li>
                     {% endif %}
                 {% endif %}
@@ -56,11 +56,11 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                             class="fa fa-cog fa-lg"></i>  {{ app.user.username }} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ path('resymf_admin_settings') }}"><i class="fa fa-cogs fa-lg"></i> Settings</a></li>
-                    <li><a href="{{ path('resymf_admin_profile_show') }}"><i class="fa fa-user fa-lg"></i> Show Profile</a>
+                    <li><a href="{{ path('resymf_admin_settings') }}"><i class="fa fa-cogs "></i> Settings</a></li>
+                    <li><a href="{{ path('resymf_admin_profile_show') }}"><i class="fa fa-user "></i> Show Profile</a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="{{ path('user_logout') }}"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+                    <li><a href="{{ path('user_logout') }}"><i class="fa fa-sign-out "></i> Logout</a></li>
                 </ul>
             </li>
         </ul>
