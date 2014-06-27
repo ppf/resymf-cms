@@ -5,7 +5,7 @@
         <thead class="">
         <tr>
             {% if table_config.fields %}
-                <th class="fooEditable  navbar-inverse" data-sort-ignore="true" data-hide="phone" data-ft-control="checkbox"></th>
+                <th class="fooEditable" data-sort-ignore="true" data-hide="phone" data-ft-control="checkbox"></th>
                 {% for field in table_config.fields %}
                     <th {% if field.hideOnDevice is defined %} data-hide={{ field.hideOnDevice }}{% endif %}>
                         {% if field.label is defined %}

@@ -49,6 +49,9 @@ textarea {
 }
 body {
 padding-top: 65px;
+    padding-left: 15px;
+    padding-right: 15px;
+
 }
 .footable-last-column {
     min-width:150px;
@@ -59,7 +62,4 @@ padding-top: 65px;
 }
 td a i {
     color: #2fa4e7;
-}
-.navbar-nav.navbar-right:last-child {
-    margin-right: 0px !important;
 }
