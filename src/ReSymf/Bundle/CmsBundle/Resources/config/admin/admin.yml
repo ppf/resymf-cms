@@ -23,6 +23,13 @@ admin:
         plural_label: 'Categories'
         icon: 'cubes'
         singular_label: 'Category'
+    theme:
+        class: 'ReSymf\Bundle\CmsBundle\Entity\Theme'
+        actions: ['list','create','delete','update']
+        plural_label: 'Themes'
+        icon: 'cubes'
+        singular_label: 'Theme'
+        hidden: true
     project:
         class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Project'
         actions: ['list','create','delete','update']

@@ -1,6 +1,7 @@
 {% extends 'ReSymfCmsBundle::index.html.twig' %}
 
 {% block stylesheets %}
+    <link href="{{ asset('bundles/resymfcms/css/bootstrap/'~app.user.theme.name~'.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('bundles/resymfcms/css/login.css') }}" rel="stylesheet"/>
     <link href="{{ asset('bundles/resymfcms/css/prettyCheckable.css') }}" rel="stylesheet"/>
     <link href="{{ asset('bundles/resymfcms/css/admin.css') }}" rel="stylesheet"/>
@@ -10,6 +11,7 @@
     <link href="{{ asset('bundles/resymfcms/css/footable.metro.css') }}" rel="stylesheet">
     <link href="{{ asset('bundles/resymfcms/css/bootstrap-multiselect.css') }}" rel="stylesheet">
     <link href="{{ asset('bundles/resymfcms/css/upload.css') }}" rel="stylesheet">
+
 {% endblock %}
 
 

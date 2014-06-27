@@ -57,3 +57,9 @@ padding-top: 65px;
     position: relative;
     bottom: 9px;
 }
+td a i {
+    color: #2fa4e7;
+}
+.navbar-nav.navbar-right:last-child {
+    margin-right: 0px !important;
+}

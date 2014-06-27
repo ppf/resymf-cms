@@ -87,12 +87,38 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $roles;
 
+    /**
+     * @var Project
+     *
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\CmsBundle\Entity\Theme", fieldLabel="Theme")
+     * @Table(display=false)
+     *
+     * @ORM\ManyToOne(targetEntity="Theme", inversedBy="users")
+     */
+    private $theme;
+
 
     public function __construct()
     {
         $this->isActive = true;
         $this->salt = md5(uniqid(null, true));
         $this->roles = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param mixed $theme
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
     }
 
     /**

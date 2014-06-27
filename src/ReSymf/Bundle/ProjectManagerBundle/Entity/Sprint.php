@@ -80,8 +80,6 @@ class Sprint
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="sprints")
      */
     private $project;
-//@Table(format="text", relation=true, class="ReSymf\Bundle\ProjectManagerBundle\Entity\Project")
-
 
     /**
      * @var string

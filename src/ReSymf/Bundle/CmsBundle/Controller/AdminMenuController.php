@@ -31,34 +31,109 @@ class AdminMenuController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $adminConfigurator = $this->get('resymfcms.configurator.admin');
-        //TODO: set settings class in config
-//        $objectMapper = $this->get('resymfcms.object.mapper');
-//        $objectType = $objectMapper->getSettingsClass($type);
+
+        $objectConfigurator = $this->get('resymfcms.configurator.object');
 
         $annotationReader = $this->get('resymfcms.annotation.reader');
 
         $formConfig = $annotationReader->readFormAnnotation($objectType);
+        $formConfig->objectKey = 'user';
 
-        if ($request->isMethod('POST')) {
+        $em = $this->getDoctrine()->getManager();
+
+
+
+        if ($request->isMethod('POST') && $user) {
+
+//            echo '<pre>';
+//            print_r($formConfig->fields);
+//            die();
             foreach ($formConfig->fields as $field) {
+                $fieldType = $field['type'];
+                $fieldRelationType = $field['relationType'];
                 $methodName = 'set' . $field['name'];
-                $user->$methodName($request->get($field['name']));
+                $targetEntityField = $field['targetEntityField'];
+                $autoInput = $field['autoInput'];
+//                print_r($field);
+//                die();
+//                if()
+
+                if(!$autoInput) {
+                    switch ($fieldType) {
+                        case 'relation':
+                            $class = $field['class'];
+                            $parameters = $request->get($field['name']);
+
+                            $relationObjects = $em->getRepository($class)
+                                ->createQueryBuilder('q')
+                                ->where('q.id IN(:id)')
+                                ->setParameter('id', $parameters)
+                                ->getQuery()
+                                ->getResult();
+
+                            $addMethodName2 = 'set' . $field['name'];
+//                            print_r(count($relationObjects));
+//                            die();
+                            $user->$addMethodName2($relationObjects[0]);
+                            foreach ($relationObjects as $relationObject) {
+
+                                if ($relationObject) {
+
+                                    $addMethodName = 'set' . 'user';
+                                    $addMethodName2 = 'set' . $field['name'];
+
+                                    if ($fieldRelationType == 'oneToMany') {
+                                        $addMethodName2 = 'add' . $field['name'];
+
+                                    }
+                                    if ($fieldRelationType = 'manyToMany' || $fieldRelationType = 'multiselect') {
+                                        $addMethodName2 = 'add' . $targetEntityField;
+                                    } else { ///toOne
+                                        $relationObject->$addMethodName($user);
+                                    }
+
+                                }
+                            }
+
+
+                            break;
+                        case 'date':
+                            $user->$methodName(new \DateTime($request->get($field['name'])));
+                            break;
+                        case 'file':
+                            $user->$methodName($request->get($field['name']));
+break;
+                        default:
+                            $user->$methodName($request->get($field['name']));
+                    }
+                }
             }
+
+            $objectConfigurator->checkUniqueValuesFromAnnotations($user, 'user');
+
+
+            $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+
+//            die();
         }
+//        print_r($formConfig);
+//        die();
+
+        $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $user);
 
         return $this->render(
             'ReSymfCmsBundle:adminmenu:create.html.twig',
             array(
                 'menu' => $adminConfigurator->getAdminConfig(),
                 'site_config' => $adminConfigurator->getSiteConfig(),
-                'form_config' => $formConfig, 'route' => $routeName,
+                'form_config' => $formConfig,
+                'route' => $routeName,
                 'edit_object' => $user,
-                'multi_select' => array()
+                'multi_select' => $multiSelectValues
             )
         );
-
     }
 
     /**
@@ -192,6 +267,7 @@ class AdminMenuController extends Controller
 //                        print_r($request->get($field['name']));
 //                        die();
                         $object->$methodName(json_encode($request->get($field['name'])));
+                        break;
                     default:
                         $object->$methodName($request->get($field['name']));
                 }
@@ -255,6 +331,7 @@ class AdminMenuController extends Controller
         }
 
 
+//        echo '<pre>';
         if ($request->isMethod('POST') && $editObject) {
 
 //            echo '<pre>';
@@ -311,7 +388,7 @@ class AdminMenuController extends Controller
                             break;
                         case 'file':
                             $editObject->$methodName($request->get($field['name']));
-
+break;
                         default:
                             $editObject->$methodName($request->get($field['name']));
                     }
@@ -325,7 +402,6 @@ class AdminMenuController extends Controller
             $em->flush();
 //            die();
         }
-//        echo '<pre>';
 //        print_r($formConfig);
 //        die();
 
