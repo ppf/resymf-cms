@@ -100,7 +100,8 @@ class BasePage
         if ($this->createDate) {
             return $this->createDate->format('Y-m-d H:i:s');
         } else {
-            return new \DateTime('now');
+            $date = new \DateTime('now');
+            return $date->format('Y-m-d H:i:s');
         }
     }
 
@@ -163,7 +164,9 @@ class BasePage
      */
     public function getAuthor()
     {
-        return $this->author->getUsername();
+        if($this->author){
+            return $this->author->getUsername();
+        }
     }
 
     /**
