@@ -346,7 +346,7 @@ break;
 //                print_r($field);
 //                die();
 //                if()
-                if(!$autoInput) {
+                if(true) {
                     switch ($fieldType) {
                         case 'relation':
                             $class = $field['class'];
