@@ -56,7 +56,7 @@ class Project
      * @Table(hideOnDevice="tablet,phone", label="Start date")
      * @Form(fieldLabel="Start Date",type="date",required=true)
      *
-     * @ORM\Column(name="start_date", type="string", length=255)
+     * @ORM\Column(name="start_date", type="datetime", length=255)
      */
     private $startDate;
 
@@ -66,7 +66,7 @@ class Project
      * @Table(hideOnDevice="tablet,phone", label="End date")
      * @Form(fieldLabel="End Date",type="date",required=true)
      *
-     * @ORM\Column(name="end_date", type="string", length=255)
+     * @ORM\Column(name="end_date", type="datetime", length=255)
      */
     private $endDate;
 
@@ -216,7 +216,13 @@ class Project
      */
     public function getStartDate()
     {
-        return $this->startDate;
+        if ($this->startDate) {
+            return $this->startDate->format('Y-m-d H:i:s');
+        } else {
+            $date = new \DateTime('now');
+            return $date->format('Y-m-d H:i:s');
+        }
+
     }
 
     /**
@@ -248,7 +254,12 @@ class Project
      */
     public function getEndDate()
     {
-        return $this->endDate;
+        if ($this->endDate) {
+            return $this->endDate->format('Y-m-d H:i:s');
+        } else {
+            $date = new \DateTime('now');
+            return $date->format('Y-m-d H:i:s');
+        }
     }
 
     /**

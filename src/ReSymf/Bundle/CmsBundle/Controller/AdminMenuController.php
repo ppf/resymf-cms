@@ -237,27 +237,33 @@ break;
                             ->getQuery()
                             ->getResult();
 //                        print_r($relationObject);
-
-                        foreach ($relationObjects as $relationObject) {
-                            if ($relationObject) {
-
-                                $addMethodName = 'set' . $type;
-                                $addMethodName2 = 'set' . $field['name'];
-
-                                if ($fieldRelationType == 'oneToMany') {
-                                    $addMethodName2 = 'add' . $field['name'];
-
-                                } if($fieldRelationType = 'manyToMany' || $fieldRelationType = 'multiselect') {
-                                    $addMethodName2 = 'add' . $targetEntityField;
-                                } else {  ///toOne
-                                    $relationObject->$addMethodName($object);
-                                }
-//
-                                $object->$addMethodName2($relationObject);
-
+                                         $addMethodName2 = 'set' . $field['name'];
+                            if($fieldRelationType == 'manyToOne' || $fieldRelationType == 'oneToOne') {
+                                $object->$addMethodName2($relationObjects[0]);
+                            }else {
+                                $object->$addMethodName2($relationObjects);
                             }
-                        }
+                            foreach ($relationObjects as $relationObject) {
 
+                                if ($relationObject) {
+
+                                    $addMethodName = 'set' . $type;
+                                    $addMethodName2 = 'set' . $field['name'];
+
+                                    if ($fieldRelationType == 'oneToMany') {
+                                        $addMethodName2 = 'add' . $field['name'];
+
+                                    }
+                                    if ($fieldRelationType = 'manyToMany' || $fieldRelationType = 'multiselect') {
+                                        $addMethodName2 = 'add' . $targetEntityField;
+                                    } else { ///toOne
+                                        $relationObject->$addMethodName($object);
+                                    }
+
+                                }
+                            }
+
+          
                         break;
                     case 'date':
                         $object->$methodName(new \DateTime($request->get($field['name'])));
@@ -360,7 +366,11 @@ break;
                                 ->getResult();
 
                             $addMethodName2 = 'set' . $field['name'];
-                            $editObject->$addMethodName2($relationObjects);
+                            if($fieldRelationType == 'manyToOne' || $fieldRelationType == 'oneToOne') {
+                                $editObject->$addMethodName2($relationObjects[0]);
+                            }else {
+                                $editObject->$addMethodName2($relationObjects);
+                            }
                             foreach ($relationObjects as $relationObject) {
 
                                 if ($relationObject) {
@@ -406,8 +416,6 @@ break;
 //        die();
 
         $multiSelectValues = $objectConfigurator->generateMultiSelectOptions($objectType, $editObject);
-//        print_r($multiSelectValues);
-//        die();
 
         return $this->render(
             'ReSymfCmsBundle:adminmenu:create.html.twig',

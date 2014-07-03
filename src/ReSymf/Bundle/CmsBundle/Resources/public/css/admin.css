@@ -56,6 +56,9 @@ padding-top: 65px;
 .footable-last-column {
     min-width:150px;
 }
+.footable-first-column {
+min-width: 85px;
+}
 .footable-toggle {
     position: relative;
     bottom: 9px;

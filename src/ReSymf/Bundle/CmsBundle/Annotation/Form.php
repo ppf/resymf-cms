@@ -27,7 +27,7 @@ class Form
     private $createLabel = 'Create Object';
     private $showLabel = 'Show Object';
     private $fieldLabel;
-    private $dateFormat ="Y-m-d H:i:s";
+    private $dateFormat ="DD-MM-YYYY hh:mm:ss";
     private $relationType;
     private $autoInput = false;
     private $class;

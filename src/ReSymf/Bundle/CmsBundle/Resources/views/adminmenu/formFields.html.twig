@@ -20,8 +20,7 @@
                         {{ field.fieldLabel }}
                     {% else %}
                         {{ field.name }}
-                    {% endif %}
-                    :</label>
+                    {% endif %}:</label>
 
                 <div class="col-lg-9">
                     <input type="text" class="form-control" name="{{ field.name }}"
@@ -36,12 +35,11 @@
                         {{ field.fieldLabel }}
                     {% else %}
                         {{ field.name }}
-                    {% endif %}
-                    :</label>
+                    {% endif %}:</label>
 
                 <div class="col-lg-9">
                     <input type="text" class="form-control datepicker" name="{{ field.name }}"
-                           value="{{ value }}" data-date-format="{{ field.dateFormat }}" {{ disabled }}/>
+                           value="{{ value }}" {{ disabled }}/>
                 </div>
             </div>
         {% endif %}
@@ -52,8 +50,7 @@
                         {{ field.fieldLabel }}
                     {% else %}
                         {{ field.name }}
-                    {% endif %}
-                    :</label>
+                    {% endif %}:</label>
 
                 <div class="col-lg-9 files">
                     <input type="hidden" value="{{ field.name }}[]" name="fileFieldName">
@@ -84,8 +81,7 @@
                         {{ field.fieldLabel }}
                     {% else %}
                         {{ field.name }}
-                    {% endif %}
-                    :</label>
+                    {% endif %}:</label>
 
                 <div class="col-lg-9">
                     <textarea class="form-control" name="{{ field.name }}"
@@ -101,8 +97,7 @@
                             {{ field.fieldLabel }}
                         {% else %}
                             {{ field.name }}
-                        {% endif %}
-                        :</label>
+                        {% endif %}:</label>
 
                     <div class="col-lg-9">
 

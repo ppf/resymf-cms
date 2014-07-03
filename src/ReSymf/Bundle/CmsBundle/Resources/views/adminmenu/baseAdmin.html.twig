@@ -40,7 +40,9 @@
         });
         $(function () {
             $('.datepicker').datetimepicker({
-                pickTime: false
+                pickTime: true,
+                format: 'YYYY-MM-DD hh:mm:ss',
+                endDate: ''
             });
         });
 
