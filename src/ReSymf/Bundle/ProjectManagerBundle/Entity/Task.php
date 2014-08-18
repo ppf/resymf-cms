@@ -113,13 +113,13 @@ class Task
      */
     private $priority;
 
-    /**
-     * @var string
+   /**
+     * @var Project
      *
-     * @Table(hideOnDevice="tablet,phone", label="Status")
-     * @Form(fieldLabel="Status",type="text",required=true)
+     * @Form(type="relation", relationType="manyToOne", class="ReSymf\Bundle\ProjectManagerBundle\Entity\Status", fieldLabel="Status", withoutLink=true)
+     * @Table(display=false)
      *
-     * @ORM\Column(name="status", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Status", inversedBy="tasks")
      */
     private $status;
 

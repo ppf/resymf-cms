@@ -26,6 +26,7 @@ class Form
     private $editLabel = 'Edit Object';
     private $createLabel = 'Create Object';
     private $showLabel = 'Show Object';
+    private $withoutLink = false;
     private $fieldLabel;
     private $dateFormat ="DD-MM-YYYY hh:mm:ss";
     private $relationType;
@@ -112,6 +113,22 @@ class Form
     public function setClass($class)
     {
         $this->class = $class;
+    }
+ 
+    /**
+     * @return mixed
+     */
+    public function getWithoutLink()
+    {
+        return $this->withoutLink;
+    }
+
+    /**
+     * @param mixed $class
+     */
+    public function setWithoutLink($class)
+    {
+        $this->withoutLink = $class;
     }
 
     // can set value as:

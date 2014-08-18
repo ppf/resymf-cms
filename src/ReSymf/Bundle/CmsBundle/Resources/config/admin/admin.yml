@@ -30,6 +30,13 @@ admin:
         icon: 'cubes'
         singular_label: 'Theme'
         hidden: true
+    status:
+        class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Status'
+        actions: ['list','create','delete','update']
+        plural_label: 'Projects'
+        icon: 'briefcase'
+        singular_label: 'Project'
+        hidden: true
     project:
         class: 'ReSymf\Bundle\ProjectManagerBundle\Entity\Project'
         actions: ['list','create','delete','update']

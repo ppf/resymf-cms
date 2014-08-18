@@ -110,7 +110,8 @@ class AnnotationReader
                     $dateFormat = $annotation->getDateFormat();
                     $targetEntityField = $annotation->getTargetEntityField();
                     $autoInput = $annotation->getAutoInput();
-                    $formConfig->fields[] = array('name' => $reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class, 'readOnly' => $readOnly, 'dateFormat' => $dateFormat, 'targetEntityField' => $targetEntityField, 'autoInput' =>$autoInput);
+                    $withoutLink = $annotation->getWithoutLink();
+                    $formConfig->fields[] = array('name' => $reflectionProperty->getName(), 'type' => $type, 'fieldLabel' => $fieldLabel, 'relationType' => $relationType, 'class' => $class, 'readOnly' => $readOnly, 'dateFormat' => $dateFormat, 'targetEntityField' => $targetEntityField, 'autoInput' =>$autoInput, 'withoutLink'=> $withoutLink);
                 }
             } else {
                 $formConfig->fields[] = array('name' => $reflectionProperty->getName());
