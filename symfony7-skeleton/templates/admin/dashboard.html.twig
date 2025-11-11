@@ -1,0 +1,149 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard - ReSymf CMS{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar (will be enhanced later) -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="min-height: 100vh;">
+            <div class="position-sticky pt-3">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Navigation</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ path('admin_dashboard') }}">
+                            Dashboard
+                        </a>
+                    </li>
+                    <!-- More menu items will be added during migration -->
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>User</span>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+            </div>
+
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Welcome, {{ user.username }}!</h4>
+                <p>You are successfully logged in to ReSymf CMS Admin Panel.</p>
+                <hr>
+                <p class="mb-0">
+                    <strong>Email:</strong> {{ user.email }}<br>
+                    <strong>Roles:</strong> {{ user.roles|join(', ') }}<br>
+                    <strong>Active:</strong> {{ user.isActive ? 'Yes' : 'No' }}<br>
+                    <strong>Member since:</strong> {{ user.createdAt|date('Y-m-d H:i:s') }}
+                </p>
+            </div>
+
+            <!-- Stats cards (placeholder) -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Users</h5>
+                            <p class="card-text display-6">-</p>
+                            <small class="text-muted">Total registered</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Pages</h5>
+                            <p class="card-text display-6">-</p>
+                            <small class="text-muted">Published</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Projects</h5>
+                            <p class="card-text display-6">-</p>
+                            <small class="text-muted">Active</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Tasks</h5>
+                            <p class="card-text display-6">-</p>
+                            <small class="text-muted">Pending</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">System Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Symfony Version:</strong></td>
+                                <td>{{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PHP Version:</strong></td>
+                                <td>{{ constant('PHP_VERSION') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Environment:</strong></td>
+                                <td>{{ app.environment }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Debug Mode:</strong></td>
+                                <td>{{ app.debug ? 'Enabled' : 'Disabled' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-4" role="alert">
+                <strong>Migration Status:</strong> Phase 2 - User Authentication Complete
+                <br>
+                <strong>Next:</strong> Entity migration (Settings, Page, Category, Project, etc.)
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    }
+    .sidebar .nav-link {
+        font-weight: 500;
+        color: #333;
+    }
+    .sidebar .nav-link.active {
+        color: #0d6efd;
+    }
+</style>
+{% endblock %}

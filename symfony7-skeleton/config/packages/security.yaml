@@ -1,29 +1,74 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
+        # Use bcrypt for user passwords (compatible with legacy migration)
+        # Legacy used md5 salt + sha512, will need password reset for users
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 12
+
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # User provider using our User entity
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+            # Form login for admin panel
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                default_target_path: admin_dashboard
+                always_use_default_target_path: false
+                use_referer: true
 
+            logout:
+                path: app_logout
+                target: app_login
+
+            # Remember me functionality (optional - legacy had it)
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path: /
+                always_remember_me: false
+
+            # Switch user (for admin impersonation)
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Public routes (login, home)
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+
+        # Admin panel - require authentication
+        - { path: ^/admin, roles: ROLE_USER }
+
+        # Specific admin routes requiring ROLE_ADMIN
+        # (Uncomment and customize as needed)
+        # - { path: ^/admin/users, roles: ROLE_ADMIN }
+        # - { path: ^/admin/settings, roles: ROLE_ADMIN }
+
+    # Role hierarchy (admin inherits all user permissions)
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 when@test:
     security:
