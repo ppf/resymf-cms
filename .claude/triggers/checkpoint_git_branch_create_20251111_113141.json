@@ -1,0 +1,13 @@
+{
+  "trigger": "git_branch_create",
+  "timestamp": "2025-11-11T11:31:41.527514",
+  "metadata": {
+    "command": "git checkout -b symfony7-migration master",
+    "description": "New git branch created"
+  },
+  "hook_data": {
+    "tool_name": "Bash",
+    "session_id": "53c626f1-0051-4586-ba9a-7415e04c3543",
+    "cwd": "/Users/storm/PhpstormProjects/ppf/resymf-cms/.conductor/surat"
+  }
+}
