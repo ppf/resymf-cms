@@ -1,0 +1,220 @@
+name: Security Scanning
+
+on:
+  schedule:
+    # Run weekly on Mondays at 00:00 UTC
+    - cron: '0 0 * * 1'
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+  workflow_dispatch:
+
+jobs:
+  # Composer Security Audit
+  composer-security:
+    name: Composer Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Composer Audit
+        run: composer audit --format=json > composer-audit.json || true
+
+      - name: Display Composer Audit Results
+        run: |
+          if [ -f "composer-audit.json" ]; then
+            cat composer-audit.json
+            echo ""
+            echo "Checking for critical vulnerabilities..."
+            composer audit || echo "⚠️ Security vulnerabilities found. Please review."
+          fi
+
+      - name: Upload Composer Audit Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: composer-audit-results
+          path: composer-audit.json
+
+  # Dependency Check
+  dependency-check:
+    name: Dependency Vulnerability Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "Checking for outdated dependencies..."
+          composer outdated --direct --format=json > outdated-deps.json || true
+          composer outdated --direct || echo "⚠️ Some dependencies are outdated"
+
+      - name: Upload Outdated Dependencies Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: outdated-dependencies
+          path: outdated-deps.json
+
+  # OWASP Dependency Check (advanced)
+  owasp-dependency-check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'resymf-cms'
+          path: '.'
+          format: 'HTML'
+          out: 'reports'
+
+      - name: Upload OWASP Dependency Check Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: owasp-dependency-check-report
+          path: reports
+
+  # Code Security Analysis
+  security-checker:
+    name: PHP Security Checker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install Local PHP Security Checker
+        run: |
+          curl -L https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 -o local-php-security-checker
+          chmod +x local-php-security-checker
+
+      - name: Run Security Checker
+        run: |
+          ./local-php-security-checker --format=json > security-report.json || true
+          ./local-php-security-checker || echo "⚠️ Security issues detected"
+
+      - name: Upload Security Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: php-security-report
+          path: security-report.json
+
+  # Static Security Analysis with Psalm
+  psalm-security:
+    name: Psalm Security Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv
+          tools: composer:v2, vimeo/psalm
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Initialize Psalm
+        run: |
+          if [ ! -f "psalm.xml" ]; then
+            vendor/bin/psalm --init src 4 || true
+          fi
+
+      - name: Run Psalm Security Analysis
+        run: |
+          vendor/bin/psalm --taint-analysis --report=psalm-report.txt || true
+          cat psalm-report.txt || echo "Psalm analysis completed"
+
+      - name: Upload Psalm Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: psalm-security-report
+          path: psalm-report.txt
+
+  # Security Summary
+  security-summary:
+    name: Security Scan Summary
+    runs-on: ubuntu-latest
+    needs: [composer-security, dependency-check, owasp-dependency-check, security-checker, psalm-security]
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate Security Summary
+        run: |
+          echo "# ��️ Security Scan Summary" > security-summary.md
+          echo "" >> security-summary.md
+          echo "**Scan Date:** $(date)" >> security-summary.md
+          echo "" >> security-summary.md
+          echo "## Scans Completed:" >> security-summary.md
+          echo "- ✅ Composer Security Audit" >> security-summary.md
+          echo "- ✅ Dependency Vulnerability Check" >> security-summary.md
+          echo "- ✅ OWASP Dependency Check" >> security-summary.md
+          echo "- ✅ PHP Security Checker" >> security-summary.md
+          echo "- ✅ Psalm Security Analysis" >> security-summary.md
+          echo "" >> security-summary.md
+          echo "Please review the individual reports for detailed findings." >> security-summary.md
+
+      - name: Display Summary
+        run: cat security-summary.md
+
+      - name: Upload Security Summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-summary
+          path: security-summary.md

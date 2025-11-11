@@ -1,0 +1,41 @@
+parameters:
+    level: 5
+    paths:
+        - src
+
+    # Symfony-specific configuration
+    symfony:
+        container_xml_path: app/cache/dev/appDevDebugProjectContainer.xml
+        # Alternatively, if the XML doesn't exist:
+        # constant_hassers: false
+        # console_application_loader: app/console
+
+    # Exclude patterns
+    excludePaths:
+        - src/ReSymf/Bundle/*/Tests/*
+        - src/ReSymf/Bundle/*/DependencyInjection/*
+
+    # Bootstrap file (if needed for autoloading)
+    # bootstrapFiles:
+    #     - app/autoload.php
+
+    # Ignore errors (customize based on your needs)
+    ignoreErrors:
+        # Ignore errors in generated/legacy code
+        - '#Parameter \#1 \$\w+ of class .* constructor expects .*, .* given\.#'
+
+    # Report unmatched ignored errors
+    reportUnmatchedIgnoredErrors: false
+
+    # Check missing type hints
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+
+    # Doctrine-specific configuration
+    doctrine:
+        repositoryClass: Doctrine\ORM\EntityRepository
+        objectManagerLoader: tests/object-manager.php
+
+    # Parallel processing
+    parallel:
+        maximumNumberOfProcesses: 4
