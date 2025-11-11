@@ -13,3 +13,13 @@
 /composer.phar
 .idea*
 nbproject*
+
+# CI Quality Automation
+.php-cs-fixer.cache
+build/
+/phpstan-baseline.neon
+/psalm-baseline.xml
+composer-audit.json
+outdated-deps.json
+security-report.json
+

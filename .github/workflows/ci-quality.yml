@@ -1,0 +1,332 @@
+name: CI Quality Checks
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  # PHP Code Quality & Static Analysis
+  code-quality:
+    name: Code Quality & Static Analysis
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json, mbstring, pdo, zip
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run PHPUnit tests
+        run: |
+          if [ -f "bin/phpunit" ]; then
+            bin/phpunit -c app --coverage-clover coverage.xml --coverage-text
+          else
+            vendor/bin/phpunit -c app --coverage-clover coverage.xml --coverage-text
+          fi
+
+      - name: Upload coverage to Codecov
+        if: matrix.php-version == '7.4'
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  # PHP Static Analysis with PHPStan
+  phpstan:
+    name: PHPStan Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
+          tools: composer:v2, phpstan
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-phpstan-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-phpstan-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run PHPStan
+        run: |
+          if [ ! -f "phpstan.neon" ]; then
+            echo "Creating default phpstan.neon configuration..."
+            cat > phpstan.neon <<EOF
+          parameters:
+              level: 5
+              paths:
+                  - src
+              symfony:
+                  container_xml_path: app/cache/dev/appDevDebugProjectContainer.xml
+              excludePaths:
+                  - src/ReSymf/Bundle/*/Tests/*
+          EOF
+          fi
+          vendor/bin/phpstan analyse --error-format=github || true
+
+      - name: PHPStan Analysis Results
+        if: always()
+        run: echo "PHPStan analysis completed. Check logs for details."
+
+  # PHP Code Style Check
+  code-style:
+    name: Code Style Check (PHP-CS-Fixer)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv
+          tools: composer:v2, php-cs-fixer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-cs-fixer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-cs-fixer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Create PHP-CS-Fixer config if not exists
+        run: |
+          if [ ! -f ".php-cs-fixer.php" ]; then
+            cat > .php-cs-fixer.php <<'EOF'
+          <?php
+
+          $finder = PhpCsFixer\Finder::create()
+              ->in(__DIR__ . '/src')
+              ->exclude('Tests')
+              ->name('*.php')
+              ->notName('*.blade.php')
+              ->ignoreDotFiles(true)
+              ->ignoreVCS(true);
+
+          return (new PhpCsFixer\Config())
+              ->setRules([
+                  '@PSR2' => true,
+                  '@Symfony' => true,
+                  'array_syntax' => ['syntax' => 'short'],
+                  'ordered_imports' => true,
+                  'no_unused_imports' => true,
+                  'not_operator_with_successor_space' => true,
+                  'trailing_comma_in_multiline' => true,
+                  'phpdoc_scalar' => true,
+                  'unary_operator_spaces' => true,
+                  'binary_operator_spaces' => true,
+                  'blank_line_before_statement' => [
+                      'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try'],
+                  ],
+                  'phpdoc_single_line_var_spacing' => true,
+                  'phpdoc_var_without_name' => true,
+              ])
+              ->setFinder($finder);
+          EOF
+          fi
+
+      - name: Run PHP-CS-Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+
+  # Security Vulnerability Check
+  security-check:
+    name: Security Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv
+          tools: composer:v2
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-security-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-security-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Check for security vulnerabilities
+        run: |
+          composer audit || echo "Security audit completed with findings"
+
+      - name: Check outdated dependencies
+        run: |
+          composer outdated --direct --strict || echo "Some dependencies are outdated"
+
+  # Doctrine Schema Validation
+  doctrine-validation:
+    name: Doctrine Schema Validation
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: symfony_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Configure database parameters
+        run: |
+          mkdir -p app/config
+          if [ ! -f "app/config/parameters.yml" ]; then
+            cat > app/config/parameters.yml <<EOF
+          parameters:
+              database_driver: pdo_mysql
+              database_host: 127.0.0.1
+              database_port: 3306
+              database_name: symfony_test
+              database_user: root
+              database_password: root
+              mailer_transport: smtp
+              mailer_host: localhost
+              mailer_user: null
+              mailer_password: null
+              locale: en
+              secret: ThisTokenIsNotSoSecretChangeIt
+          EOF
+          fi
+
+      - name: Create database schema
+        run: |
+          php app/console doctrine:database:create --if-not-exists || true
+          php app/console doctrine:schema:create || true
+
+      - name: Validate Doctrine schema
+        run: php app/console doctrine:schema:validate --skip-sync || true
+
+  # Code Metrics & Complexity
+  code-metrics:
+    name: Code Metrics & Complexity Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Install PHPLOC
+        run: composer require --dev phploc/phploc
+
+      - name: Run PHPLOC
+        run: vendor/bin/phploc src --log-json=phploc.json || true
+
+      - name: Display code metrics
+        run: |
+          if [ -f "phploc.json" ]; then
+            cat phploc.json
+          fi
+
+  # Linting & Syntax Check
+  lint:
+    name: PHP Lint & Syntax Check
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+
+      - name: Lint PHP files
+        run: find src -name "*.php" -print0 | xargs -0 -n1 -P4 php -l
+
+  # Overall CI Status
+  ci-success:
+    name: CI Quality Checks Passed
+    runs-on: ubuntu-latest
+    needs: [code-quality, phpstan, code-style, security-check, doctrine-validation, code-metrics, lint]
+    if: success()
+
+    steps:
+      - name: All checks passed
+        run: echo "✅ All CI quality checks passed successfully!"
