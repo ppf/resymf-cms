@@ -1,0 +1,13 @@
+{
+  "trigger": "git_commit",
+  "timestamp": "2025-11-11T11:35:48.115712",
+  "metadata": {
+    "command": "git commit -m \"symfony7-migration - Phase 1 foundation complete\n\n- Initialize Symfony 7.1.11 skeleton with PHP 8.3\n- Install webapp pack (doctrine, security, twig, maker, phpunit)\n- Configure MySQL database connection\n- Create CmsBundle and ProjectManagerBundle structure\n- Add comprehensive MIGRATION_ROADMAP.md (10 phases)\n- Add QUICKSTART.md for developers\n\nPhase 1 Complete:\n\u2705 Symfony 7.1.11 skeleton\n\u2705 103 packages installed (doctrine 3.5, phpunit 12.4)\n\u2705 Directory structure (src/bundles, config/, public/)\n\u2705 Environment configuration (.env with MySQL)\n\u2705 Migration documentation (roadmap + quick start)\n\nNext: Phase 2 - Database & Entity Migration (User, Role, Settings)\n\"",
+    "description": "Git commit created"
+  },
+  "hook_data": {
+    "tool_name": "Bash",
+    "session_id": "53c626f1-0051-4586-ba9a-7415e04c3543",
+    "cwd": "/Users/storm/PhpstormProjects/ppf/resymf-cms/.conductor/surat"
+  }
+}

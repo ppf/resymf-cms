@@ -1,0 +1,13 @@
+{
+  "trigger": "git_commit",
+  "timestamp": "2025-11-11T11:43:48.971915",
+  "metadata": {
+    "command": "git commit -m \"Phase 2: User authentication complete\n\n\u2705 User Entity Migration:\n- Created User entity with PHP 8.3 attributes (Doctrine ORM 3)\n- Implements UserInterface + PasswordAuthenticatedUserInterface\n- Roles stored as JSON array (Symfony 7 best practice)\n- Removed salt (modern password hashers use bcrypt)\n- Type-safe properties with strict types\n- Created/Updated timestamps with lifecycle callbacks\n\n\u2705 Security Configuration:\n- Configured security.yaml with bcrypt password hasher\n- Form login with CSRF protection\n- Remember me functionality\n- User switch for admin impersonation\n- Role hierarchy (ROLE_ADMIN inherits ROLE_USER)\n- Access control rules for /admin routes\n\n\u2705 Controllers & Templates:\n- SecurityController: login/logout routes\n- AdminController: dashboard route (#[IsGranted('ROLE_USER')])\n- Login template with Bootstrap styling\n- Dashboard template with user info and navigation\n\n\u2705 Repository:\n- UserRepository with PasswordUpgraderInterface\n- Custom query methods (findByUsername, findByEmail, findByRole)\n- Pagination and search functionality\n- Count methods for admin and active users\n\n\u2705 Database Migration:\n- Generated Version20251111104202 migration\n- Created resymf_users table with proper constraints\n- Executed migration successfully\n- Schema validated and in sync\n\n\u2705 Fixtures:\n- Installed doctrine/doctrine-fixtures-bundle\n- Created UserFixtures with 3 test users:\n  * admin (admin@resymf.local) - ROLE_ADMIN\n  * testuser (user@resymf.local) - ROLE_USER\n  * inactive (inactive@resymf.local) - ROLE_USER [disabled]\n- Password hashing integrated\n\n\u2705 Verification:\n- Database created successfully\n- Migration executed (30.5ms, 2 SQL queries)\n- Fixtures loaded (3 users created)\n- Login page accessible (HTTP 200)\n- Schema validation: all in sync\n\nPhase 2 Progress: 75% (6/8 tasks complete)\nNext: Create Settings entity, then functional tests\n\"",
+    "description": "Git commit created"
+  },
+  "hook_data": {
+    "tool_name": "Bash",
+    "session_id": "53c626f1-0051-4586-ba9a-7415e04c3543",
+    "cwd": "/Users/storm/PhpstormProjects/ppf/resymf-cms/.conductor/surat"
+  }
+}
