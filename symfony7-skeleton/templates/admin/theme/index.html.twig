@@ -1,0 +1,15 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}Themes{% endblock %}
+{% block body %}
+<h1>Themes <a href="{{ path('admin_theme_new') }}" class="btn btn-primary btn-sm">New</a></h1>
+<table class="table">
+    <thead><tr><th>Name</th><th>Colors</th><th>Default</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for theme in themes %}
+        <tr><td>{{ theme.name }}</td><td>{{ theme.primaryColor }}</td><td>{{ theme.isDefault ? 'Yes' : 'No' }}</td>
+            <td><a href="{{ path('admin_theme_edit', {id: theme.id}) }}" class="btn btn-sm btn-warning">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

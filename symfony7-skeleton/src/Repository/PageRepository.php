@@ -261,4 +261,32 @@ class PageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Find all pages ordered by creation date (newest first)
+     *
+     * @return Page[]
+     */
+    public function findAllOrderedByCreated(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find first published page (for fallback homepage)
+     */
+    public function findFirstPublished(): ?Page
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isPublished = :published')
+            ->setParameter('published', true)
+            ->orderBy('p.displayOrder', 'ASC')
+            ->addOrderBy('p.createdAt', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

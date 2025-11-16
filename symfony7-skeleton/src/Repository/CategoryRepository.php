@@ -160,4 +160,15 @@ class CategoryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Find all categories ordered by display order
+     * Alias for findOrdered() for controller consistency
+     *
+     * @return Category[]
+     */
+    public function findAllOrderedByOrder(): array
+    {
+        return $this->findOrdered();
+    }
 }

@@ -1,0 +1,24 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}Categories{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between mb-4">
+    <h1>Categories</h1>
+    <a href="{{ path('admin_category_new') }}" class="btn btn-primary">Create New</a>
+</div>
+<table class="table">
+    <thead><tr><th>Name</th><th>Slug</th><th>Active</th><th>Pages</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td><code>{{ category.slug }}</code></td>
+            <td>{{ category.isActive ? 'Yes' : 'No' }}</td>
+            <td>{{ category.pageCount }}</td>
+            <td>
+                <a href="{{ path('admin_category_edit', {id: category.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

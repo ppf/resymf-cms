@@ -1,0 +1,34 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ page.title }}</h1>
+    <div>
+        <a href="{{ path('admin_page_edit', {id: page.id}) }}" class="btn btn-warning">Edit</a>
+        <a href="{{ path('admin_page_index') }}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">ID</dt><dd class="col-sm-9">{{ page.id }}</dd>
+    <dt class="col-sm-3">Slug</dt><dd class="col-sm-9"><code>{{ page.slug }}</code></dd>
+    <dt class="col-sm-3">Published</dt><dd class="col-sm-9">{{ page.isPublished ? 'Yes' : 'No' }}</dd>
+    <dt class="col-sm-3">Homepage</dt><dd class="col-sm-9">{{ page.isHomepage ? 'Yes' : 'No' }}</dd>
+    <dt class="col-sm-3">Author</dt><dd class="col-sm-9">{{ page.author.username }}</dd>
+    <dt class="col-sm-3">Views</dt><dd class="col-sm-9">{{ page.viewCount }}</dd>
+    <dt class="col-sm-3">Created</dt><dd class="col-sm-9">{{ page.createdAt|date('Y-m-d H:i') }}</dd>
+    <dt class="col-sm-3">Categories</dt>
+    <dd class="col-sm-9">
+        {% for category in page.categories %}
+            <span class="badge bg-secondary">{{ category.name }}</span>
+        {% else %}
+            <em>None</em>
+        {% endfor %}
+    </dd>
+</dl>
+
+<h3>Content</h3>
+<div class="border p-3">{{ page.content|raw }}</div>
+{% endblock %}

@@ -117,4 +117,18 @@ class ThemeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Unset default flag on all themes
+     * Used before setting a new default theme
+     */
+    public function unsetAllDefaults(): void
+    {
+        $this->createQueryBuilder('t')
+            ->update()
+            ->set('t.isDefault', ':default')
+            ->setParameter('default', false)
+            ->getQuery()
+            ->execute();
+    }
 }

@@ -1,0 +1,14 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Edit Page{% endblock %}
+
+{% block body %}
+<h1>Edit Page: {{ page.title }}</h1>
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Update Page</button>
+        <a href="{{ path('admin_page_index') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

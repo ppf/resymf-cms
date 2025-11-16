@@ -1,0 +1,8 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}Settings{% endblock %}
+{% block body %}
+<h1>Site Settings</h1>
+{{ form_start(form) }}{{ form_widget(form) }}
+<button type="submit" class="btn btn-primary mt-3">Save Settings</button>
+{{ form_end(form) }}
+{% endblock %}

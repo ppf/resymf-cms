@@ -1,0 +1,7 @@
+{% extends 'admin/base.html.twig' %}
+{% block body %}
+{{ form_start(form) }}{{ form_widget(form) }}
+<button type="submit" class="btn btn-primary mt-3">Save</button>
+<a href="{{ path('admin_user_index') }}" class="btn btn-secondary mt-3">Cancel</a>
+{{ form_end(form) }}
+{% endblock %}
