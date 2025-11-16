@@ -91,24 +91,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Theme relationship (optional - for UI customization)
-     * TODO: Uncomment when Theme entity is created
      */
-    // #[ORM\ManyToOne(targetEntity: 'App\Entity\Theme', inversedBy: 'users')]
-    // #[ORM\JoinColumn(name: 'theme_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
-    // private ?object $theme = null;
+    #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'users')]
+    #[ORM\JoinColumn(name: 'theme_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Theme $theme = null;
 
     /**
      * Pages authored by this user
      * Lazy loaded - not fetched unless explicitly needed
-     * TODO: Uncomment when Page entity is created
      */
-    // #[ORM\OneToMany(targetEntity: 'App\Entity\Page', mappedBy: 'author')]
-    // private Collection $authoredPages;
+    #[ORM\OneToMany(targetEntity: Page::class, mappedBy: 'author')]
+    private Collection $authoredPages;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        // $this->authoredPages = new ArrayCollection();
+        $this->authoredPages = new ArrayCollection();
         $this->roles = ['ROLE_USER']; // Default role
     }
 
@@ -294,43 +292,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    // TODO: Uncomment when Theme entity is created
-    // public function getTheme(): ?object
-    // {
-    //     return $this->theme;
-    // }
-    //
-    // public function setTheme(?object $theme): static
-    // {
-    //     $this->theme = $theme;
-    //
-    //     return $this;
-    // }
+    public function getTheme(): ?Theme
+    {
+        return $this->theme;
+    }
 
-    // TODO: Uncomment when Page entity is created
-    // /**
-    //  * @return Collection<int, object>
-    //  */
-    // public function getAuthoredPages(): Collection
-    // {
-    //     return $this->authoredPages;
-    // }
-    //
-    // public function addAuthoredPage(object $page): static
-    // {
-    //     if (!$this->authoredPages->contains($page)) {
-    //         $this->authoredPages->add($page);
-    //     }
-    //
-    //     return $this;
-    // }
-    //
-    // public function removeAuthoredPage(object $page): static
-    // {
-    //     $this->authoredPages->removeElement($page);
-    //
-    //     return $this;
-    // }
+    public function setTheme(?Theme $theme): static
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Page>
+     */
+    public function getAuthoredPages(): Collection
+    {
+        return $this->authoredPages;
+    }
+
+    public function addAuthoredPage(Page $page): static
+    {
+        if (!$this->authoredPages->contains($page)) {
+            $this->authoredPages->add($page);
+            $page->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthoredPage(Page $page): static
+    {
+        if ($this->authoredPages->removeElement($page)) {
+            // set the owning side to null (unless already changed)
+            if ($page->getAuthor() === $this) {
+                $page->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
 
     /**
      * String representation for debugging
