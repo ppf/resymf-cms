@@ -1,0 +1,22 @@
+# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+flysystem:
+    storages:
+        # Default storage for application files
+        default.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/var/storage/default'
+
+        # Public uploads storage (accessible via web)
+        uploads.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public/uploads'
+                visibility: public
+
+        # Private documents storage (not web-accessible)
+        documents.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/var/storage/documents'
+                visibility: private

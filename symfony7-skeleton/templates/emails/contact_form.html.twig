@@ -1,0 +1,31 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block title %}New Contact Form Submission{% endblock %}
+
+{% block header %}Contact Form Submission{% endblock %}
+
+{% block body %}
+    <h2>New Contact Form Submission</h2>
+
+    <p>You have received a new contact form submission from your website.</p>
+
+    <div class="info-box">
+        <p><strong>Sender Information:</strong></p>
+        <ul style="margin: 5px 0; list-style: none; padding: 0;">
+            <li><strong>Name:</strong> {{ senderName }}</li>
+            <li><strong>Email:</strong> <a href="mailto:{{ senderEmail }}">{{ senderEmail }}</a></li>
+            <li><strong>Submitted:</strong> {{ 'now'|date('F j, Y \\a\\t g:i A') }}</li>
+        </ul>
+    </div>
+
+    <h3>Message:</h3>
+    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        {{ message|nl2br }}
+    </div>
+
+    <p>You can reply directly to this email to respond to {{ senderName }}.</p>
+{% endblock %}
+
+{% block footer %}
+    This contact form was submitted through your ReSymf CMS website.
+{% endblock %}

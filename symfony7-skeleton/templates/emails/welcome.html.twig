@@ -1,0 +1,33 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block title %}Welcome to ReSymf CMS{% endblock %}
+
+{% block header %}Welcome!{% endblock %}
+
+{% block body %}
+    <h2>Hello {{ userName }},</h2>
+
+    <p>Welcome to ReSymf CMS! Your account has been successfully created.</p>
+
+    <p>You can now access the admin panel and start managing your content.</p>
+
+    <div style="text-align: center;">
+        <a href="{{ url('admin_dashboard') }}" class="button">Go to Dashboard</a>
+    </div>
+
+    <div class="info-box">
+        <p><strong>Getting Started:</strong></p>
+        <ul style="margin: 5px 0;">
+            <li>Complete your profile settings</li>
+            <li>Explore the content management features</li>
+            <li>Create your first page</li>
+            <li>Customize your theme preferences</li>
+        </ul>
+    </div>
+
+    <p>If you have any questions, please don't hesitate to contact support.</p>
+{% endblock %}
+
+{% block footer %}
+    Thank you for using ReSymf CMS!
+{% endblock %}
