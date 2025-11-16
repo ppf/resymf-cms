@@ -12,11 +12,9 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/public/uploads'
-                visibility: public
 
         # Private documents storage (not web-accessible)
         documents.storage:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/var/storage/documents'
-                visibility: private
