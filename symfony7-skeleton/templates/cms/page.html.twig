@@ -1,16 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ settings.locale ?? 'en' }}">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} - {{ settings.siteName }}</title>
+
+    {# SEO Meta Tags #}
     <meta name="description" content="{{ page.metaDescription ?? settings.seoDescription }}">
+    <meta name="keywords" content="{{ page.metaKeywords ?? settings.seoKeywords }}">
+    <meta name="author" content="{{ page.author.username ?? settings.siteName }}">
+
+    {# Open Graph / Social Media #}
+    <meta property="og:title" content="{{ page.title }}">
+    <meta property="og:description" content="{{ page.metaDescription ?? settings.seoDescription }}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ app.request.uri }}">
+
+    {# Twitter Card #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page.title }}">
+    <meta name="twitter:description" content="{{ page.metaDescription ?? settings.seoDescription }}">
+
+    {# Stylesheets #}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('styles/cms.css') }}">
+
+    {# Google Analytics (if configured) #}
+    {% if settings.googleAnalyticsId %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.googleAnalyticsId }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ settings.googleAnalyticsId }}');
+    </script>
+    {% endif %}
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>{{ page.title }}</h1>
-        <div class="content">{{ page.content|raw }}</div>
-        <hr>
-        <p class="text-muted">Views: {{ page.viewCount }} | Published: {{ page.publishedAt|date('Y-m-d') }}</p>
+    {# Header #}
+    <header class="cms-header">
+        <div class="container">
+            <a href="{{ path('cms_homepage') }}" class="cms-logo">
+                {{ settings.siteName }}
+            </a>
+            <nav class="cms-nav">
+                <ul>
+                    <li><a href="{{ path('cms_homepage') }}">Home</a></li>
+                    {% if is_granted('ROLE_USER') %}
+                        <li><a href="{{ path('admin_dashboard') }}">Admin</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    {# Main Content #}
+    <div class="cms-content">
+        <article>
+            {# Page Title #}
+            <h1 class="cms-page-title">{{ page.title }}</h1>
+
+            {# Page Metadata #}
+            <div class="cms-page-meta">
+                {% if page.author %}
+                    <span>
+                        <i class="bi bi-person"></i>
+                        By {{ page.author.username }}
+                    </span>
+                {% endif %}
+                {% if page.publishedAt %}
+                    <span>
+                        <i class="bi bi-calendar"></i>
+                        {{ page.publishedAt|date('F j, Y') }}
+                    </span>
+                {% endif %}
+                <span class="view-count">
+                    <i class="bi bi-eye"></i>
+                    {{ page.viewCount }} views
+                </span>
+            </div>
+
+            {# Page Content #}
+            <div class="cms-page-body">
+                {{ page.content|raw }}
+            </div>
+
+            {# Categories #}
+            {% if page.categories|length > 0 %}
+                <div class="cms-categories">
+                    <strong><i class="bi bi-tags"></i> Categories:</strong>
+                    {% for category in page.categories %}
+                        <a href="#" class="cms-category-badge">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </article>
     </div>
+
+    {# Footer #}
+    <footer class="cms-footer">
+        <div class="container">
+            <div class="cms-footer-content">
+                <div class="cms-footer-links">
+                    <a href="{{ path('cms_homepage') }}">Home</a>
+                    {% if is_granted('ROLE_USER') %}
+                        <a href="{{ path('admin_dashboard') }}">Admin</a>
+                    {% endif %}
+                </div>
+                <p>&copy; {{ 'now'|date('Y') }} {{ settings.siteName }}. All rights reserved.</p>
+                {% if settings.facebookUrl or settings.twitterUrl or settings.linkedinUrl %}
+                    <div class="social-links mt-3">
+                        {% if settings.facebookUrl %}
+                            <a href="{{ settings.facebookUrl }}" target="_blank" rel="noopener" title="Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                        {% endif %}
+                        {% if settings.twitterUrl %}
+                            <a href="{{ settings.twitterUrl }}" target="_blank" rel="noopener" title="Twitter">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                        {% endif %}
+                        {% if settings.linkedinUrl %}
+                            <a href="{{ settings.linkedinUrl }}" target="_blank" rel="noopener" title="LinkedIn">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </footer>
+
+    {# JavaScript #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('cms.js') }}" type="module"></script>
 </body>
 </html>

@@ -1,0 +1,196 @@
+{% extends 'admin/base.html.twig' %}
+
+{# Enhanced Page Index Template - Phase 5 Example #}
+{# This demonstrates the new Phase 5 features #}
+{# To use: rename to index.html.twig and update controller to support pagination #}
+
+{% block title %}Pages{% endblock %}
+
+{% block body %}
+{# Page Header #}
+<div class="page-header">
+    <h1><i class="bi bi-file-text"></i> Pages</h1>
+    <a href="{{ path('admin_page_new') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create New Page
+    </a>
+</div>
+
+{# Search Box #}
+<div class="search-box">
+    <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" id="pageSearch" data-table-search="pagesTable"
+               placeholder="Search pages by title, slug, or author...">
+    </div>
+</div>
+
+{# Stats Cards (if available) #}
+{% if stats is defined %}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-value">{{ stats.total }}</div>
+                <div class="stat-label">Total Pages</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card" style="border-left-color: #198754;">
+            <div class="card-body">
+                <div class="stat-value" style="color: #198754;">{{ stats.published }}</div>
+                <div class="stat-label">Published</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card" style="border-left-color: #ffc107;">
+            <div class="card-body">
+                <div class="stat-value" style="color: #ffc107;">{{ stats.drafts }}</div>
+                <div class="stat-label">Drafts</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card" style="border-left-color: #0dcaf0;">
+            <div class="card-body">
+                <div class="stat-value" style="color: #0dcaf0;">{{ stats.totalViews }}</div>
+                <div class="stat-label">Total Views</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{# Pages Table #}
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-table"></i> All Pages
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="pagesTable">
+                <thead>
+                    <tr>
+                        <th data-sort>ID</th>
+                        <th data-sort>Title</th>
+                        <th data-sort>Slug</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                        <th data-sort>Views</th>
+                        <th data-sort>Created</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for page in pages %}
+                    <tr data-href="{{ path('admin_page_edit', {id: page.id}) }}">
+                        <td><strong>#{{ page.id }}</strong></td>
+                        <td>
+                            <div class="text-truncate" style="max-width: 250px;" title="{{ page.title }}">
+                                {{ page.title }}
+                            </div>
+                            {% if page.isHomepage %}
+                                <span class="badge bg-info">Homepage</span>
+                            {% endif %}
+                        </td>
+                        <td><code class="text-muted">{{ page.slug }}</code></td>
+                        <td>
+                            {% if page.author %}
+                                <span class="text-muted">
+                                    <i class="bi bi-person"></i>
+                                    {{ page.author.username }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post" action="{{ path('admin_page_toggle_published', {id: page.id}) }}"
+                                  class="d-inline" onclick="event.stopPropagation()">
+                                <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ page.id) }}">
+                                <button type="submit" class="badge {{ page.isPublished ? 'bg-success' : 'bg-secondary' }} border-0"
+                                        style="cursor: pointer;">
+                                    <i class="bi bi-{{ page.isPublished ? 'check-circle' : 'circle' }}"></i>
+                                    {{ page.isPublished ? 'Published' : 'Draft' }}
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <span class="view-count">
+                                <i class="bi bi-eye"></i>
+                                {{ page.viewCount }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-muted" title="{{ page.createdAt|date('Y-m-d H:i:s') }}">
+                                {{ page.createdAt|date('M j, Y') }}
+                            </span>
+                        </td>
+                        <td class="text-end" onclick="event.stopPropagation()">
+                            <div class="action-buttons">
+                                <a href="{{ path('cms_page', {slug: page.slug}) }}" class="btn btn-sm btn-outline-primary"
+                                   target="_blank" title="View on site">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ path('admin_page_edit', {id: page.id}) }}" class="btn btn-sm btn-warning"
+                                   title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" action="{{ path('admin_page_delete', {id: page.id}) }}"
+                                      class="d-inline" data-confirm="Are you sure you want to delete '{{ page.title }}'? This action cannot be undone.">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ page.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="bi bi-file-text"></i></div>
+                                <h3>No Pages Yet</h3>
+                                <p>Get started by creating your first page</p>
+                                <a href="{{ path('admin_page_new') }}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i> Create Your First Page
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{# Pagination (if using Paginator service) #}
+{% if pagination is defined %}
+    {% include '_pagination.html.twig' with {
+        pagination: pagination,
+        route_name: 'admin_page_index',
+        route_params: {}
+    } %}
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Additional page-specific JavaScript
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('✓ Enhanced page index loaded');
+
+        // Add row highlight on hover
+        document.querySelectorAll('#pagesTable tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.backgroundColor = 'rgba(13, 110, 253, 0.05)';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.backgroundColor = '';
+            });
+        });
+    });
+</script>
+{% endblock %}
