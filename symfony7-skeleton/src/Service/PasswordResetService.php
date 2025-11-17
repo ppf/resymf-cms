@@ -49,7 +49,7 @@ class PasswordResetService
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         // Always return true to prevent email enumeration
-        if ($user === null || !$user->isActive()) {
+        if ($user === null || !$user->isEnabled()) {
             return true;
         }
 
@@ -195,7 +195,7 @@ class PasswordResetService
      */
     public function canRequestReset(User $user): bool
     {
-        if (!$user->isActive()) {
+        if (!$user->isEnabled()) {
             return false;
         }
 
