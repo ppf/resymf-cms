@@ -1,9 +1,10 @@
 :root {
-    --rs-bg-start: #0f172a;
-    --rs-bg-end: #1d4ed8;
+    --rs-bg-start: #f8fafc;
+    --rs-bg-end: #dbeafe;
     --rs-card-bg: #ffffff;
-    --rs-card-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+    --rs-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
     --rs-text-muted: #64748b;
+    --rs-primary-blue: #3b82f6;
 }
 
 *,
@@ -31,7 +32,7 @@ body.app-shell {
 .auth-card {
     width: min(420px, 100%);
     background: var(--rs-card-bg);
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     padding: 2.5rem;
     box-shadow: var(--rs-card-shadow);
 }
@@ -40,7 +41,7 @@ body.app-shell {
     width: 64px;
     height: 64px;
     border-radius: 18px;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    background: var(--rs-primary-blue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,12 +70,12 @@ body.app-shell {
 }
 
 .form-control:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+    border-color: var(--rs-primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.15);
 }
 
 .auth-cta {
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    background: var(--rs-primary-blue);
     border: none;
     font-weight: 600;
     padding: 0.95rem;

@@ -1,149 +1,157 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}Admin Dashboard - ReSymf CMS{% endblock %}
+{% block title %}Dashboard - ReSymf CMS Admin{% endblock %}
 
 {% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar (will be enhanced later) -->
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="min-height: 100vh;">
-            <div class="position-sticky pt-3">
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Navigation</span>
-                </h6>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ path('admin_dashboard') }}">
-                            Dashboard
-                        </a>
-                    </li>
-                    <!-- More menu items will be added during migration -->
-                </ul>
+{# Welcome Section #}
+<div class="dashboard-welcome">
+    <h1>Welcome back, {{ user.username }}!</h1>
+    <p class="subtitle">{{ 'now'|date('l, F j, Y') }} • Last login: {{ user.createdAt|date('M j, Y') }}</p>
+</div>
 
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>User</span>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+{# Stats Grid #}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-people"></i>
+        </div>
+        <div class="stat-value">-</div>
+        <div class="stat-label">Total Users</div>
+    </div>
 
-        <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
-            </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-file-text"></i>
+        </div>
+        <div class="stat-value">-</div>
+        <div class="stat-label">Published Pages</div>
+    </div>
 
-            <div class="alert alert-success" role="alert">
-                <h4 class="alert-heading">Welcome, {{ user.username }}!</h4>
-                <p>You are successfully logged in to ReSymf CMS Admin Panel.</p>
-                <hr>
-                <p class="mb-0">
-                    <strong>Email:</strong> {{ user.email }}<br>
-                    <strong>Roles:</strong> {{ user.roles|join(', ') }}<br>
-                    <strong>Active:</strong> {{ user.isActive ? 'Yes' : 'No' }}<br>
-                    <strong>Member since:</strong> {{ user.createdAt|date('Y-m-d H:i:s') }}
-                </p>
-            </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-tags"></i>
+        </div>
+        <div class="stat-value">-</div>
+        <div class="stat-label">Categories</div>
+    </div>
 
-            <!-- Stats cards (placeholder) -->
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Users</h5>
-                            <p class="card-text display-6">-</p>
-                            <small class="text-muted">Total registered</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Pages</h5>
-                            <p class="card-text display-6">-</p>
-                            <small class="text-muted">Published</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Projects</h5>
-                            <p class="card-text display-6">-</p>
-                            <small class="text-muted">Active</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Tasks</h5>
-                            <p class="card-text display-6">-</p>
-                            <small class="text-muted">Pending</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">System Information</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm">
-                        <tbody>
-                            <tr>
-                                <td><strong>Symfony Version:</strong></td>
-                                <td>{{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>PHP Version:</strong></td>
-                                <td>{{ constant('PHP_VERSION') }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Environment:</strong></td>
-                                <td>{{ app.environment }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Debug Mode:</strong></td>
-                                <td>{{ app.debug ? 'Enabled' : 'Disabled' }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="alert alert-info mt-4" role="alert">
-                <strong>Migration Status:</strong> Phase 2 - User Authentication Complete
-                <br>
-                <strong>Next:</strong> Entity migration (Settings, Page, Category, Project, etc.)
-            </div>
-        </main>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-activity"></i>
+        </div>
+        <div class="stat-value">-</div>
+        <div class="stat-label">Recent Activity</div>
     </div>
 </div>
 
-<style>
-    .sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 100;
-        padding: 48px 0 0;
-        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-    }
-    .sidebar .nav-link {
-        font-weight: 500;
-        color: #333;
-    }
-    .sidebar .nav-link.active {
-        color: #0d6efd;
-    }
-</style>
+{# Quick Actions #}
+<div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="quick-actions-grid">
+        <a href="{{ path('admin_page_new') }}" class="quick-action-card primary">
+            <i class="bi bi-plus-circle"></i>
+            Create Page
+        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('admin_user_new') }}" class="quick-action-card">
+            <i class="bi bi-person-plus"></i>
+            Add User
+        </a>
+        {% endif %}
+        <a href="{{ path('cms_homepage') }}" target="_blank" class="quick-action-card">
+            <i class="bi bi-eye"></i>
+            View Site
+        </a>
+    </div>
+</div>
+
+{# User Information Card #}
+<div class="card">
+    <div class="card-header">
+        <h3>Your Account</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <strong class="text-muted small">Username:</strong>
+                <div>{{ user.username }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <strong class="text-muted small">Email:</strong>
+                <div>{{ user.email }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <strong class="text-muted small">Roles:</strong>
+                <div>
+                    {% for role in user.roles %}
+                        <span class="badge badge-primary">{{ role }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <strong class="text-muted small">Status:</strong>
+                <div>
+                    {% if user.isActive %}
+                        <span class="badge badge-success">Active</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <strong class="text-muted small">Member Since:</strong>
+                <div>{{ user.createdAt|date('F j, Y') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# System Information Card #}
+<div class="card">
+    <div class="card-header">
+        <h3>System Information</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm">
+            <tbody>
+                <tr>
+                    <td class="fw-semibold">Symfony Version:</td>
+                    <td>{{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-semibold">PHP Version:</td>
+                    <td>{{ constant('PHP_VERSION') }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-semibold">Environment:</td>
+                    <td>
+                        <span class="badge {{ app.environment == 'prod' ? 'badge-success' : 'badge-warning' }}">
+                            {{ app.environment }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fw-semibold">Debug Mode:</td>
+                    <td>
+                        {% if app.debug %}
+                            <span class="badge badge-warning">Enabled</span>
+                        {% else %}
+                            <span class="badge badge-success">Disabled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# Migration Status (Optional - can be removed after migration complete) #}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i>
+    <div>
+        <strong>Migration Status:</strong> Phase 5 - Frontend Modernization Complete
+        <br>
+        <small>Next: Continue entity migration and feature development</small>
+    </div>
+</div>
 {% endblock %}
