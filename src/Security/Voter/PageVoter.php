@@ -126,9 +126,7 @@ class PageVoter extends Voter
         }
 
         // Cannot delete homepage (additional business rule)
-        return !($page->isHomepage())
-
-        ;
+        return !$page->isHomepage();
     }
 
     private function canCreate(UserInterface $user): bool
