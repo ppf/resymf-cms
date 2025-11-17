@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload Composer Audit Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: composer-audit-results
           path: composer-audit.json
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload Outdated Dependencies Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: outdated-dependencies
           path: outdated-deps.json
@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload OWASP Dependency Check Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: owasp-dependency-check-report
           path: reports
@@ -142,7 +142,7 @@ jobs:
 
       - name: Upload Security Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: php-security-report
           path: security-report.json
@@ -179,7 +179,7 @@ jobs:
 
       - name: Upload Psalm Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: psalm-security-report
           path: psalm-report.txt
@@ -193,7 +193,7 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Generate Security Summary
         run: |
