@@ -90,3 +90,10 @@ body.app-shell {
 .auth-footnote {
     color: var(--rs-text-muted);
 }
+
+.remember-me {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+}
