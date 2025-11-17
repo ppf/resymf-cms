@@ -1,0 +1,35 @@
+# .dockerignore
+
+# Git files
+.git
+.gitignore
+
+# Docker files
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker/
+
+# Local environment files
+.env.local
+.env.*.local
+
+# Vendor directory (managed by Composer within the container)
+vendor/
+
+# Symfony cache, logs, and test artifacts
+var/cache/
+var/log/
+var/test/
+tests/
+
+# Build artifacts from other tools
+build/
+node_modules/
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store

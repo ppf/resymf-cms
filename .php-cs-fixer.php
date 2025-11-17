@@ -1,128 +1,157 @@
 <?php
 
+declare(strict_types=1);
+
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src')
-    ->exclude('Tests')
-    ->exclude('DependencyInjection')
+    ->in(__DIR__ . '/config')
+    ->in(__DIR__ . '/tests')
+    ->exclude('var')
+    ->exclude('vendor')
     ->name('*.php')
     ->notName('*.blade.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 
 $config = new PhpCsFixer\Config();
-
-return $config
+$config
+    ->setRiskyAllowed(true)
     ->setRules([
-        '@PSR2' => true,
+        '@PSR12' => true,
         '@Symfony' => true,
+        '@PHP83Migration' => true,
 
         // Array notation
         'array_syntax' => ['syntax' => 'short'],
-        'array_indentation' => true,
-        'trim_array_spaces' => true,
-        'whitespace_after_comma_in_array' => true,
+        'trailing_comma_in_multiline' => [
+            'elements' => ['arrays', 'arguments', 'parameters'],
+        ],
 
         // Imports
         'ordered_imports' => [
             'imports_order' => ['class', 'function', 'const'],
-            'sort_algorithm' => 'alpha'
+            'sort_algorithm' => 'alpha',
         ],
         'no_unused_imports' => true,
-        'no_leading_import_slash' => true,
-        'single_import_per_statement' => true,
+        'global_namespace_import' => [
+            'import_classes' => false,
+            'import_constants' => false,
+            'import_functions' => false,
+        ],
 
         // Operators
-        'not_operator_with_successor_space' => true,
         'binary_operator_spaces' => [
-            'operators' => [
-                '=>' => 'align_single_line_minimal',
-                '=' => 'single_space',
-            ]
+            'default' => 'single_space',
+            'operators' => ['=>' => null],
         ],
-        'unary_operator_spaces' => true,
+        'not_operator_with_successor_space' => false,
         'concat_space' => ['spacing' => 'one'],
-
-        // Code structure
-        'trailing_comma_in_multiline' => ['elements' => ['arrays', 'arguments', 'parameters']],
-        'blank_line_before_statement' => [
-            'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try', 'if', 'switch', 'for', 'foreach', 'while', 'do'],
-        ],
-        'blank_line_after_opening_tag' => true,
-        'blank_line_after_namespace' => true,
-        'single_blank_line_at_eof' => true,
-        'no_extra_blank_lines' => [
-            'tokens' => ['extra', 'throw', 'use', 'use_trait']
-        ],
+        'unary_operator_spaces' => true,
 
         // PHPDoc
-        'phpdoc_scalar' => true,
-        'phpdoc_single_line_var_spacing' => true,
-        'phpdoc_var_without_name' => true,
-        'phpdoc_align' => ['align' => 'left'],
-        'phpdoc_separation' => true,
-        'phpdoc_summary' => true,
-        'phpdoc_trim' => true,
+        'phpdoc_align' => [
+            'align' => 'left',
+        ],
+        'phpdoc_annotation_without_dot' => true,
+        'phpdoc_indent' => true,
+        'phpdoc_inline_tag_normalizer' => true,
+        'phpdoc_no_access' => true,
+        'phpdoc_no_alias_tag' => true,
         'phpdoc_no_empty_return' => true,
-        'phpdoc_order' => true,
-        'phpdoc_types_order' => [
-            'null_adjustment' => 'always_last',
-            'sort_algorithm' => 'alpha'
-        ],
+        'phpdoc_no_package' => true,
+        'phpdoc_no_useless_inheritdoc' => true,
+        'phpdoc_return_self_reference' => true,
+        'phpdoc_scalar' => true,
+        'phpdoc_separation' => true,
+        'phpdoc_single_line_var_spacing' => true,
+        'phpdoc_summary' => true,
+        'phpdoc_to_comment' => false,
+        'phpdoc_trim' => true,
+        'phpdoc_types' => true,
+        'phpdoc_var_annotation_correct_order' => true,
+        'phpdoc_var_without_name' => true,
 
-        // Casting
-        'cast_spaces' => ['space' => 'single'],
-        'lowercase_cast' => true,
-        'short_scalar_cast' => true,
-
-        // Classes and methods
-        'class_attributes_separation' => [
-            'elements' => ['method' => 'one', 'property' => 'one']
+        // Blank lines
+        'blank_line_after_namespace' => true,
+        'blank_line_after_opening_tag' => true,
+        'blank_line_before_statement' => [
+            'statements' => [
+                'break',
+                'continue',
+                'declare',
+                'return',
+                'throw',
+                'try',
+            ],
         ],
-        'method_chaining_indentation' => true,
-        'no_blank_lines_after_class_opening' => true,
-        'single_class_element_per_statement' => true,
-        'visibility_required' => ['elements' => ['property', 'method', 'const']],
 
         // Control structures
-        'control_structure_continuation_position' => ['position' => 'same_line'],
-        'no_alternative_syntax' => true,
+        'control_structure_braces' => true,
+        'control_structure_continuation_position' => true,
+        'declare_parentheses' => true,
+        'no_alternative_syntax' => ['fix_non_monolithic_code' => false],
         'no_superfluous_elseif' => true,
         'no_useless_else' => true,
+        'simplified_if_return' => true,
+        'yoda_style' => false,
+
+        // Classes
+        'class_attributes_separation' => [
+            'elements' => [
+                'method' => 'one',
+                'property' => 'one',
+            ],
+        ],
+        'final_internal_class' => false,
+        'no_null_property_initialization' => true,
+        'ordered_class_elements' => [
+            'order' => [
+                'use_trait',
+                'constant_public',
+                'constant_protected',
+                'constant_private',
+                'property_public',
+                'property_protected',
+                'property_private',
+                'construct',
+                'destruct',
+                'magic',
+                'phpunit',
+                'method_public',
+                'method_protected',
+                'method_private',
+            ],
+        ],
+        'self_accessor' => true,
+        'single_class_element_per_statement' => true,
 
         // Functions
-        'function_declaration' => ['closure_function_spacing' => 'one'],
-        'function_typehint_space' => true,
-        'lambda_not_used_import' => true,
+        'function_declaration' => true,
+        'method_argument_space' => [
+            'on_multiline' => 'ensure_fully_multiline',
+        ],
+        'no_spaces_after_function_name' => true,
         'return_type_declaration' => ['space_before' => 'none'],
 
-        // Strings
+        // Strict types
+        'declare_strict_types' => true,
+        'strict_comparison' => true,
+        'strict_param' => true,
+
+        // Miscellaneous
+        'native_function_invocation' => false,
+        'no_useless_return' => true,
+        'single_line_comment_style' => [
+            'comment_types' => ['hash'],
+        ],
         'single_quote' => true,
-        'string_line_ending' => true,
-
-        // Whitespace
-        'no_trailing_whitespace' => true,
-        'no_trailing_whitespace_in_comment' => true,
-        'no_whitespace_in_blank_line' => true,
-        'single_line_after_imports' => true,
-
-        // Other
-        'encoding' => true,
-        'full_opening_tag' => true,
-        'no_closing_tag' => true,
-        'line_ending' => true,
-        'no_php4_constructor' => true,
-        'modernize_types_casting' => true,
-        'native_function_casing' => true,
-        'native_function_type_declaration_casing' => true,
-        'no_empty_comment' => true,
-        'no_empty_phpdoc' => true,
-        'no_empty_statement' => true,
-        'no_mixed_echo_print' => ['use' => 'echo'],
-        'semicolon_after_instruction' => true,
         'standardize_not_equals' => true,
-        'ternary_operator_spaces' => true,
+        'ternary_to_null_coalescing' => true,
+        'visibility_required' => [
+            'elements' => ['property', 'method', 'const'],
+        ],
     ])
     ->setFinder($finder)
-    ->setRiskyAllowed(true)
-    ->setUsingCache(true)
-    ->setCacheFile(__DIR__ . '/.php-cs-fixer.cache');
+    ->setLineEnding("\n");
+
+return $config;

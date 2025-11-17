@@ -1,0 +1,72 @@
+# docker-compose.yml for ReSymf-CMS (Symfony 7)
+#
+# This configuration is intended for local development.
+#
+services:
+  php:
+    build:
+      context: .
+      target: app_dev # Use the development stage from the Dockerfile
+    container_name: resymf_php
+    volumes:
+      - .:/app # Mount the application directory
+      # Use a named volume for the vendor directory to persist dependencies
+      - vendor:/app/vendor
+    environment:
+      # Symfony environment variables
+      APP_ENV: dev
+      APP_DEBUG: 1
+      APP_SECRET: '!ChangeMe!' # Use a different secret in production
+      # Database connection
+      DATABASE_URL: "mysql://resymf:password@db:3306/resymf_cms?serverVersion=8.0&charset=utf8mb4"
+      # Mailer DSN (using a local catcher like MailHog)
+      MAILER_DSN: "smtp://mailhog:1025"
+    depends_on:
+      - db
+    networks:
+      - resymf_network
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: resymf_nginx
+    ports:
+      - "8088:80" # Map host port 8088 to container port 80
+    volumes:
+      - .:/app:ro # Mount the application directory read-only
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    networks:
+      - resymf_network
+
+  db:
+    image: mysql:8.0
+    container_name: resymf_db
+    ports:
+      - "33066:3306" # Map host port 33066 to container port 3306 to avoid conflicts
+    environment:
+      MYSQL_DATABASE: resymf_cms
+      MYSQL_USER: resymf
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - resymf_network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: resymf_mailhog
+    ports:
+      - "1026:1025" # SMTP port
+      - "8026:8025" # Web UI port
+    networks:
+      - resymf_network
+
+volumes:
+  db_data:
+  vendor:
+
+networks:
+  resymf_network:
+    driver: bridge

@@ -1,0 +1,94 @@
+# Nginx Configuration for Symfony 7 Applications
+#
+# This is a sample configuration file.
+#
+# 1. Replace `your-domain-name.com` with your actual domain.
+# 2. Replace `/home/resymf/resymf-cms/symfony7-skeleton/public` with the correct path to your project's public directory.
+# 3. Ensure the `fastcgi_pass` directive points to the correct PHP-FPM socket.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name your-domain-name.com www.your-domain-name.com;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name your-domain-name.com;
+
+    # SSL Configuration (replace with your certificate paths)
+    # It's highly recommended to use Let's Encrypt for free SSL certificates.
+    # ssl_certificate /etc/letsencrypt/live/your-domain-name.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/your-domain-name.com/privkey.pem;
+    # include /etc/letsencrypt/options-ssl-nginx.conf;
+    # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # Path to the public directory of your Symfony application
+    root /home/resymf/resymf-cms/symfony7-skeleton/public;
+    index index.php;
+
+    # Default character set
+    charset utf-8;
+
+    # Log files
+    access_log /var/log/nginx/resymf-cms_access.log;
+    error_log /var/log/nginx/resymf-cms_error.log;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self';" always;
+
+    # Handle static files directly
+    location ~* \.(?:css|js|gif|jpe?g|png|ico|svg|woff2?)$ {
+        expires 1M;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+
+    # Main entry point for the Symfony application
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    # PHP-FPM configuration
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+
+        # When you are using symlinks to link the document root to the
+        # current version of your application, you should pass the real
+        # application path instead of the path to the symlink to PHP
+        # FPM.
+        # Otherwise, PHP's OPcache may not properly detect changes to
+        # your PHP files (see https://github.com/zendtech/ZendOptimizerPlus/issues/126
+        # for more information).
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+
+        # Prevents URIs that include the front controller. This will 404:
+        # http://domain.tld/index.php/some-path
+        # Remove the internal directive to allow URIs like this
+        internal;
+    }
+
+    # Block access to .php files in the root directory
+    location ~ \.php$ {
+        return 404;
+    }
+
+    # Block access to sensitive files
+    location ~ /\. {
+        deny all;
+    }
+    location ~ \.(env|log|yaml|yml|dist)$ {
+        deny all;
+    }
+}

@@ -1,25 +1,32 @@
-/web/bundles/
-/web/uploads/*
-/app/bootstrap.php.cache
-/app/config/parameters.yml
-/app/cache/*
-/app/config/parameters.yml
-/app/logs/*
-!app/cache/.gitkeep
-!app/logs/.gitkeep
-/build/
-/vendor/
-/bin/
-/composer.phar
-.idea*
-nbproject*
 
-# CI Quality Automation
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
+
+# Tooling / local artifacts
 .php-cs-fixer.cache
-build/
-/phpstan-baseline.neon
-/psalm-baseline.xml
+/build/
 composer-audit.json
 outdated-deps.json
 security-report.json
-
+/phpstan-baseline.neon
+/psalm-baseline.xml
+.idea*
+nbproject*
+composer.phar
