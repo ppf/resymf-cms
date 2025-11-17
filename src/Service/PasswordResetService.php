@@ -32,7 +32,7 @@ class PasswordResetService
         private readonly UserRepository $userRepository,
         private readonly EmailService $emailService,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly UrlGeneratorInterface $urlGenerator
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -68,7 +68,7 @@ class PasswordResetService
         $resetRequest->setUser($user);
         $resetRequest->setToken($token);
         $resetRequest->setExpiresAt(
-            (new \DateTimeImmutable())->modify('+' . self::TOKEN_LIFETIME . ' seconds')
+            (new \DateTimeImmutable())->modify('+' . self::TOKEN_LIFETIME . ' seconds'),
         );
         $resetRequest->setIpAddress($ipAddress);
 
@@ -79,7 +79,7 @@ class PasswordResetService
         $resetUrl = $this->urlGenerator->generate(
             'security_reset_password',
             ['token' => $token],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         // Send email
@@ -88,7 +88,7 @@ class PasswordResetService
                 $user->getEmail(),
                 $user->getUsername(),
                 $token,
-                $resetUrl
+                $resetUrl,
             );
         } catch (\Exception $e) {
             // Log error but don't reveal to user
@@ -145,7 +145,7 @@ class PasswordResetService
         try {
             $this->emailService->sendPasswordChangedEmail(
                 $user->getEmail(),
-                $user->getUsername()
+                $user->getUsername(),
             );
         } catch (\Exception $e) {
             // Log error but password was still changed
@@ -164,16 +164,6 @@ class PasswordResetService
     public function cleanupExpiredRequests(): int
     {
         return $this->resetRequestRepository->deleteExpired();
-    }
-
-    /**
-     * Generate a cryptographically secure token.
-     *
-     * @return string The generated token
-     */
-    private function generateSecureToken(): string
-    {
-        return bin2hex(random_bytes(32));
     }
 
     /**
@@ -202,5 +192,15 @@ class PasswordResetService
         $activeRequests = $this->resetRequestRepository->countActiveForUser($user);
 
         return $activeRequests < self::MAX_ACTIVE_REQUESTS;
+    }
+
+    /**
+     * Generate a cryptographically secure token.
+     *
+     * @return string The generated token
+     */
+    private function generateSecureToken(): string
+    {
+        return bin2hex(random_bytes(32));
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -21,30 +23,31 @@ class DatabaseSetupCommand extends Command
         $this
             ->addOption('skip-drop', null, InputOption::VALUE_NONE, 'Skip dropping existing database')
             ->addOption('skip-fixtures', null, InputOption::VALUE_NONE, 'Skip loading fixtures')
-            ->setHelp(<<<'HELP'
-The <info>%command.name%</info> command sets up your development database:
+            ->setHelp(
+                <<<'HELP'
+                    The <info>%command.name%</info> command sets up your development database:
 
-    <info>php %command.full_name%</info>
+                        <info>php %command.full_name%</info>
 
-This command performs the following steps:
-  1. Drops the existing database (if it exists)
-  2. Creates a new database
-  3. Runs all migrations
-  4. Loads fixtures (sample data)
+                    This command performs the following steps:
+                      1. Drops the existing database (if it exists)
+                      2. Creates a new database
+                      3. Runs all migrations
+                      4. Loads fixtures (sample data)
 
-To keep existing database without dropping:
+                    To keep existing database without dropping:
 
-    <info>php %command.full_name% --skip-drop</info>
+                        <info>php %command.full_name% --skip-drop</info>
 
-To skip loading fixtures:
+                    To skip loading fixtures:
 
-    <info>php %command.full_name% --skip-fixtures</info>
+                        <info>php %command.full_name% --skip-fixtures</info>
 
-This is perfect for:
-  - Initial development setup
-  - Resetting your development database
-  - Quick testing with fresh data
-HELP
+                    This is perfect for:
+                      - Initial development setup
+                      - Resetting your development database
+                      - Quick testing with fresh data
+                    HELP
             );
     }
 
@@ -55,6 +58,7 @@ HELP
 
         if (!$application) {
             $io->error('Could not access application');
+
             return Command::FAILURE;
         }
 
@@ -98,6 +102,7 @@ HELP
         $returnCode = $createCommand->run($createInput, $output);
         if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
             $io->error('Failed to create database');
+
             return Command::FAILURE;
         }
         $io->success('Database created successfully');
@@ -115,6 +120,7 @@ HELP
         $returnCode = $migrateCommand->run($migrateInput, $output);
         if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
             $io->error('Failed to run migrations');
+
             return Command::FAILURE;
         }
         $io->success('Migrations executed successfully');
@@ -140,6 +146,7 @@ HELP
                 $returnCode = $fixturesCommand->run($fixturesInput, $output);
                 if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
                     $io->error('Failed to load fixtures');
+
                     return Command::FAILURE;
                 }
                 $io->success('Fixtures loaded successfully');

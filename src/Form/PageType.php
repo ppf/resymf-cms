@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Form type for Page entity
+ * Form type for Page entity.
  *
  * Handles CMS page creation and editing with categories, SEO fields, and publishing options
  */

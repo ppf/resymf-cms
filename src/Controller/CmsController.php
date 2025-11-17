@@ -9,11 +9,10 @@ use App\Repository\SettingsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * CMS Frontend Controller
+ * CMS Frontend Controller.
  *
  * Handles public page rendering by slug
  * Implements dynamic routing for CMS pages
@@ -23,13 +22,13 @@ class CmsController extends AbstractController
     public function __construct(
         private readonly PageRepository $pageRepository,
         private readonly SettingsRepository $settingsRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     /**
      * Homepage
-     * Shows the page marked as homepage or first published page
+     * Shows the page marked as homepage or first published page.
      */
     #[Route('/', name: 'cms_homepage', methods: ['GET'])]
     public function homepage(): Response
@@ -61,7 +60,7 @@ class CmsController extends AbstractController
 
     /**
      * Dynamic page rendering by slug
-     * Catches all remaining routes and tries to find a matching page
+     * Catches all remaining routes and tries to find a matching page.
      *
      * This route has the lowest priority to avoid conflicting with other routes
      */

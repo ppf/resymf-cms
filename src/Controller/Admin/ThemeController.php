@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Admin Theme CRUD Controller
+ * Admin Theme CRUD Controller.
  *
  * Handles theme management in the admin area
  */
@@ -25,12 +25,12 @@ class ThemeController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ThemeRepository $themeRepository
+        private readonly ThemeRepository $themeRepository,
     ) {
     }
 
     /**
-     * List all themes
+     * List all themes.
      */
     #[Route('', name: 'admin_theme_index', methods: ['GET'])]
     public function index(): Response
@@ -43,7 +43,7 @@ class ThemeController extends AbstractController
     }
 
     /**
-     * Create a new theme
+     * Create a new theme.
      */
     #[Route('/new', name: 'admin_theme_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
@@ -73,7 +73,7 @@ class ThemeController extends AbstractController
     }
 
     /**
-     * Show theme details
+     * Show theme details.
      */
     #[Route('/{id}', name: 'admin_theme_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Theme $theme): Response
@@ -84,7 +84,7 @@ class ThemeController extends AbstractController
     }
 
     /**
-     * Edit existing theme
+     * Edit existing theme.
      */
     #[Route('/{id}/edit', name: 'admin_theme_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Theme $theme): Response
@@ -112,7 +112,7 @@ class ThemeController extends AbstractController
     }
 
     /**
-     * Delete theme
+     * Delete theme.
      */
     #[Route('/{id}/delete', name: 'admin_theme_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Theme $theme): Response
@@ -138,7 +138,7 @@ class ThemeController extends AbstractController
     }
 
     /**
-     * Set theme as default
+     * Set theme as default.
      */
     #[Route('/{id}/set-default', name: 'admin_theme_set_default', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function setDefault(Request $request, Theme $theme): Response

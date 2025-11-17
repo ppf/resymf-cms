@@ -10,7 +10,7 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * User Fixtures
+ * User Fixtures.
  *
  * Loads initial users for development and testing
  * - Admin user with ROLE_ADMIN
@@ -21,7 +21,7 @@ class UserFixtures extends Fixture
     public const USER_ADMIN = 'user-admin';
 
     public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
         // Hash password
         $hashedPassword = $this->passwordHasher->hashPassword(
             $admin,
-            'admin123' // Default password - CHANGE IN PRODUCTION!
+            'admin123', // Default password - CHANGE IN PRODUCTION!
         );
         $admin->setPassword($hashedPassword);
 
@@ -52,7 +52,7 @@ class UserFixtures extends Fixture
 
         $hashedPassword = $this->passwordHasher->hashPassword(
             $user,
-            'user123' // Default password - CHANGE IN PRODUCTION!
+            'user123', // Default password - CHANGE IN PRODUCTION!
         );
         $user->setPassword($hashedPassword);
 
@@ -67,7 +67,7 @@ class UserFixtures extends Fixture
 
         $hashedPassword = $this->passwordHasher->hashPassword(
             $inactiveUser,
-            'inactive123'
+            'inactive123',
         );
         $inactiveUser->setPassword($hashedPassword);
 

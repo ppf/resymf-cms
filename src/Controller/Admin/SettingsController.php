@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Admin Settings Controller
+ * Admin Settings Controller.
  *
  * Handles site-wide settings management
  * Uses singleton pattern (only one Settings record exists)
@@ -25,12 +25,12 @@ class SettingsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly SettingsRepository $settingsRepository
+        private readonly SettingsRepository $settingsRepository,
     ) {
     }
 
     /**
-     * View and edit settings
+     * View and edit settings.
      */
     #[Route('', name: 'admin_settings_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request): Response

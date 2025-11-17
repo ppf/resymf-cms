@@ -33,7 +33,7 @@ class PageVoter extends Voter
             self::PUBLISH,
         ];
 
-        if (!in_array($attribute, $supportedAttributes)) {
+        if (!in_array($attribute, $supportedAttributes, true)) {
             return false;
         }
 
@@ -56,6 +56,7 @@ class PageVoter extends Voter
             if ($attribute === self::VIEW && $subject instanceof Page) {
                 return $subject->isPublished();
             }
+
             return false;
         }
 
@@ -125,11 +126,9 @@ class PageVoter extends Voter
         }
 
         // Cannot delete homepage (additional business rule)
-        if ($page->isHomepage()) {
-            return false;
-        }
+        return !($page->isHomepage())
 
-        return true;
+        ;
     }
 
     private function canCreate(UserInterface $user): bool

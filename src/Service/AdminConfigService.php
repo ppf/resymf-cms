@@ -98,7 +98,7 @@ class AdminConfigService
     ];
 
     public function __construct(
-        private readonly SettingsRepository $settingsRepository
+        private readonly SettingsRepository $settingsRepository,
     ) {
     }
 
@@ -250,6 +250,7 @@ class AdminConfigService
                 foreach ($requiredRoles as $role) {
                     if (in_array($role, $userRoles, true)) {
                         $hasAccess = true;
+
                         break;
                     }
                 }

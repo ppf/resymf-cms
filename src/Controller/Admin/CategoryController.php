@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Admin Category CRUD Controller
+ * Admin Category CRUD Controller.
  *
  * Handles category management in the admin area
  */
@@ -25,12 +25,12 @@ class CategoryController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly CategoryRepository $categoryRepository
+        private readonly CategoryRepository $categoryRepository,
     ) {
     }
 
     /**
-     * List all categories
+     * List all categories.
      */
     #[Route('', name: 'admin_category_index', methods: ['GET'])]
     public function index(): Response
@@ -43,7 +43,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Create a new category
+     * Create a new category.
      */
     #[Route('/new', name: 'admin_category_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
@@ -68,7 +68,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Show category details
+     * Show category details.
      */
     #[Route('/{id}', name: 'admin_category_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Category $category): Response
@@ -79,7 +79,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Edit existing category
+     * Edit existing category.
      */
     #[Route('/{id}/edit', name: 'admin_category_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Category $category): Response
@@ -102,7 +102,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Delete category
+     * Delete category.
      */
     #[Route('/{id}/delete', name: 'admin_category_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Category $category): Response
@@ -121,7 +121,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Toggle active status
+     * Toggle active status.
      */
     #[Route('/{id}/toggle-active', name: 'admin_category_toggle_active', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function toggleActive(Request $request, Category $category): Response

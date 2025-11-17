@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Settings Entity
+ * Settings Entity.
  *
  * Single-row configuration pattern for site-wide settings
  * Migrated from legacy ReSymf\Bundle\CmsBundle\Entity\Settings
@@ -28,7 +28,7 @@ class Settings
 {
     /**
      * Fixed ID for singleton pattern
-     * Only one Settings record should exist with ID=1
+     * Only one Settings record should exist with ID=1.
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,7 +40,7 @@ class Settings
     #[Assert\Length(
         min: 1,
         max: 255,
-        maxMessage: 'Site name cannot be longer than {{ limit }} characters.'
+        maxMessage: 'Site name cannot be longer than {{ limit }} characters.',
     )]
     private string $siteName = 'ReSymf CMS';
 
@@ -119,6 +119,14 @@ class Settings
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+    }
+
+    /**
+     * String representation for debugging.
+     */
+    public function __toString(): string
+    {
+        return $this->siteName;
     }
 
     public function getId(): ?int
@@ -363,13 +371,5 @@ class Settings
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    /**
-     * String representation for debugging
-     */
-    public function __toString(): string
-    {
-        return $this->siteName;
     }
 }

@@ -9,7 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Theme Fixtures
+ * Theme Fixtures.
  *
  * Creates sample UI themes for testing
  * Load order: 1 (before UserFixtures since users may reference themes)

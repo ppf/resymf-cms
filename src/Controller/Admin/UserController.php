@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Admin User CRUD Controller
+ * Admin User CRUD Controller.
  *
  * Handles user management in the admin area
  */
@@ -27,12 +27,12 @@ class UserController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $userRepository,
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
     /**
-     * List all users
+     * List all users.
      */
     #[Route('', name: 'admin_user_index', methods: ['GET'])]
     public function index(): Response
@@ -45,7 +45,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Create a new user
+     * Create a new user.
      */
     #[Route('/new', name: 'admin_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
@@ -62,7 +62,7 @@ class UserController extends AbstractController
             if ($user->getPlainPassword()) {
                 $hashedPassword = $this->passwordHasher->hashPassword(
                     $user,
-                    $user->getPlainPassword()
+                    $user->getPlainPassword(),
                 );
                 $user->setPassword($hashedPassword);
             }
@@ -82,7 +82,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Show user details
+     * Show user details.
      */
     #[Route('/{id}', name: 'admin_user_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(User $user): Response
@@ -93,7 +93,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Edit existing user
+     * Edit existing user.
      */
     #[Route('/{id}/edit', name: 'admin_user_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, User $user): Response
@@ -109,7 +109,7 @@ class UserController extends AbstractController
             if ($user->getPlainPassword()) {
                 $hashedPassword = $this->passwordHasher->hashPassword(
                     $user,
-                    $user->getPlainPassword()
+                    $user->getPlainPassword(),
                 );
                 $user->setPassword($hashedPassword);
             }
@@ -128,7 +128,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Delete user
+     * Delete user.
      */
     #[Route('/{id}/delete', name: 'admin_user_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, User $user): Response
@@ -154,7 +154,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Toggle user active status
+     * Toggle user active status.
      */
     #[Route('/{id}/toggle-active', name: 'admin_user_toggle_active', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function toggleActive(Request $request, User $user): Response

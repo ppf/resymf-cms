@@ -37,7 +37,7 @@ class ThemeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find the default theme
+     * Find the default theme.
      */
     public function findDefault(): ?Theme
     {
@@ -53,7 +53,7 @@ class ThemeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find all active themes
+     * Find all active themes.
      *
      * @return Theme[]
      */
@@ -68,7 +68,7 @@ class ThemeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find theme by name
+     * Find theme by name.
      */
     public function findByName(string $name): ?Theme
     {
@@ -80,7 +80,7 @@ class ThemeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count all themes
+     * Count all themes.
      */
     public function countAll(): int
     {
@@ -91,7 +91,7 @@ class ThemeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count active themes
+     * Count active themes.
      */
     public function countActive(): int
     {
@@ -104,7 +104,7 @@ class ThemeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find themes with pagination
+     * Find themes with pagination.
      *
      * @return Theme[]
      */
@@ -120,7 +120,7 @@ class ThemeRepository extends ServiceEntityRepository
 
     /**
      * Unset default flag on all themes
-     * Used before setting a new default theme
+     * Used before setting a new default theme.
      */
     public function unsetAllDefaults(): void
     {

@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Form type for Category entity
+ * Form type for Category entity.
  *
  * Handles category creation and editing for content organization
  */

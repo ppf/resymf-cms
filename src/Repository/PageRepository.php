@@ -39,7 +39,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find page by slug
+     * Find page by slug.
      */
     public function findBySlug(string $slug): ?Page
     {
@@ -51,7 +51,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find published page by slug (public access)
+     * Find published page by slug (public access).
      */
     public function findPublishedBySlug(string $slug): ?Page
     {
@@ -65,7 +65,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find all published pages
+     * Find all published pages.
      *
      * @return Page[]
      */
@@ -81,7 +81,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find homepage page
+     * Find homepage page.
      */
     public function findHomepage(): ?Page
     {
@@ -97,7 +97,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find pages by category
+     * Find pages by category.
      *
      * @return Page[]
      */
@@ -120,7 +120,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find pages by author
+     * Find pages by author.
      *
      * @return Page[]
      */
@@ -135,7 +135,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find recent pages
+     * Find recent pages.
      *
      * @return Page[]
      */
@@ -155,7 +155,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find popular pages by view count
+     * Find popular pages by view count.
      *
      * @return Page[]
      */
@@ -176,7 +176,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Search pages by title or content
+     * Search pages by title or content.
      *
      * @return Page[]
      */
@@ -197,7 +197,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count all pages
+     * Count all pages.
      */
     public function countAll(): int
     {
@@ -208,7 +208,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count published pages
+     * Count published pages.
      */
     public function countPublished(): int
     {
@@ -221,7 +221,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find pages with pagination
+     * Find pages with pagination.
      *
      * @return Page[]
      */
@@ -243,7 +243,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find pages ordered by display order
+     * Find pages ordered by display order.
      *
      * @return Page[]
      */
@@ -263,7 +263,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find all pages ordered by creation date (newest first)
+     * Find all pages ordered by creation date (newest first).
      *
      * @return Page[]
      */
@@ -276,7 +276,7 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find first published page (for fallback homepage)
+     * Find first published page (for fallback homepage).
      */
     public function findFirstPublished(): ?Page
     {

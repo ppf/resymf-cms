@@ -9,7 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Category Fixtures
+ * Category Fixtures.
  *
  * Creates sample content categories for testing
  * Load order: 2 (before PageFixtures)

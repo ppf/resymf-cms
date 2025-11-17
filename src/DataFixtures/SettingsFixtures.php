@@ -9,7 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Settings Fixtures
+ * Settings Fixtures.
  *
  * Loads initial site configuration for development and testing
  * Implements singleton pattern - only one Settings record should exist
@@ -61,8 +61,8 @@ class SettingsFixtures extends Fixture
         echo "   - Default Locale: {$settings->getDefaultLocale()}\n";
         echo "   - Timezone: {$settings->getTimezone()}\n";
         echo "   - Items Per Page: {$settings->getItemsPerPage()}\n";
-        echo "   - Registration Enabled: " . ($settings->isRegistrationEnabled() ? 'Yes' : 'No') . "\n";
-        echo "   - Maintenance Mode: " . ($settings->isMaintenanceMode() ? 'Yes' : 'No') . "\n";
+        echo '   - Registration Enabled: ' . ($settings->isRegistrationEnabled() ? 'Yes' : 'No') . "\n";
+        echo '   - Maintenance Mode: ' . ($settings->isMaintenanceMode() ? 'Yes' : 'No') . "\n";
         echo "\n💡 Customize these settings via the admin panel or config files.\n";
     }
 }

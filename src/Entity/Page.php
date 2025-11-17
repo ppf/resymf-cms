@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Page Entity
+ * Page Entity.
  *
  * CMS Page content with routing, categorization, and author tracking
  * Supports custom slugs for SEO-friendly URLs
@@ -36,19 +36,19 @@ class Page
         min: 3,
         max: 255,
         minMessage: 'Title must be at least {{ limit }} characters long.',
-        maxMessage: 'Title cannot be longer than {{ limit }} characters.'
+        maxMessage: 'Title cannot be longer than {{ limit }} characters.',
     )]
     private string $title;
 
     /**
-     * URL-friendly slug for routing
+     * URL-friendly slug for routing.
      */
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[Assert\Regex(
         pattern: '/^[a-z0-9-\/]+$/',
-        message: 'Slug can only contain lowercase letters, numbers, hyphens and forward slashes.'
+        message: 'Slug can only contain lowercase letters, numbers, hyphens and forward slashes.',
     )]
     private string $slug;
 
@@ -57,45 +57,45 @@ class Page
     private string $content;
 
     /**
-     * Optional meta description for SEO
+     * Optional meta description for SEO.
      */
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     private ?string $metaDescription = null;
 
     /**
-     * Optional meta keywords for SEO
+     * Optional meta keywords for SEO.
      */
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     private ?string $metaKeywords = null;
 
     /**
-     * Published status
+     * Published status.
      */
     #[ORM\Column(name: 'is_published', type: Types::BOOLEAN)]
     private bool $isPublished = false;
 
     /**
-     * Display on homepage
+     * Display on homepage.
      */
     #[ORM\Column(name: 'is_homepage', type: Types::BOOLEAN)]
     private bool $isHomepage = false;
 
     /**
-     * Display order (for menus, lower numbers appear first)
+     * Display order (for menus, lower numbers appear first).
      */
     #[ORM\Column(type: Types::INTEGER)]
     private int $displayOrder = 0;
 
     /**
-     * View count for analytics
+     * View count for analytics.
      */
     #[ORM\Column(type: Types::INTEGER)]
     private int $viewCount = 0;
 
     /**
-     * Optional published date (can be scheduled for future)
+     * Optional published date (can be scheduled for future).
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
@@ -107,7 +107,7 @@ class Page
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * Author of the page
+     * Author of the page.
      */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'authoredPages')]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
@@ -115,7 +115,7 @@ class Page
 
     /**
      * Categories assigned to this page
-     * Many-to-many relationship (owning side)
+     * Many-to-many relationship (owning side).
      */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'pages')]
     #[ORM\JoinTable(name: 'resymf_page_categories')]
@@ -125,6 +125,11 @@ class Page
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->categories = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 
     public function getId(): ?int
@@ -241,11 +246,11 @@ class Page
     }
 
     /**
-     * Increment view count
+     * Increment view count.
      */
     public function incrementViewCount(): static
     {
-        $this->viewCount++;
+        ++$this->viewCount;
 
         return $this;
     }
@@ -322,7 +327,7 @@ class Page
     }
 
     /**
-     * Check if page is currently published and visible
+     * Check if page is currently published and visible.
      */
     public function isVisible(): bool
     {
@@ -339,7 +344,7 @@ class Page
     }
 
     /**
-     * Get excerpt from content (first N characters)
+     * Get excerpt from content (first N characters).
      */
     public function getExcerpt(int $length = 200): string
     {
@@ -349,10 +354,5 @@ class Page
         }
 
         return mb_substr($text, 0, $length) . '...';
-    }
-
-    public function __toString(): string
-    {
-        return $this->title;
     }
 }

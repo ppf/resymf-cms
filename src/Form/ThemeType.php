@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Form type for Theme entity
+ * Form type for Theme entity.
  *
  * Handles theme creation and editing for UI customization
  */

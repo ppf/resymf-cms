@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * Security Controller
+ * Security Controller.
  *
  * Handles login and logout functionality
  * Migrated from legacy admin login system

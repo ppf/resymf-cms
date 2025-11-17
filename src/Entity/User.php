@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * User Entity
+ * User Entity.
  *
  * Migrated from legacy ReSymf\Bundle\CmsBundle\Entity\User
  * Modern Symfony 7 implementation with PHP 8.3 features
@@ -48,11 +48,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         min: 3,
         max: 25,
         minMessage: 'Username must be at least {{ limit }} characters long.',
-        maxMessage: 'Username cannot be longer than {{ limit }} characters.'
+        maxMessage: 'Username cannot be longer than {{ limit }} characters.',
     )]
     #[Assert\Regex(
         pattern: '/^[a-zA-Z0-9_-]+$/',
-        message: 'Username can only contain letters, numbers, underscores and hyphens.'
+        message: 'Username can only contain letters, numbers, underscores and hyphens.',
     )]
     private string $username;
 
@@ -85,12 +85,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Plain password (not persisted to database)
-     * Used for form handling
+     * Used for form handling.
      */
     private ?string $plainPassword = null;
 
     /**
-     * Theme relationship (optional - for UI customization)
+     * Theme relationship (optional - for UI customization).
      */
     #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'theme_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
@@ -98,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Pages authored by this user
-     * Lazy loaded - not fetched unless explicitly needed
+     * Lazy loaded - not fetched unless explicitly needed.
      */
     #[ORM\OneToMany(targetEntity: Page::class, mappedBy: 'author')]
     private Collection $authoredPages;
@@ -108,6 +108,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTimeImmutable();
         $this->authoredPages = new ArrayCollection();
         $this->roles = ['ROLE_USER']; // Default role
+    }
+
+    /**
+     * String representation for debugging.
+     */
+    public function __toString(): string
+    {
+        return sprintf('%s (%s)', $this->username, $this->email);
     }
 
     public function getId(): ?int
@@ -151,6 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
+     *
      * @return list<string>
      */
     public function getRoles(): array
@@ -173,7 +182,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Add a role to the user
+     * Add a role to the user.
      */
     public function addRole(string $role): static
     {
@@ -185,7 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Remove a role from the user
+     * Remove a role from the user.
      */
     public function removeRole(string $role): static
     {
@@ -199,7 +208,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Check if user has a specific role
+     * Check if user has a specific role.
      */
     public function hasRole(string $role): bool
     {
@@ -222,7 +231,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Get plain password (for form handling)
+     * Get plain password (for form handling).
      */
     public function getPlainPassword(): ?string
     {
@@ -231,7 +240,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Set plain password (for form handling)
-     * Will be hashed and set as password by UserPasswordHasher
+     * Will be hashed and set as password by UserPasswordHasher.
      */
     public function setPlainPassword(?string $plainPassword): static
     {
@@ -262,7 +271,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Check if account is enabled (for security)
+     * Check if account is enabled (for security).
      */
     public function isEnabled(): bool
     {
@@ -332,13 +341,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-    }
-
-    /**
-     * String representation for debugging
-     */
-    public function __toString(): string
-    {
-        return sprintf('%s (%s)', $this->username, $this->email);
     }
 }

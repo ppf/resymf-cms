@@ -22,7 +22,7 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * Save a settings entity
+     * Save a settings entity.
      */
     public function save(Settings $settings, bool $flush = false): void
     {
@@ -34,7 +34,7 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * Remove a settings entity
+     * Remove a settings entity.
      */
     public function remove(Settings $settings, bool $flush = false): void
     {
@@ -47,7 +47,7 @@ class SettingsRepository extends ServiceEntityRepository
 
     /**
      * Get the singleton Settings instance
-     * Creates default settings if none exist
+     * Creates default settings if none exist.
      */
     public function getSettings(): Settings
     {
@@ -62,7 +62,7 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get or create the Settings instance (alias for getSettings)
+     * Get or create the Settings instance (alias for getSettings).
      */
     public function getOrCreate(): Settings
     {
@@ -70,26 +70,7 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * Create default settings with sensible defaults
-     */
-    private function createDefaultSettings(): Settings
-    {
-        $settings = new Settings();
-        $settings->setSiteName('ReSymf CMS');
-        $settings->setSiteTagline('A Modern Symfony CMS');
-        $settings->setSeoDescription('ReSymf CMS - A powerful and flexible content management system built with Symfony');
-        $settings->setDefaultLocale('en');
-        $settings->setTimezone('UTC');
-        $settings->setItemsPerPage(10);
-        $settings->setRegistrationEnabled(true);
-        $settings->setEmailVerificationRequired(false);
-        $settings->setMaintenanceMode(false);
-
-        return $settings;
-    }
-
-    /**
-     * Update settings with new values
+     * Update settings with new values.
      */
     public function update(Settings $settings): void
     {
@@ -97,7 +78,7 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * Check if settings exist
+     * Check if settings exist.
      */
     public function exists(): bool
     {
@@ -105,7 +86,7 @@ class SettingsRepository extends ServiceEntityRepository
     }
 
     /**
-     * Reset settings to defaults
+     * Reset settings to defaults.
      */
     public function resetToDefaults(): Settings
     {
@@ -131,6 +112,25 @@ class SettingsRepository extends ServiceEntityRepository
         $settings->setGithubUrl(null);
 
         $this->save($settings, true);
+
+        return $settings;
+    }
+
+    /**
+     * Create default settings with sensible defaults.
+     */
+    private function createDefaultSettings(): Settings
+    {
+        $settings = new Settings();
+        $settings->setSiteName('ReSymf CMS');
+        $settings->setSiteTagline('A Modern Symfony CMS');
+        $settings->setSeoDescription('ReSymf CMS - A powerful and flexible content management system built with Symfony');
+        $settings->setDefaultLocale('en');
+        $settings->setTimezone('UTC');
+        $settings->setItemsPerPage(10);
+        $settings->setRegistrationEnabled(true);
+        $settings->setEmailVerificationRequired(false);
+        $settings->setMaintenanceMode(false);
 
         return $settings;
     }

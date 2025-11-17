@@ -52,7 +52,7 @@ class FileUploadService
     public function __construct(
         private readonly FilesystemOperator $uploadsStorage,
         private readonly FilesystemOperator $documentsStorage,
-        private readonly SluggerInterface $slugger
+        private readonly SluggerInterface $slugger,
     ) {
     }
 
@@ -70,7 +70,7 @@ class FileUploadService
     public function uploadPublicFile(
         UploadedFile $file,
         ?string $subdirectory = null,
-        bool $preserveOriginalName = false
+        bool $preserveOriginalName = false,
     ): string {
         $this->validateFile($file);
 
@@ -113,7 +113,7 @@ class FileUploadService
     public function uploadPrivateFile(
         UploadedFile $file,
         ?string $subdirectory = null,
-        bool $preserveOriginalName = false
+        bool $preserveOriginalName = false,
     ): string {
         $this->validateFile($file);
 
@@ -154,8 +154,10 @@ class FileUploadService
         try {
             if ($this->uploadsStorage->fileExists($path)) {
                 $this->uploadsStorage->delete($path);
+
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -174,8 +176,10 @@ class FileUploadService
         try {
             if ($this->documentsStorage->fileExists($path)) {
                 $this->documentsStorage->delete($path);
+
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -211,6 +215,44 @@ class FileUploadService
     }
 
     /**
+     * Get allowed MIME types for validation.
+     *
+     * @return array<string> Array of allowed MIME types
+     */
+    public function getAllowedMimeTypes(): array
+    {
+        return array_merge(
+            self::ALLOWED_IMAGE_TYPES,
+            self::ALLOWED_DOCUMENT_TYPES,
+            self::ALLOWED_ARCHIVE_TYPES,
+        );
+    }
+
+    /**
+     * Check if a MIME type is allowed for images.
+     *
+     * @param string $mimeType The MIME type to check
+     *
+     * @return bool True if allowed for images
+     */
+    public function isImageType(string $mimeType): bool
+    {
+        return in_array($mimeType, self::ALLOWED_IMAGE_TYPES, true);
+    }
+
+    /**
+     * Check if a MIME type is allowed for documents.
+     *
+     * @param string $mimeType The MIME type to check
+     *
+     * @return bool True if allowed for documents
+     */
+    public function isDocumentType(string $mimeType): bool
+    {
+        return in_array($mimeType, self::ALLOWED_DOCUMENT_TYPES, true);
+    }
+
+    /**
      * Validate an uploaded file.
      *
      * @param UploadedFile $file The file to validate
@@ -221,11 +263,7 @@ class FileUploadService
     {
         // Check file size
         if ($file->getSize() > self::MAX_FILE_SIZE) {
-            throw new FileException(sprintf(
-                'File size (%s) exceeds maximum allowed size (%s)',
-                $this->formatBytes($file->getSize()),
-                $this->formatBytes(self::MAX_FILE_SIZE)
-            ));
+            throw new FileException(sprintf('File size (%s) exceeds maximum allowed size (%s)', $this->formatBytes($file->getSize()), $this->formatBytes(self::MAX_FILE_SIZE)));
         }
 
         // Check MIME type
@@ -233,15 +271,11 @@ class FileUploadService
         $allowedTypes = array_merge(
             self::ALLOWED_IMAGE_TYPES,
             self::ALLOWED_DOCUMENT_TYPES,
-            self::ALLOWED_ARCHIVE_TYPES
+            self::ALLOWED_ARCHIVE_TYPES,
         );
 
         if ($mimeType === null || !in_array($mimeType, $allowedTypes, true)) {
-            throw new FileException(sprintf(
-                'File type "%s" is not allowed. Allowed types: %s',
-                $mimeType ?? 'unknown',
-                implode(', ', $allowedTypes)
-            ));
+            throw new FileException(sprintf('File type "%s" is not allowed. Allowed types: %s', $mimeType ?? 'unknown', implode(', ', $allowedTypes)));
         }
 
         // Additional security check: ensure file is actually uploaded
@@ -290,43 +324,5 @@ class FileUploadService
         $bytes /= (1024 ** $pow);
 
         return round($bytes, 2) . ' ' . $units[$pow];
-    }
-
-    /**
-     * Get allowed MIME types for validation.
-     *
-     * @return array<string> Array of allowed MIME types
-     */
-    public function getAllowedMimeTypes(): array
-    {
-        return array_merge(
-            self::ALLOWED_IMAGE_TYPES,
-            self::ALLOWED_DOCUMENT_TYPES,
-            self::ALLOWED_ARCHIVE_TYPES
-        );
-    }
-
-    /**
-     * Check if a MIME type is allowed for images.
-     *
-     * @param string $mimeType The MIME type to check
-     *
-     * @return bool True if allowed for images
-     */
-    public function isImageType(string $mimeType): bool
-    {
-        return in_array($mimeType, self::ALLOWED_IMAGE_TYPES, true);
-    }
-
-    /**
-     * Check if a MIME type is allowed for documents.
-     *
-     * @param string $mimeType The MIME type to check
-     *
-     * @return bool True if allowed for documents
-     */
-    public function isDocumentType(string $mimeType): bool
-    {
-        return in_array($mimeType, self::ALLOWED_DOCUMENT_TYPES, true);
     }
 }

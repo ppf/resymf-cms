@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Form type for Settings entity
+ * Form type for Settings entity.
  *
  * Handles site-wide configuration settings
  */

@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Category Entity
+ * Category Entity.
  *
  * Content categorization for Pages
  * Simple label-based tagging system
@@ -36,7 +36,7 @@ class Category
         min: 2,
         max: 100,
         minMessage: 'Category name must be at least {{ limit }} characters long.',
-        maxMessage: 'Category name cannot be longer than {{ limit }} characters.'
+        maxMessage: 'Category name cannot be longer than {{ limit }} characters.',
     )]
     private string $name;
 
@@ -44,19 +44,19 @@ class Category
     private ?string $description = null;
 
     /**
-     * URL-friendly slug for the category
+     * URL-friendly slug for the category.
      */
     #[ORM\Column(type: Types::STRING, length: 128, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 128)]
     #[Assert\Regex(
         pattern: '/^[a-z0-9-]+$/',
-        message: 'Slug can only contain lowercase letters, numbers and hyphens.'
+        message: 'Slug can only contain lowercase letters, numbers and hyphens.',
     )]
     private string $slug;
 
     /**
-     * Display order (lower numbers appear first)
+     * Display order (lower numbers appear first).
      */
     #[ORM\Column(type: Types::INTEGER)]
     private int $displayOrder = 0;
@@ -72,7 +72,7 @@ class Category
 
     /**
      * Pages in this category
-     * Many-to-many relationship (inverse side)
+     * Many-to-many relationship (inverse side).
      */
     #[ORM\ManyToMany(targetEntity: Page::class, mappedBy: 'categories')]
     private Collection $pages;
@@ -81,6 +81,11 @@ class Category
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->pages = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -199,15 +204,10 @@ class Category
     }
 
     /**
-     * Get count of pages in this category
+     * Get count of pages in this category.
      */
     public function getPageCount(): int
     {
         return $this->pages->count();
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }

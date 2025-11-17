@@ -49,7 +49,7 @@ class EntityVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::CREATE])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::CREATE], true)) {
             return false;
         }
 
@@ -58,12 +58,14 @@ class EntityVoter extends Voter
             if (is_string($subject)) {
                 return isset(self::ENTITY_PERMISSIONS[$subject]);
             }
+
             return false;
         }
 
         // For other operations, check if we have permissions defined for this entity class
         if (is_object($subject)) {
             $className = get_class($subject);
+
             return isset(self::ENTITY_PERMISSIONS[$className]);
         }
 

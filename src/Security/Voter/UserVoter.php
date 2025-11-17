@@ -24,7 +24,7 @@ class UserVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         // Support if attribute is one of our defined constants
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::CREATE])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::CREATE], true)) {
             return false;
         }
 
@@ -66,11 +66,9 @@ class UserVoter extends Voter
         }
 
         // Users can view their own profile
-        if ($targetUser !== null && $currentUser->getUserIdentifier() === $targetUser->getUserIdentifier()) {
-            return true;
-        }
+        return (bool) ($targetUser !== null && $currentUser->getUserIdentifier() === $targetUser->getUserIdentifier())
 
-        return false;
+        ;
     }
 
     private function canEdit(UserInterface $currentUser, ?User $targetUser): bool
@@ -85,11 +83,9 @@ class UserVoter extends Voter
         }
 
         // Users can edit their own profile (limited fields)
-        if ($currentUser->getUserIdentifier() === $targetUser->getUserIdentifier()) {
-            return true;
-        }
+        return (bool) ($currentUser->getUserIdentifier() === $targetUser->getUserIdentifier())
 
-        return false;
+        ;
     }
 
     private function canDelete(UserInterface $currentUser, ?User $targetUser): bool
@@ -104,11 +100,9 @@ class UserVoter extends Voter
         }
 
         // Cannot delete yourself
-        if ($currentUser->getUserIdentifier() === $targetUser->getUserIdentifier()) {
-            return false;
-        }
+        return !($currentUser->getUserIdentifier() === $targetUser->getUserIdentifier())
 
-        return true;
+        ;
     }
 
     private function canCreate(UserInterface $currentUser): bool

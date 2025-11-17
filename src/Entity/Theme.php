@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Theme Entity
+ * Theme Entity.
  *
  * UI Theme configuration for users
  * Allows customization of admin interface appearance
@@ -36,7 +36,7 @@ class Theme
         min: 3,
         max: 50,
         minMessage: 'Theme name must be at least {{ limit }} characters long.',
-        maxMessage: 'Theme name cannot be longer than {{ limit }} characters.'
+        maxMessage: 'Theme name cannot be longer than {{ limit }} characters.',
     )]
     private string $name;
 
@@ -45,27 +45,27 @@ class Theme
     private ?string $description = null;
 
     /**
-     * Primary color in hex format (e.g., #3498db)
+     * Primary color in hex format (e.g., #3498db).
      */
     #[ORM\Column(type: Types::STRING, length: 7, nullable: true)]
     #[Assert\Regex(
         pattern: '/^#[0-9A-Fa-f]{6}$/',
-        message: 'Primary color must be a valid hex color (e.g., #3498db).'
+        message: 'Primary color must be a valid hex color (e.g., #3498db).',
     )]
     private ?string $primaryColor = null;
 
     /**
-     * Secondary color in hex format (e.g., #2ecc71)
+     * Secondary color in hex format (e.g., #2ecc71).
      */
     #[ORM\Column(type: Types::STRING, length: 7, nullable: true)]
     #[Assert\Regex(
         pattern: '/^#[0-9A-Fa-f]{6}$/',
-        message: 'Secondary color must be a valid hex color (e.g., #2ecc71).'
+        message: 'Secondary color must be a valid hex color (e.g., #2ecc71).',
     )]
     private ?string $secondaryColor = null;
 
     /**
-     * CSS stylesheet path (relative to public/themes/)
+     * CSS stylesheet path (relative to public/themes/).
      */
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
@@ -84,7 +84,7 @@ class Theme
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * Users using this theme
+     * Users using this theme.
      */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'theme')]
     private Collection $users;
@@ -93,6 +93,11 @@ class Theme
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->users = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -235,10 +240,5 @@ class Theme
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }

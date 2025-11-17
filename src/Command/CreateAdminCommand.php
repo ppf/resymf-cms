@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\User;
@@ -26,7 +28,7 @@ class CreateAdminCommand extends Command
         private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly ValidatorInterface $validator,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
     ) {
         parent::__construct();
     }
@@ -38,21 +40,22 @@ class CreateAdminCommand extends Command
             ->addArgument('email', InputArgument::OPTIONAL, 'Email address for the admin user')
             ->addArgument('password', InputArgument::OPTIONAL, 'Password for the admin user')
             ->addOption('inactive', null, InputOption::VALUE_NONE, 'Create user as inactive')
-            ->setHelp(<<<'HELP'
-The <info>%command.name%</info> command creates a new admin user:
+            ->setHelp(
+                <<<'HELP'
+                    The <info>%command.name%</info> command creates a new admin user:
 
-    <info>php %command.full_name%</info>
+                        <info>php %command.full_name%</info>
 
-You can also pass the username, email and password as arguments:
+                    You can also pass the username, email and password as arguments:
 
-    <info>php %command.full_name% admin admin@example.com secret123</info>
+                        <info>php %command.full_name% admin admin@example.com secret123</info>
 
-If you omit any arguments, the command will ask you to provide them interactively.
+                    If you omit any arguments, the command will ask you to provide them interactively.
 
-To create an inactive admin user:
+                    To create an inactive admin user:
 
-    <info>php %command.full_name% admin admin@example.com secret123 --inactive</info>
-HELP
+                        <info>php %command.full_name% admin admin@example.com secret123 --inactive</info>
+                    HELP
             );
     }
 
@@ -73,6 +76,7 @@ HELP
                 if (strlen($value) < 3) {
                     throw new \RuntimeException('Username must be at least 3 characters long');
                 }
+
                 return $value;
             });
             $username = $io->askQuestion($question);
@@ -81,6 +85,7 @@ HELP
         // Check if username already exists
         if ($this->userRepository->findOneBy(['username' => $username])) {
             $io->error(sprintf('A user with username "%s" already exists', $username));
+
             return Command::FAILURE;
         }
 
@@ -95,6 +100,7 @@ HELP
                 if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
                     throw new \RuntimeException('Invalid email format');
                 }
+
                 return $value;
             });
             $email = $io->askQuestion($question);
@@ -103,6 +109,7 @@ HELP
         // Check if email already exists
         if ($this->userRepository->findOneBy(['email' => $email])) {
             $io->error(sprintf('A user with email "%s" already exists', $email));
+
             return Command::FAILURE;
         }
 
@@ -119,6 +126,7 @@ HELP
                 if (strlen($value) < 6) {
                     throw new \RuntimeException('Password must be at least 6 characters long');
                 }
+
                 return $value;
             });
             $password = $io->askQuestion($question);
@@ -131,6 +139,7 @@ HELP
 
             if ($password !== $confirmPassword) {
                 $io->error('Passwords do not match');
+
                 return Command::FAILURE;
             }
         }
@@ -153,6 +162,7 @@ HELP
             foreach ($errors as $error) {
                 $io->writeln('  - ' . $error->getMessage());
             }
+
             return Command::FAILURE;
         }
 
@@ -162,6 +172,7 @@ HELP
             $this->entityManager->flush();
         } catch (\Exception $e) {
             $io->error('Failed to create admin user: ' . $e->getMessage());
+
             return Command::FAILURE;
         }
 

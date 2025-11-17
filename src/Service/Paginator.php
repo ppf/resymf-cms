@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 /**
- * Simple pagination service for admin list views
+ * Simple pagination service for admin list views.
  */
 class Paginator
 {
@@ -17,7 +17,7 @@ class Paginator
     public function __construct(
         private QueryBuilder $queryBuilder,
         private int $currentPage = 1,
-        private int $perPage = self::DEFAULT_PER_PAGE
+        private int $perPage = self::DEFAULT_PER_PAGE,
     ) {
         if ($this->currentPage < 1) {
             $this->currentPage = 1;
@@ -53,6 +53,7 @@ class Paginator
     public function getTotalPages(DoctrinePaginator $paginator): int
     {
         $total = $this->getTotalItems($paginator);
+
         return (int) ceil($total / $this->perPage);
     }
 
@@ -77,7 +78,7 @@ class Paginator
     }
 
     /**
-     * Get array of pagination data for template
+     * Get array of pagination data for template.
      */
     public function getPaginationData(DoctrinePaginator $paginator): array
     {
@@ -97,8 +98,16 @@ class Paginator
     }
 
     /**
+     * Static factory method for quick pagination.
+     */
+    public static function create(QueryBuilder $qb, int $page = 1, int $perPage = self::DEFAULT_PER_PAGE): self
+    {
+        return new self($qb, $page, $perPage);
+    }
+
+    /**
      * Get range of page numbers to display
-     * Shows current page +/- 2 pages
+     * Shows current page +/- 2 pages.
      */
     private function getPageRange(int $totalPages): array
     {
@@ -115,7 +124,7 @@ class Paginator
         }
 
         // Show range around current page
-        for ($i = $start; $i <= $end; $i++) {
+        for ($i = $start; $i <= $end; ++$i) {
             $range[] = $i;
         }
 
@@ -128,13 +137,5 @@ class Paginator
         }
 
         return $range;
-    }
-
-    /**
-     * Static factory method for quick pagination
-     */
-    public static function create(QueryBuilder $qb, int $page = 1, int $perPage = self::DEFAULT_PER_PAGE): self
-    {
-        return new self($qb, $page, $perPage);
     }
 }

@@ -15,7 +15,7 @@ class AdminController extends AbstractController
 {
     /**
      * Admin dashboard
-     * Placeholder - will be enhanced with metrics and widgets
+     * Placeholder - will be enhanced with metrics and widgets.
      */
     #[Route('', name: 'admin_dashboard')]
     public function index(): Response

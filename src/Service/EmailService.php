@@ -20,7 +20,7 @@ class EmailService
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly string $fromEmail = 'noreply@example.com',
-        private readonly string $fromName = 'ReSymf CMS'
+        private readonly string $fromName = 'ReSymf CMS',
     ) {
     }
 
@@ -60,7 +60,7 @@ class EmailService
         string $toEmail,
         string $userName,
         string $resetToken,
-        string $resetUrl
+        string $resetUrl,
     ): void {
         $email = (new TemplatedEmail())
             ->from(new Address($this->fromEmail, $this->fromName))
@@ -113,7 +113,7 @@ class EmailService
         string $toEmail,
         string $subject,
         string $templatePath,
-        array $context = []
+        array $context = [],
     ): void {
         $email = (new TemplatedEmail())
             ->from(new Address($this->fromEmail, $this->fromName))
@@ -139,7 +139,7 @@ class EmailService
         string $adminEmail,
         string $senderName,
         string $senderEmail,
-        string $message
+        string $message,
     ): void {
         $email = (new TemplatedEmail())
             ->from(new Address($this->fromEmail, $this->fromName))

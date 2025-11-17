@@ -25,7 +25,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Save a user entity
+     * Save a user entity.
      */
     public function save(User $user, bool $flush = false): void
     {
@@ -37,7 +37,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Remove a user entity
+     * Remove a user entity.
      */
     public function remove(User $user, bool $flush = false): void
     {
@@ -64,7 +64,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find user by username
+     * Find user by username.
      */
     public function findByUsername(string $username): ?User
     {
@@ -76,7 +76,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find user by email
+     * Find user by email.
      */
     public function findByEmail(string $email): ?User
     {
@@ -89,7 +89,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Find user by username or email
-     * Useful for login forms that accept either
+     * Useful for login forms that accept either.
      */
     public function findByUsernameOrEmail(string $identifier): ?User
     {
@@ -101,7 +101,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find all active users
+     * Find all active users.
      *
      * @return User[]
      */
@@ -116,7 +116,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find all inactive users
+     * Find all inactive users.
      *
      * @return User[]
      */
@@ -131,7 +131,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find users by role
+     * Find users by role.
      *
      * @return User[]
      */
@@ -146,7 +146,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find all admin users (ROLE_ADMIN)
+     * Find all admin users (ROLE_ADMIN).
      *
      * @return User[]
      */
@@ -156,7 +156,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Count total users
+     * Count total users.
      */
     public function countAll(): int
     {
@@ -167,7 +167,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Count active users
+     * Count active users.
      */
     public function countActive(): int
     {
@@ -180,7 +180,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find users with pagination
+     * Find users with pagination.
      *
      * @return User[]
      */
@@ -197,7 +197,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Search users by username or email
+     * Search users by username or email.
      *
      * @return User[]
      */
@@ -213,7 +213,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find recently created users
+     * Find recently created users.
      *
      * @return User[]
      */
@@ -227,7 +227,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find all users ordered by creation date (newest first)
+     * Find all users ordered by creation date (newest first).
      *
      * @return User[]
      */

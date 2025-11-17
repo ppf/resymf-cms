@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Form type for User entity
+ * Form type for User entity.
  *
  * Handles user creation and editing with role and theme assignment
  */

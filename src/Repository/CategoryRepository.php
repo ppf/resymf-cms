@@ -37,7 +37,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find category by slug
+     * Find category by slug.
      */
     public function findBySlug(string $slug): ?Category
     {
@@ -49,7 +49,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find all active categories
+     * Find all active categories.
      *
      * @return Category[]
      */
@@ -65,7 +65,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find categories ordered by display order
+     * Find categories ordered by display order.
      *
      * @return Category[]
      */
@@ -79,7 +79,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find category by name
+     * Find category by name.
      */
     public function findByName(string $name): ?Category
     {
@@ -91,7 +91,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count all categories
+     * Count all categories.
      */
     public function countAll(): int
     {
@@ -102,7 +102,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count active categories
+     * Count active categories.
      */
     public function countActive(): int
     {
@@ -116,7 +116,7 @@ class CategoryRepository extends ServiceEntityRepository
 
     /**
      * Find categories with page count
-     * Returns array with category and page_count
+     * Returns array with category and page_count.
      */
     public function findWithPageCount(): array
     {
@@ -131,7 +131,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Search categories by name
+     * Search categories by name.
      *
      * @return Category[]
      */
@@ -146,7 +146,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find categories with pagination
+     * Find categories with pagination.
      *
      * @return Category[]
      */
@@ -163,7 +163,7 @@ class CategoryRepository extends ServiceEntityRepository
 
     /**
      * Find all categories ordered by display order
-     * Alias for findOrdered() for controller consistency
+     * Alias for findOrdered() for controller consistency.
      *
      * @return Category[]
      */

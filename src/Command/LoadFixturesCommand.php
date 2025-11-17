@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,26 +25,27 @@ class LoadFixturesCommand extends Command
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append data instead of purging the database first')
             ->addOption('group', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Load specific fixture groups')
             ->addOption('yes', 'y', InputOption::VALUE_NONE, 'Skip confirmation prompt')
-            ->setHelp(<<<'HELP'
-The <info>%command.name%</info> command loads database fixtures:
+            ->setHelp(
+                <<<'HELP'
+                    The <info>%command.name%</info> command loads database fixtures:
 
-    <info>php %command.full_name%</info>
+                        <info>php %command.full_name%</info>
 
-By default, this will purge the database and load all fixtures. To append data:
+                    By default, this will purge the database and load all fixtures. To append data:
 
-    <info>php %command.full_name% --append</info>
+                        <info>php %command.full_name% --append</info>
 
-To load specific fixture groups:
+                    To load specific fixture groups:
 
-    <info>php %command.full_name% --group=user --group=settings</info>
+                        <info>php %command.full_name% --group=user --group=settings</info>
 
-To skip the confirmation prompt:
+                    To skip the confirmation prompt:
 
-    <info>php %command.full_name% --yes</info>
+                        <info>php %command.full_name% --yes</info>
 
-This is a convenience wrapper around the Doctrine fixtures bundle command.
-It replaces the legacy "resymf:populate" command.
-HELP
+                    This is a convenience wrapper around the Doctrine fixtures bundle command.
+                    It replaces the legacy "resymf:populate" command.
+                    HELP
             );
     }
 
@@ -59,6 +62,7 @@ HELP
                 'The doctrine/doctrine-fixtures-bundle is not installed.',
                 'Please install it with: composer require --dev doctrine/doctrine-fixtures-bundle',
             ]);
+
             return Command::FAILURE;
         }
 
@@ -76,11 +80,12 @@ HELP
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion(
                 'Are you sure you want to continue? (yes/no) ',
-                false
+                false,
             );
 
             if (!$helper->ask($input, $output, $question)) {
                 $io->note('Operation cancelled.');
+
                 return Command::SUCCESS;
             }
         }
@@ -123,7 +128,7 @@ HELP
                     ['ThemeFixtures - Sample themes'],
                     ['CategoryFixtures - Content categories'],
                     ['PageFixtures - Sample CMS pages'],
-                ]
+                ],
             );
 
             $io->note([

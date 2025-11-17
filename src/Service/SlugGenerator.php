@@ -18,14 +18,14 @@ class SlugGenerator
 {
     public function __construct(
         private readonly SluggerInterface $slugger,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     /**
      * Generate a unique slug from a given string.
      *
-     * @param string $text      The text to slugify
+     * @param string $text The text to slugify
      * @param string $entityClass The entity class to check uniqueness against
      * @param int|null $excludeId Optional entity ID to exclude from uniqueness check (for updates)
      * @param string $slugField The field name that stores the slug (default: 'slug')
@@ -38,7 +38,7 @@ class SlugGenerator
         string $entityClass,
         ?int $excludeId = null,
         string $slugField = 'slug',
-        int $maxLength = 255
+        int $maxLength = 255,
     ): string {
         // Generate base slug
         $baseSlug = $this->slugger->slug($text)->lower()->toString();
@@ -57,50 +57,18 @@ class SlugGenerator
             $maxBaseLength = $maxLength - strlen($suffix);
             $truncatedBase = substr($baseSlug, 0, $maxBaseLength);
             $slug = $truncatedBase . $suffix;
-            $counter++;
+            ++$counter;
 
             // Safety check to prevent infinite loops
             if ($counter > 1000) {
                 // Fallback: add timestamp
                 $slug = $baseSlug . '-' . time();
+
                 break;
             }
         }
 
         return $slug;
-    }
-
-    /**
-     * Check if a slug already exists in the database.
-     *
-     * @param string $slug The slug to check
-     * @param string $entityClass The entity class to check against
-     * @param int|null $excludeId Optional entity ID to exclude from the check
-     * @param string $slugField The field name that stores the slug
-     *
-     * @return bool True if the slug exists, false otherwise
-     */
-    private function slugExists(
-        string $slug,
-        string $entityClass,
-        ?int $excludeId,
-        string $slugField
-    ): bool {
-        $repository = $this->entityManager->getRepository($entityClass);
-
-        $qb = $repository->createQueryBuilder('e')
-            ->select('COUNT(e.id)')
-            ->where("e.$slugField = :slug")
-            ->setParameter('slug', $slug);
-
-        if ($excludeId !== null) {
-            $qb->andWhere('e.id != :excludeId')
-                ->setParameter('excludeId', $excludeId);
-        }
-
-        $count = (int) $qb->getQuery()->getSingleScalarResult();
-
-        return $count > 0;
     }
 
     /**
@@ -155,5 +123,38 @@ class SlugGenerator
         $combined = implode(' ' . $separator . ' ', $cleanParts);
 
         return $this->slugify($combined);
+    }
+
+    /**
+     * Check if a slug already exists in the database.
+     *
+     * @param string $slug The slug to check
+     * @param string $entityClass The entity class to check against
+     * @param int|null $excludeId Optional entity ID to exclude from the check
+     * @param string $slugField The field name that stores the slug
+     *
+     * @return bool True if the slug exists, false otherwise
+     */
+    private function slugExists(
+        string $slug,
+        string $entityClass,
+        ?int $excludeId,
+        string $slugField,
+    ): bool {
+        $repository = $this->entityManager->getRepository($entityClass);
+
+        $qb = $repository->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->where("e.$slugField = :slug")
+            ->setParameter('slug', $slug);
+
+        if ($excludeId !== null) {
+            $qb->andWhere('e.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
+        }
+
+        $count = (int) $qb->getQuery()->getSingleScalarResult();
+
+        return $count > 0;
     }
 }
