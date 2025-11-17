@@ -1,3 +1,92 @@
-body {
-    background-color: skyblue;
+:root {
+    --rs-bg-start: #0f172a;
+    --rs-bg-end: #1d4ed8;
+    --rs-card-bg: #ffffff;
+    --rs-card-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+    --rs-text-muted: #64748b;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body.app-shell {
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at top, var(--rs-bg-end), var(--rs-bg-start));
+    color: #0f172a;
+}
+
+.auth-hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    width: min(420px, 100%);
+    background: var(--rs-card-bg);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: var(--rs-card-shadow);
+}
+
+.auth-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.auth-title {
+    font-size: 1.875rem;
+    font-weight: 600;
+}
+
+.auth-subtitle {
+    color: var(--rs-text-muted);
+    margin-bottom: 2rem;
+}
+
+.form-control,
+.form-check-input {
+    border-radius: 0.75rem;
+    border-color: #e2e8f0;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}
+
+.auth-cta {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border: none;
+    font-weight: 600;
+    padding: 0.95rem;
+    border-radius: 0.85rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+}
+
+.auth-footnote {
+    color: var(--rs-text-muted);
 }

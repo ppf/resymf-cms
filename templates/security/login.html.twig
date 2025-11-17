@@ -1,78 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in - ReSymf CMS{% endblock %}
+{% block title %}Sign in · ReSymf CMS{% endblock %}
 
 {% block body %}
-<div class="container" style="max-width: 400px; margin-top: 100px;">
-    <h1 class="h3 mb-3 font-weight-normal text-center">ReSymf CMS</h1>
-    <h2 class="h5 mb-4 font-weight-normal text-center text-muted">Please sign in</h2>
-
-    {% if error %}
-        <div class="alert alert-danger" role="alert">
-            {{ error.messageKey|trans(error.messageData, 'security') }}
-        </div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="alert alert-info">
-            You are logged in as {{ app.user.userIdentifier }}.
-            <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
-
-    <form method="post" action="{{ path('app_login') }}">
-        <div class="form-group mb-3">
-            <label for="username">Username</label>
-            <input type="text"
-                   value="{{ last_username }}"
-                   name="_username"
-                   id="username"
-                   class="form-control"
-                   autocomplete="username"
-                   required
-                   autofocus
-                   placeholder="Enter username">
+<section class="auth-hero">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <div class="auth-logo mx-auto">
+                <i class="bi bi-columns-gap"></i>
+            </div>
+            <h1 class="auth-title">Welcome back</h1>
+            <p class="auth-subtitle">Sign in to manage pages, themes and users.</p>
         </div>
 
-        <div class="form-group mb-3">
-            <label for="password">Password</label>
-            <input type="password"
-                   name="_password"
-                   id="password"
-                   class="form-control"
-                   autocomplete="current-password"
-                   required
-                   placeholder="Enter password">
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="alert alert-info">
+                You are logged in as {{ app.user.userIdentifier }}.
+                <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+
+        <form method="post" action="{{ path('app_login') }}" class="space-y-3">
+            <div class="mb-3">
+                <label for="username" class="form-label fw-semibold">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input
+                        type="text"
+                        value="{{ last_username }}"
+                        name="_username"
+                        id="username"
+                        class="form-control"
+                        autocomplete="username"
+                        required
+                        autofocus
+                        placeholder="admin">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input
+                        type="password"
+                        name="_password"
+                        id="password"
+                        class="form-control"
+                        autocomplete="current-password"
+                        required
+                        placeholder="••••••••">
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input type="checkbox" name="_remember_me" id="remember_me" class="form-check-input">
+                    <label for="remember_me" class="form-check-label">
+                        Remember me
+                    </label>
+                </div>
+                <a class="small text-decoration-none text-primary" href="#">
+                    Forgot password?
+                </a>
+            </div>
+
+            <button class="btn auth-cta text-white w-100" type="submit">
+                Sign in
+            </button>
+        </form>
+
+        <div class="mt-4 p-3 rounded-3 bg-light border">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-info-circle text-primary"></i>
+                <div>
+                    <small class="d-block text-muted">Default admin</small>
+                    <strong>admin / admin123</strong>
+                </div>
+            </div>
         </div>
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <div class="form-check mb-3">
-            <input type="checkbox" name="_remember_me" id="remember_me" class="form-check-input">
-            <label for="remember_me" class="form-check-label">
-                Remember me
-            </label>
-        </div>
-
-        <button class="btn btn-lg btn-primary btn-block w-100" type="submit">
-            Sign in
-        </button>
-
-        <p class="mt-5 mb-3 text-muted text-center">
-            &copy; {{ 'now'|date('Y') }} ReSymf CMS
+        <p class="auth-footnote text-center mt-4 mb-0">
+            &copy; {{ 'now'|date('Y') }} ReSymf CMS · Crafted with Symfony 7
         </p>
-    </form>
-</div>
-
-<style>
-    body {
-        background-color: #f5f5f5;
-    }
-    .form-control {
-        height: 45px;
-    }
-    .btn-lg {
-        height: 50px;
-    }
-</style>
+    </div>
+</section>
 {% endblock %}
