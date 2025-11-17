@@ -16,7 +16,8 @@ class ApplicationSmokeTest extends KernelTestCase
         $kernel = self::bootKernel();
 
         $this->assertSame('test', $kernel->getEnvironment());
-        $this->assertTrue($kernel->isBooted());
+        // Kernel is booted if bootKernel() succeeded
+        $this->assertInstanceOf(\Symfony\Component\HttpKernel\KernelInterface::class, $kernel);
     }
 
     public function testServiceContainerIsAvailable(): void

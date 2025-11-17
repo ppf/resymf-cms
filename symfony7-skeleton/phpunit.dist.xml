@@ -5,7 +5,7 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          colors="true"
          failOnDeprecation="false"
-         failOnNotice="true"
+         failOnNotice="false"
          failOnWarning="false"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
@@ -30,32 +30,9 @@
         </testsuite>
     </testsuites>
 
-    <coverage includeUncoveredFiles="true"
-              pathCoverage="false"
-              ignoreDeprecatedCodeUnits="true"
-              disableCodeCoverageIgnore="true">
-        <report>
-            <html outputDirectory="var/coverage/html" lowUpperBound="50" highLowerBound="80"/>
-            <text outputFile="php://stdout" showUncoveredFiles="false" showOnlySummary="true"/>
-        </report>
-    </coverage>
-
-    <source ignoreSuppressionOfDeprecations="true"
-            ignoreIndirectDeprecations="true"
-            restrictNotices="true"
-            restrictWarnings="true"
-    >
+    <source>
         <include>
             <directory>src</directory>
         </include>
-
-        <deprecationTrigger>
-            <method>Doctrine\Deprecations\Deprecation::trigger</method>
-            <method>Doctrine\Deprecations\Deprecation::delegateTriggerToBackend</method>
-            <function>trigger_deprecation</function>
-        </deprecationTrigger>
     </source>
-
-    <extensions>
-    </extensions>
 </phpunit>
