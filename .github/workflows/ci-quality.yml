@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+        php-version: ['8.3']
 
     steps:
       - name: Checkout code
@@ -41,18 +41,14 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPUnit tests
         run: |
-          if [ -f "bin/phpunit" ]; then
-            bin/phpunit -c app --coverage-clover coverage.xml --coverage-text
-          else
-            vendor/bin/phpunit -c app --coverage-clover coverage.xml --coverage-text
-          fi
+          APP_ENV=test APP_DEBUG=0 php bin/phpunit --configuration phpunit.dist.xml --coverage-clover coverage.xml --coverage-text
 
       - name: Upload coverage to Codecov
-        if: matrix.php-version == '7.4'
+        if: matrix.php-version == '8.3'
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage.xml
@@ -72,7 +68,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
           tools: composer:v2, phpstan
 
@@ -85,24 +81,10 @@ jobs:
             ${{ runner.os }}-php-phpstan-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPStan
-        run: |
-          if [ ! -f "phpstan.neon" ]; then
-            echo "Creating default phpstan.neon configuration..."
-            cat > phpstan.neon <<EOF
-          parameters:
-              level: 5
-              paths:
-                  - src
-              symfony:
-                  container_xml_path: app/cache/dev/appDevDebugProjectContainer.xml
-              excludePaths:
-                  - src/ReSymf/Bundle/*/Tests/*
-          EOF
-          fi
-          vendor/bin/phpstan analyse --error-format=github || true
+        run: vendor/bin/phpstan analyse --error-format=github
 
       - name: PHPStan Analysis Results
         if: always()
@@ -120,7 +102,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv
           tools: composer:v2, php-cs-fixer
 
@@ -133,7 +115,7 @@ jobs:
             ${{ runner.os }}-php-cs-fixer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Create PHP-CS-Fixer config if not exists
         run: |
@@ -186,7 +168,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv
           tools: composer:v2
 
@@ -199,7 +181,7 @@ jobs:
             ${{ runner.os }}-php-security-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Check for security vulnerabilities
         run: |
@@ -213,16 +195,19 @@ jobs:
   doctrine-validation:
     name: Doctrine Schema Validation
     runs-on: ubuntu-latest
-
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: symfony_test
+          MYSQL_DATABASE: resymf_test
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout code
@@ -231,41 +216,40 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
           tools: composer:v2
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Configure database parameters
+      - name: Configure test environment
         run: |
-          mkdir -p app/config
-          if [ ! -f "app/config/parameters.yml" ]; then
-            cat > app/config/parameters.yml <<EOF
-          parameters:
-              database_driver: pdo_mysql
-              database_host: 127.0.0.1
-              database_port: 3306
-              database_name: symfony_test
-              database_user: root
-              database_password: root
-              mailer_transport: smtp
-              mailer_host: localhost
-              mailer_user: null
-              mailer_password: null
-              locale: en
-              secret: ThisTokenIsNotSoSecretChangeIt
+          cat > .env.test.local <<'EOF'
+          APP_ENV=test
+          APP_DEBUG=0
+          DATABASE_URL="mysql://root:root@127.0.0.1:3306/resymf_test?serverVersion=8.0&charset=utf8mb4"
+          MAILER_DSN="null://null"
           EOF
-          fi
 
-      - name: Create database schema
+      - name: Wait for MySQL to be ready
         run: |
-          php app/console doctrine:database:create --if-not-exists || true
-          php app/console doctrine:schema:create || true
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -uroot -proot --silent; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "MySQL did not become ready in time" >&2
+          exit 1
+
+      - name: Prepare database
+        run: |
+          php bin/console doctrine:database:create --if-not-exists --env=test
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
       - name: Validate Doctrine schema
-        run: php app/console doctrine:schema:validate --skip-sync || true
+        run: php bin/console doctrine:schema:validate --env=test --skip-sync
 
   # Code Metrics & Complexity
   code-metrics:
@@ -279,18 +263,20 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv
           tools: composer:v2
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Install PHPLOC
-        run: composer require --dev phploc/phploc
+      - name: Download PHPLOC
+        run: |
+          curl -Ls https://phar.phpunit.de/phploc.phar -o phploc.phar
+          chmod +x phploc.phar
 
       - name: Run PHPLOC
-        run: vendor/bin/phploc src --log-json=phploc.json || true
+        run: ./phploc.phar src --log-json=phploc.json || true
 
       - name: Display code metrics
         run: |
@@ -303,10 +289,6 @@ jobs:
     name: PHP Lint & Syntax Check
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -314,7 +296,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: '8.3'
           tools: composer:v2
 
       - name: Lint PHP files
