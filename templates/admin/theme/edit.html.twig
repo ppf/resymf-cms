@@ -1,7 +1,104 @@
 {% extends 'admin/base.html.twig' %}
+{% form_theme form 'form/bootstrap_5_custom.html.twig' %}
+
+{% block title %}Edit Theme{% endblock %}
+
 {% block body %}
-{{ form_start(form) }}{{ form_widget(form) }}
-<button type="submit" class="btn btn-primary mt-3">Save</button>
-<a href="{{ path('admin_theme_index') }}" class="btn btn-secondary mt-3">Cancel</a>
-{{ form_end(form) }}
+<div class="dashboard-welcome mb-4">
+    <h1>Edit Theme</h1>
+    <p class="subtitle">Modify theme: <strong>{{ theme.name }}</strong></p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-section">
+                <h3 class="form-section-title">Theme Information</h3>
+
+                <div class="form-grid">
+                    <div>{{ form_row(form.name) }}</div>
+                    <div>{{ form_row(form.identifier) }}</div>
+                </div>
+
+                {{ form_row(form.description) }}
+
+                {% if form.version is defined %}
+                    <div class="form-grid">
+                        <div>{{ form_row(form.version) }}</div>
+                        {% if form.author is defined %}
+                            <div>{{ form_row(form.author) }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Theme Assets</h3>
+
+                {% if form.templatePath is defined %}
+                    {{ form_row(form.templatePath) }}
+                {% endif %}
+
+                {% if form.assetsPath is defined %}
+                    {{ form_row(form.assetsPath) }}
+                {% endif %}
+
+                {% if form.screenshot is defined %}
+                    {{ form_row(form.screenshot) }}
+                {% endif %}
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Settings</h3>
+
+                {% if form.isActive is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.isActive) }}
+                        {{ form_label(form.isActive) }}
+                        {{ form_help(form.isActive) }}
+                    </div>
+                {% endif %}
+
+                {% if form.isDefault is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.isDefault) }}
+                        {{ form_label(form.isDefault) }}
+                        {{ form_help(form.isDefault) }}
+                    </div>
+                {% endif %}
+
+                {% if form.config is defined %}
+                    {{ form_row(form.config) }}
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Update Theme
+                </button>
+                <a href="{{ path('admin_theme_show', {'id': theme.id}) }}" class="btn btn-info">
+                    <i class="bi bi-eye"></i> View
+                </a>
+                <a href="{{ path('admin_theme_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<div class="mt-3">
+    <small class="text-muted">
+        Created: {{ theme.createdAt|date('Y-m-d H:i') }}
+        {% if theme.updatedAt is defined %}
+            | Last Updated: {{ theme.updatedAt|date('Y-m-d H:i') }}
+        {% endif %}
+        {% if theme.isActive %}
+            | Status: <span class="badge bg-success">Active</span>
+        {% else %}
+            | Status: <span class="badge bg-secondary">Inactive</span>
+        {% endif %}
+    </small>
+</div>
 {% endblock %}

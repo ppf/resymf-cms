@@ -1,0 +1,101 @@
+{# Custom Bootstrap 5 Form Theme for Admin #}
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+{# Customize form row to add proper spacing and wrapper #}
+{% block form_row %}
+    <div class="mb-4">
+        {{- form_label(form) -}}
+        {{- form_widget(form) -}}
+        {{- form_help(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{% endblock %}
+
+{# Customize checkbox row for better styling #}
+{% block checkbox_row %}
+    <div class="form-check mb-3">
+        {{- form_widget(form) -}}
+        {{- form_label(form) -}}
+        {{- form_help(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{% endblock %}
+
+{# Customize radio row #}
+{% block radio_row %}
+    <div class="form-check mb-3">
+        {{- form_widget(form) -}}
+        {{- form_label(form) -}}
+        {{- form_help(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{% endblock %}
+
+{# Add help text with proper styling #}
+{% block form_help %}
+    {% if help is not empty %}
+        <small class="form-text text-muted">{{ help }}</small>
+    {% endif %}
+{% endblock %}
+
+{# Customize form errors #}
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="invalid-feedback d-block">
+            {% for error in errors %}
+                <div>{{ error.message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{# Add proper classes to form widgets #}
+{% block form_widget_simple %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block textarea_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block choice_widget_collapsed %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-select')|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{# Customize checkbox widget #}
+{% block checkbox_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-check-input')|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{# Customize radio widget #}
+{% block radio_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-check-input')|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{# Customize form label #}
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' form-label')|trim}) %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{# Customize checkbox label #}
+{% block checkbox_label %}
+    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' form-check-label')|trim}) %}
+    {{ parent() }}
+{% endblock %}
+
+{# Customize radio label #}
+{% block radio_label %}
+    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' form-check-label')|trim}) %}
+    {{ parent() }}
+{% endblock %}

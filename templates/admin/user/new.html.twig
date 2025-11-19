@@ -1,7 +1,85 @@
 {% extends 'admin/base.html.twig' %}
+{% form_theme form 'form/bootstrap_5_custom.html.twig' %}
+
+{% block title %}Create User{% endblock %}
+
 {% block body %}
-{{ form_start(form) }}{{ form_widget(form) }}
-<button type="submit" class="btn btn-primary mt-3">Save</button>
-<a href="{{ path('admin_user_index') }}" class="btn btn-secondary mt-3">Cancel</a>
-{{ form_end(form) }}
+<div class="dashboard-welcome mb-4">
+    <h1>Create New User</h1>
+    <p class="subtitle">Add a new user to the system</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-section">
+                <h3 class="form-section-title">Account Information</h3>
+
+                <div class="form-grid">
+                    <div>{{ form_row(form.email) }}</div>
+                    <div>{{ form_row(form.username) }}</div>
+                </div>
+
+                <div class="form-grid">
+                    <div>{{ form_row(form.password) }}</div>
+                    {% if form.plainPassword is defined %}
+                        <div>{{ form_row(form.plainPassword) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Profile Information</h3>
+
+                <div class="form-grid">
+                    {% if form.firstName is defined %}
+                        <div>{{ form_row(form.firstName) }}</div>
+                    {% endif %}
+                    {% if form.lastName is defined %}
+                        <div>{{ form_row(form.lastName) }}</div>
+                    {% endif %}
+                </div>
+
+                {% if form.bio is defined %}
+                    {{ form_row(form.bio) }}
+                {% endif %}
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Permissions & Status</h3>
+
+                <div class="form-grid">
+                    <div>{{ form_row(form.roles) }}</div>
+                    {% if form.isActive is defined %}
+                        <div>
+                            <div class="form-check mb-3">
+                                {{ form_widget(form.isActive) }}
+                                {{ form_label(form.isActive) }}
+                                {{ form_help(form.isActive) }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if form.isEmailVerified is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.isEmailVerified) }}
+                        {{ form_label(form.isEmailVerified) }}
+                        {{ form_help(form.isEmailVerified) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Create User
+                </button>
+                <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
 {% endblock %}

@@ -1,8 +1,202 @@
 {% extends 'admin/base.html.twig' %}
-{% block title %}Settings{% endblock %}
+{% form_theme form 'form/bootstrap_5_custom.html.twig' %}
+
+{% block title %}Site Settings{% endblock %}
+
 {% block body %}
-<h1>Site Settings</h1>
-{{ form_start(form) }}{{ form_widget(form) }}
-<button type="submit" class="btn btn-primary mt-3">Save Settings</button>
-{{ form_end(form) }}
+<div class="dashboard-welcome mb-4">
+    <h1>Site Settings</h1>
+    <p class="subtitle">Configure global settings for your website</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-section">
+                <h3 class="form-section-title">General Settings</h3>
+
+                <div class="form-grid">
+                    {% if form.siteName is defined %}
+                        <div>{{ form_row(form.siteName) }}</div>
+                    {% endif %}
+                    {% if form.siteTagline is defined %}
+                        <div>{{ form_row(form.siteTagline) }}</div>
+                    {% endif %}
+                </div>
+
+                {% if form.siteDescription is defined %}
+                    {{ form_row(form.siteDescription) }}
+                {% endif %}
+
+                <div class="form-grid">
+                    {% if form.siteUrl is defined %}
+                        <div>{{ form_row(form.siteUrl) }}</div>
+                    {% endif %}
+                    {% if form.adminEmail is defined %}
+                        <div>{{ form_row(form.adminEmail) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">SEO & Meta</h3>
+
+                {% if form.metaDescription is defined %}
+                    {{ form_row(form.metaDescription) }}
+                {% endif %}
+
+                {% if form.metaKeywords is defined %}
+                    {{ form_row(form.metaKeywords) }}
+                {% endif %}
+
+                <div class="form-grid">
+                    {% if form.googleAnalytics is defined %}
+                        <div>{{ form_row(form.googleAnalytics) }}</div>
+                    {% endif %}
+                    {% if form.googleTagManager is defined %}
+                        <div>{{ form_row(form.googleTagManager) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Display Settings</h3>
+
+                <div class="form-grid">
+                    {% if form.postsPerPage is defined %}
+                        <div>{{ form_row(form.postsPerPage) }}</div>
+                    {% endif %}
+                    {% if form.dateFormat is defined %}
+                        <div>{{ form_row(form.dateFormat) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-grid">
+                    {% if form.timeFormat is defined %}
+                        <div>{{ form_row(form.timeFormat) }}</div>
+                    {% endif %}
+                    {% if form.timezone is defined %}
+                        <div>{{ form_row(form.timezone) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-grid">
+                    {% if form.defaultTheme is defined %}
+                        <div>{{ form_row(form.defaultTheme) }}</div>
+                    {% endif %}
+                    {% if form.language is defined %}
+                        <div>{{ form_row(form.language) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Features</h3>
+
+                {% if form.enableComments is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.enableComments) }}
+                        {{ form_label(form.enableComments) }}
+                        {{ form_help(form.enableComments) }}
+                    </div>
+                {% endif %}
+
+                {% if form.enableRegistration is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.enableRegistration) }}
+                        {{ form_label(form.enableRegistration) }}
+                        {{ form_help(form.enableRegistration) }}
+                    </div>
+                {% endif %}
+
+                {% if form.maintenanceMode is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.maintenanceMode) }}
+                        {{ form_label(form.maintenanceMode) }}
+                        {{ form_help(form.maintenanceMode) }}
+                    </div>
+                {% endif %}
+
+                {% if form.enableCache is defined %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(form.enableCache) }}
+                        {{ form_label(form.enableCache) }}
+                        {{ form_help(form.enableCache) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Email Settings</h3>
+
+                <div class="form-grid">
+                    {% if form.mailerDsn is defined %}
+                        <div>{{ form_row(form.mailerDsn) }}</div>
+                    {% endif %}
+                    {% if form.emailFrom is defined %}
+                        <div>{{ form_row(form.emailFrom) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-grid">
+                    {% if form.emailFromName is defined %}
+                        <div>{{ form_row(form.emailFromName) }}</div>
+                    {% endif %}
+                    {% if form.emailReplyTo is defined %}
+                        <div>{{ form_row(form.emailReplyTo) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="form-section-title">Social Media</h3>
+
+                <div class="form-grid">
+                    {% if form.facebookUrl is defined %}
+                        <div>{{ form_row(form.facebookUrl) }}</div>
+                    {% endif %}
+                    {% if form.twitterUrl is defined %}
+                        <div>{{ form_row(form.twitterUrl) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-grid">
+                    {% if form.instagramUrl is defined %}
+                        <div>{{ form_row(form.instagramUrl) }}</div>
+                    {% endif %}
+                    {% if form.linkedinUrl is defined %}
+                        <div>{{ form_row(form.linkedinUrl) }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-grid">
+                    {% if form.youtubeUrl is defined %}
+                        <div>{{ form_row(form.youtubeUrl) }}</div>
+                    {% endif %}
+                    {% if form.githubUrl is defined %}
+                        <div>{{ form_row(form.githubUrl) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Save Settings
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<div class="mt-3">
+    <small class="text-muted">
+        Settings last updated: {{ 'now'|date('Y-m-d H:i') }}
+        | Environment: {{ app.environment|upper }}
+        | Debug: {{ app.debug ? 'ON' : 'OFF' }}
+    </small>
+</div>
 {% endblock %}

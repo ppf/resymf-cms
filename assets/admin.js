@@ -3,9 +3,6 @@
  * Enhanced admin area functionality
  */
 
-// Import styles
-import './styles/admin.css';
-
 // Slug Auto-Generation
 class SlugGenerator {
     constructor() {
@@ -261,6 +258,113 @@ class SidebarToggle {
     }
 }
 
+// Dropdown Toggle for Navigation and User Menu
+class DropdownToggle {
+    constructor() {
+        this.initNavDropdowns();
+        this.initUserMenu();
+        this.initOutsideClick();
+    }
+
+    initNavDropdowns() {
+        const navDropdownToggles = document.querySelectorAll('.admin-navbar .nav-item > .nav-link');
+
+        navDropdownToggles.forEach(toggle => {
+            const parentItem = toggle.closest('.nav-item');
+            const dropdownMenu = parentItem.querySelector('.dropdown-menu');
+
+            if (dropdownMenu) {
+                // Add click handler
+                toggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Close other nav dropdowns
+                    document.querySelectorAll('.admin-navbar .nav-item').forEach(item => {
+                        if (item !== parentItem) {
+                            item.classList.remove('show');
+                        }
+                    });
+
+                    // Close user menu if open
+                    const userMenu = document.querySelector('.user-menu');
+                    if (userMenu) {
+                        userMenu.classList.remove('show');
+                    }
+
+                    // Toggle current dropdown
+                    parentItem.classList.toggle('show');
+                });
+
+                // Add visual feedback
+                toggle.style.cursor = 'pointer';
+            }
+        });
+    }
+
+    initUserMenu() {
+        const userToggle = document.querySelector('.user-menu .user-toggle');
+        console.log('🔍 User toggle found:', userToggle);
+
+        if (userToggle) {
+            userToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('👆 User menu clicked');
+
+                const userMenu = userToggle.closest('.user-menu');
+                console.log('📋 User menu element:', userMenu);
+
+                // Close nav dropdowns
+                document.querySelectorAll('.admin-navbar .nav-item').forEach(item => {
+                    item.classList.remove('show');
+                });
+
+                // Toggle user menu
+                const isShowing = userMenu.classList.toggle('show');
+                console.log('✨ User menu show state:', isShowing);
+            });
+
+            userToggle.style.cursor = 'pointer';
+            console.log('✅ User menu click handler attached');
+        } else {
+            console.error('❌ User toggle not found!');
+        }
+    }
+
+    initOutsideClick() {
+        // Close all dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-item') && !e.target.closest('.user-menu')) {
+                // Close nav dropdowns
+                document.querySelectorAll('.admin-navbar .nav-item').forEach(item => {
+                    item.classList.remove('show');
+                });
+
+                // Close user menu
+                const userMenu = document.querySelector('.user-menu');
+                if (userMenu) {
+                    userMenu.classList.remove('show');
+                }
+            }
+        });
+
+        // Close dropdowns on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.admin-navbar .nav-item').forEach(item => {
+                    item.classList.remove('show');
+                });
+
+                const userMenu = document.querySelector('.user-menu');
+                if (userMenu) {
+                    userMenu.classList.remove('show');
+                }
+            }
+        });
+    }
+}
+
 // Loading Spinner
 class LoadingSpinner {
     static show() {
@@ -349,6 +453,7 @@ class FormAutoSave {
 
 // Initialize all features when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    new DropdownToggle();
     new SlugGenerator();
     new DeleteConfirmation();
     new FormValidator();
