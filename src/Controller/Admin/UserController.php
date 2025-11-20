@@ -32,16 +32,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * List all users.
+     * List all users (Vue-powered grid).
      */
     #[Route('', name: 'admin_user_index', methods: ['GET'])]
     public function index(): Response
     {
-        $users = $this->userRepository->findAllOrderedByCreated();
-
-        return $this->render('admin/user/index.html.twig', [
-            'users' => $users,
-        ]);
+        // Users are now loaded via Vue component from API
+        return $this->render('admin/user/index.html.twig');
     }
 
     /**
