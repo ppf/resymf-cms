@@ -110,8 +110,8 @@ class Page
      * Author of the page.
      */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'authoredPages')]
-    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private User $author;
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    private ?User $author = null;
 
     /**
      * Categories assigned to this page
@@ -290,12 +290,12 @@ class Page
         $this->updatedAt = new \DateTimeImmutable();
     }
 
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): static
+    public function setAuthor(?User $author): static
     {
         $this->author = $author;
 
