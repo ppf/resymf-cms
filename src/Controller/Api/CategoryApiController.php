@@ -28,7 +28,7 @@ class CategoryApiController extends AbstractController
         if ('' !== $search) {
             $qb
                 ->andWhere('LOWER(c.name) LIKE :q OR LOWER(c.slug) LIKE :q')
-                ->setParameter('q', '%'.mb_strtolower($search).'%');
+                ->setParameter('q', '%' . mb_strtolower($search) . '%');
         }
 
         $results = $qb

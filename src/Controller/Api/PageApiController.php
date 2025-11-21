@@ -31,7 +31,7 @@ class PageApiController extends AbstractController
         if ('' !== $search) {
             $qb
                 ->andWhere('LOWER(p.title) LIKE :q OR LOWER(p.slug) LIKE :q')
-                ->setParameter('q', '%'.mb_strtolower($search).'%');
+                ->setParameter('q', '%' . mb_strtolower($search) . '%');
         }
 
         $qb
