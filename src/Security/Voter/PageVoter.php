@@ -54,7 +54,7 @@ class PageVoter extends Voter
         if (!$user instanceof UserInterface) {
             // Public can view published pages
             if ($attribute === self::VIEW && $subject instanceof Page) {
-                return $subject->isPublished();
+                return $subject->getIsPublished();
             }
 
             return false;
@@ -92,7 +92,7 @@ class PageVoter extends Voter
         }
 
         // Everyone can view published pages
-        return $page->isPublished();
+        return $page->getIsPublished();
     }
 
     private function canEdit(UserInterface $user, ?Page $page): bool
@@ -126,7 +126,7 @@ class PageVoter extends Voter
         }
 
         // Cannot delete homepage (additional business rule)
-        return !$page->isHomepage();
+        return !$page->getIsHomepage();
     }
 
     private function canCreate(UserInterface $user): bool
