@@ -90,7 +90,7 @@ class UserTest extends TestCase
         $user->addRole('ROLE_ADMIN');
         $user->addRole('ROLE_ADMIN');
 
-        $roles = array_filter($user->getRoles(), fn($role) => $role === 'ROLE_ADMIN');
+        $roles = array_filter($user->getRoles(), fn ($role) => $role === 'ROLE_ADMIN');
         $this->assertCount(1, $roles);
     }
 

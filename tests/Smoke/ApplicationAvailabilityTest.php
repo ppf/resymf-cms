@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Smoke;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -13,9 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class ApplicationAvailabilityTest extends WebTestCase
 {
-    /**
-     * @dataProvider urlProvider
-     */
+    #[DataProvider('urlProvider')]
     public function testPageIsSuccessful(string $url, int $expectedCode): void
     {
         $client = self::createClient();
