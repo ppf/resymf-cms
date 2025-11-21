@@ -132,13 +132,60 @@ class PageController extends AbstractController
     #[Route('/{id}/toggle-published', name: 'admin_page_toggle_published', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function togglePublished(Request $request, Page $page): Response
     {
-        if ($this->isCsrfTokenValid('toggle' . $page->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('toggle', $request->request->get('_token'))) {
             $page->setIsPublished(!$page->getIsPublished());
             $this->entityManager->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'isPublished' => $page->getIsPublished(),
+                ]);
+            }
 
             $status = $page->getIsPublished() ? 'published' : 'unpublished';
             $this->addFlash('success', sprintf('Page "%s" has been %s.', $page->getTitle(), $status));
         } else {
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => false, 'error' => 'Invalid CSRF token'], 400);
+            }
+            $this->addFlash('error', 'Invalid CSRF token.');
+        }
+
+        return $this->redirectToRoute('admin_page_index');
+    }
+
+    /**
+     * Toggle homepage status.
+     */
+    #[Route('/{id}/toggle-homepage', name: 'admin_page_toggle_homepage', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function toggleHomepage(Request $request, Page $page): Response
+    {
+        if ($this->isCsrfTokenValid('toggle', $request->request->get('_token'))) {
+            if (!$page->getIsHomepage()) {
+                // Unset all other homepage flags
+                $this->pageRepository->unsetAllHomepages();
+                $page->setIsHomepage(true);
+                $this->entityManager->flush();
+
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'success' => true,
+                        'isHomepage' => true,
+                    ]);
+                }
+
+                $this->addFlash('success', sprintf('Page "%s" set as homepage.', $page->getTitle()));
+            } else {
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json(['success' => false, 'error' => 'Cannot unset homepage'], 400);
+                }
+                $this->addFlash('error', 'Cannot unset homepage. Set another page as homepage first.');
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                return $this->json(['success' => false, 'error' => 'Invalid CSRF token'], 400);
+            }
             $this->addFlash('error', 'Invalid CSRF token.');
         }
 

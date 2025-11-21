@@ -24,6 +24,7 @@ export default defineConfig({
         cms_vue: './assets/vue/cms-app.js',
         'category-grid-app': './assets/vue/category-grid-app.js',
         'theme-grid-app': './assets/vue/theme-grid-app.js',
+        'page-grid-app': './assets/vue/page-grid-app.js',
       },
     },
   },

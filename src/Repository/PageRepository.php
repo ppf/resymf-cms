@@ -289,4 +289,17 @@ class PageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * Unset all homepage flags.
+     */
+    public function unsetAllHomepages(): void
+    {
+        $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.isHomepage', ':false')
+            ->setParameter('false', false)
+            ->getQuery()
+            ->execute();
+    }
 }

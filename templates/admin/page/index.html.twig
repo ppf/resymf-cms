@@ -8,46 +8,14 @@
     <a href="{{ path('admin_page_new') }}" class="btn btn-primary">Create New Page</a>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Slug</th>
-            <th>Published</th>
-            <th>Views</th>
-            <th>Created</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for page in pages %}
-        <tr>
-            <td>{{ page.id }}</td>
-            <td>{{ page.title }}</td>
-            <td><code>{{ page.slug }}</code></td>
-            <td>
-                <form method="post" action="{{ path('admin_page_toggle_published', {id: page.id}) }}" style="display:inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ page.id) }}">
-                    <button type="submit" class="btn btn-sm btn-{{ page.isPublished ? 'success' : 'secondary' }}">
-                        {{ page.isPublished ? 'Published' : 'Draft' }}
-                    </button>
-                </form>
-            </td>
-            <td>{{ page.viewCount }}</td>
-            <td>{{ page.createdAt|date('Y-m-d') }}</td>
-            <td>
-                <a href="{{ path('admin_page_show', {id: page.id}) }}" class="btn btn-sm btn-info">View</a>
-                <a href="{{ path('admin_page_edit', {id: page.id}) }}" class="btn btn-sm btn-warning">Edit</a>
-                <form method="post" action="{{ path('admin_page_delete', {id: page.id}) }}" style="display:inline" onsubmit="return confirm('Delete this page?')">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ page.id) }}">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% else %}
-        <tr><td colspan="7" class="text-center">No pages found</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div 
+    data-vue-island="page-grid"
+    data-api-url="{{ path('api_pages_list') }}"
+    data-csrf-token="{{ csrf_token('toggle') }}"
+></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ vite_entry_script_tags('page-grid-app') }}
 {% endblock %}
