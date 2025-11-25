@@ -129,4 +129,225 @@ class CategoryApiController extends AbstractController
             'message' => 'Display order updated',
         ]);
     }
+
+    /**
+     * Get single category by ID.
+     */
+    #[Route('/{id}', name: 'api_categories_get', methods: ['GET'])]
+    public function get(int $id, CategoryRepository $categories): JsonResponse
+    {
+        $category = $categories->find($id);
+
+        if (!$category) {
+            return $this->json(['error' => 'Category not found'], 404);
+        }
+
+        return $this->json([
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'slug' => $category->getSlug(),
+            'description' => $category->getDescription(),
+            'displayOrder' => $category->getDisplayOrder(),
+            'isActive' => $category->getIsActive(),
+            'pageCount' => $category->getPageCount(),
+            'createdAt' => $category->getCreatedAt()->format('c'),
+        ]);
+    }
+
+    /**
+     * Create new category.
+     */
+    #[Route('', name: 'api_categories_create', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function create(Request $request, EntityManagerInterface $em, CategoryRepository $categories): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // Validate input
+        $errors = $this->validateCategoryData($data, $categories);
+        if (!empty($errors)) {
+            return $this->json(['errors' => $errors], 422);
+        }
+
+        // Create category
+        $category = new Category();
+        $category->setName($data['name']);
+        $category->setSlug($data['slug']);
+        $category->setDescription($data['description'] ?? '');
+        $category->setDisplayOrder($data['displayOrder'] ?? 0);
+        $category->setIsActive($data['isActive'] ?? true);
+
+        $em->persist($category);
+        $em->flush();
+
+        return $this->json([
+            'success' => true,
+            'message' => 'Category created successfully',
+            'id' => $category->getId(),
+        ], 201);
+    }
+
+    /**
+     * Update existing category.
+     */
+    #[Route('/{id}', name: 'api_categories_update', methods: ['PUT'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function update(int $id, Request $request, EntityManagerInterface $em, CategoryRepository $categories): JsonResponse
+    {
+        $category = $categories->find($id);
+
+        if (!$category) {
+            return $this->json(['error' => 'Category not found'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        // Validate input
+        $errors = $this->validateCategoryData($data, $categories, $category);
+        if (!empty($errors)) {
+            return $this->json(['errors' => $errors], 422);
+        }
+
+        // Update category
+        $category->setName($data['name']);
+        $category->setSlug($data['slug']);
+        $category->setDescription($data['description'] ?? '');
+        $category->setDisplayOrder($data['displayOrder'] ?? 0);
+        $category->setIsActive($data['isActive'] ?? true);
+
+        $em->flush();
+
+        return $this->json([
+            'success' => true,
+            'message' => 'Category updated successfully',
+        ]);
+    }
+
+    /**
+     * Delete category.
+     */
+    #[Route('/{id}', name: 'api_categories_delete', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(int $id, EntityManagerInterface $em, CategoryRepository $categories): JsonResponse
+    {
+        $category = $categories->find($id);
+
+        if (!$category) {
+            return $this->json(['error' => 'Category not found'], 404);
+        }
+
+        // Check if category has pages
+        if ($category->getPageCount() > 0) {
+            return $this->json([
+                'error' => 'Cannot delete category with associated pages',
+            ], 400);
+        }
+
+        $em->remove($category);
+        $em->flush();
+
+        return $this->json([
+            'success' => true,
+            'message' => 'Category deleted successfully',
+        ]);
+    }
+
+    /**
+     * Validate slug uniqueness.
+     */
+    #[Route('/validate-slug', name: 'api_categories_validate_slug', methods: ['POST'])]
+    public function validateSlug(Request $request, CategoryRepository $categories): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $slug = $data['slug'] ?? '';
+        $excludeId = $data['excludeId'] ?? null;
+
+        // Basic slug format validation
+        if (!preg_match('/^[a-z0-9-]+$/', $slug)) {
+            return $this->json([
+                'valid' => false,
+                'message' => 'Slug can only contain lowercase letters, numbers, and hyphens',
+            ]);
+        }
+
+        // Check uniqueness
+        $qb = $categories->createQueryBuilder('c')
+            ->where('c.slug = :slug')
+            ->setParameter('slug', $slug);
+
+        if ($excludeId) {
+            $qb->andWhere('c.id != :id')
+               ->setParameter('id', $excludeId);
+        }
+
+        $exists = $qb->getQuery()->getOneOrNullResult() !== null;
+
+        return $this->json([
+            'valid' => !$exists,
+            'message' => $exists ? 'Slug already exists' : 'Slug is available',
+        ]);
+    }
+
+    /**
+     * Validate category data.
+     *
+     * @return array<string, string> Validation errors
+     */
+    private function validateCategoryData(array $data, CategoryRepository $categories, ?Category $existing = null): array
+    {
+        $errors = [];
+
+        // Validate name
+        if (empty($data['name'])) {
+            $errors['name'] = 'Name is required';
+        } elseif (strlen($data['name']) < 2) {
+            $errors['name'] = 'Name must be at least 2 characters';
+        } elseif (strlen($data['name']) > 100) {
+            $errors['name'] = 'Name must not exceed 100 characters';
+        } else {
+            // Check name uniqueness
+            $qb = $categories->createQueryBuilder('c')
+                ->where('c.name = :name')
+                ->setParameter('name', $data['name']);
+
+            if ($existing) {
+                $qb->andWhere('c.id != :id')
+                   ->setParameter('id', $existing->getId());
+            }
+
+            if ($qb->getQuery()->getOneOrNullResult() !== null) {
+                $errors['name'] = 'This category name is already taken';
+            }
+        }
+
+        // Validate slug
+        if (empty($data['slug'])) {
+            $errors['slug'] = 'Slug is required';
+        } elseif (strlen($data['slug']) > 128) {
+            $errors['slug'] = 'Slug must not exceed 128 characters';
+        } elseif (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+            $errors['slug'] = 'Slug can only contain lowercase letters, numbers, and hyphens';
+        } else {
+            // Check slug uniqueness
+            $qb = $categories->createQueryBuilder('c')
+                ->where('c.slug = :slug')
+                ->setParameter('slug', $data['slug']);
+
+            if ($existing) {
+                $qb->andWhere('c.id != :id')
+                   ->setParameter('id', $existing->getId());
+            }
+
+            if ($qb->getQuery()->getOneOrNullResult() !== null) {
+                $errors['slug'] = 'This slug is already taken';
+            }
+        }
+
+        // Validate display order
+        if (isset($data['displayOrder']) && (!is_numeric($data['displayOrder']) || $data['displayOrder'] < 0)) {
+            $errors['displayOrder'] = 'Display order must be a positive number';
+        }
+
+        return $errors;
+    }
 }

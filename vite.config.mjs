@@ -23,6 +23,7 @@ export default defineConfig({
         admin_users_vue: './assets/vue/admin-users-app.js',
         cms_vue: './assets/vue/cms-app.js',
         'category-grid-app': './assets/vue/category-grid-app.js',
+        'category-form-app': './assets/vue/category-form-app.js',
         'theme-grid-app': './assets/vue/theme-grid-app.js',
         'page-grid-app': './assets/vue/page-grid-app.js',
       },
