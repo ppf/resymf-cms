@@ -1,102 +1,33 @@
 {% extends 'admin/base.html.twig' %}
-{% form_theme form 'form/bootstrap_5_custom.html.twig' %}
 
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
 <div class="dashboard-welcome mb-4">
     <h1>Edit User</h1>
-    <p class="subtitle">Modify user account: <strong>{{ user.email }}</strong></p>
+    <p class="subtitle">Modify user account: <strong>{{ user.username }}</strong> ({{ user.email }})</p>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-
-            <div class="form-section">
-                <h3 class="form-section-title">Account Information</h3>
-
-                <div class="form-grid">
-                    <div>{{ form_row(form.email) }}</div>
-                    <div>{{ form_row(form.username) }}</div>
-                </div>
-
-                {% if form.plainPassword is defined %}
-                    <div class="form-grid">
-                        <div>{{ form_row(form.plainPassword) }}</div>
-                        <div>
-                            <small class="text-muted">Leave blank to keep current password</small>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-
-            <div class="form-section">
-                <h3 class="form-section-title">Profile Information</h3>
-
-                <div class="form-grid">
-                    {% if form.firstName is defined %}
-                        <div>{{ form_row(form.firstName) }}</div>
-                    {% endif %}
-                    {% if form.lastName is defined %}
-                        <div>{{ form_row(form.lastName) }}</div>
-                    {% endif %}
-                </div>
-
-                {% if form.bio is defined %}
-                    {{ form_row(form.bio) }}
-                {% endif %}
-            </div>
-
-            <div class="form-section">
-                <h3 class="form-section-title">Permissions & Status</h3>
-
-                <div class="form-grid">
-                    <div>{{ form_row(form.roles) }}</div>
-                    {% if form.isActive is defined %}
-                        <div>
-                            <div class="form-check mb-3">
-                                {{ form_widget(form.isActive) }}
-                                {{ form_label(form.isActive) }}
-                                {{ form_help(form.isActive) }}
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                {% if form.isEmailVerified is defined %}
-                    <div class="form-check mb-3">
-                        {{ form_widget(form.isEmailVerified) }}
-                        {{ form_label(form.isEmailVerified) }}
-                        {{ form_help(form.isEmailVerified) }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-circle"></i> Update User
-                </button>
-                <a href="{{ path('admin_user_show', {'id': user.id}) }}" class="btn btn-info">
-                    <i class="bi bi-eye"></i> View
-                </a>
-                <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">
-                    <i class="bi bi-x-circle"></i> Cancel
-                </a>
-            </div>
-        {{ form_end(form) }}
-    </div>
-</div>
+{# Vue User Form #}
+<div
+    data-vue-island="user-form"
+    data-user-id="{{ user.id }}"
+    data-api-url="{{ path('api_users_index') }}"
+    data-cancel-url="{{ path('admin_user_index') }}"
+    data-themes-data="{{ themesData|raw }}"
+></div>
 
 <div class="mt-3">
     <small class="text-muted">
         Created: {{ user.createdAt|date('Y-m-d H:i') }}
-        {% if user.updatedAt is defined %}
+        {% if user.updatedAt %}
             | Last Updated: {{ user.updatedAt|date('Y-m-d H:i') }}
-        {% endif %}
-        {% if user.lastLoginAt is defined %}
-            | Last Login: {{ user.lastLoginAt|date('Y-m-d H:i') }}
         {% endif %}
     </small>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ vite_entry_script_tags('user-form-app') }}
 {% endblock %}

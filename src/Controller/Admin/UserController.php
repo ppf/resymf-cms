@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\ThemeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,37 +43,17 @@ class UserController extends AbstractController
     /**
      * Create a new user.
      */
-    #[Route('/new', name: 'admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    #[Route('/new', name: 'admin_user_new', methods: ['GET'])]
+    public function new(ThemeRepository $themes): Response
     {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user, [
-            'include_password' => true,
-            'require_password' => true,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Hash the password
-            if ($user->getPlainPassword()) {
-                $hashedPassword = $this->passwordHasher->hashPassword(
-                    $user,
-                    $user->getPlainPassword(),
-                );
-                $user->setPassword($hashedPassword);
-            }
-
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-
-            $this->addFlash('success', sprintf('User "%s" has been created successfully.', $user->getUsername()));
-
-            return $this->redirectToRoute('admin_user_index');
-        }
+        // Get all themes for the form dropdown
+        $themesData = array_map(fn($theme) => [
+            'id' => $theme->getId(),
+            'name' => $theme->getName(),
+        ], $themes->findAll());
 
         return $this->render('admin/user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
+            'themesData' => json_encode($themesData),
         ]);
     }
 
@@ -90,35 +71,18 @@ class UserController extends AbstractController
     /**
      * Edit existing user.
      */
-    #[Route('/{id}/edit', name: 'admin_user_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Request $request, User $user): Response
+    #[Route('/{id}/edit', name: 'admin_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function edit(User $user, ThemeRepository $themes): Response
     {
-        $form = $this->createForm(UserType::class, $user, [
-            'include_password' => true,
-            'require_password' => false, // Password is optional when editing
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Hash the password if it was changed
-            if ($user->getPlainPassword()) {
-                $hashedPassword = $this->passwordHasher->hashPassword(
-                    $user,
-                    $user->getPlainPassword(),
-                );
-                $user->setPassword($hashedPassword);
-            }
-
-            $this->entityManager->flush();
-
-            $this->addFlash('success', sprintf('User "%s" has been updated successfully.', $user->getUsername()));
-
-            return $this->redirectToRoute('admin_user_index');
-        }
+        // Get all themes for the form dropdown
+        $themesData = array_map(fn($theme) => [
+            'id' => $theme->getId(),
+            'name' => $theme->getName(),
+        ], $themes->findAll());
 
         return $this->render('admin/user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'themesData' => json_encode($themesData),
         ]);
     }
 
