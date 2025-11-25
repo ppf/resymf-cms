@@ -312,7 +312,6 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { usePageForm } from '../composables/usePageForm';
 import RichTextEditor from './RichTextEditor.vue';
-import { Toast } from 'bootstrap';
 
 const props = defineProps({
   pageId: {
@@ -449,8 +448,8 @@ const showToast = (title, message, type = 'success') => {
     toastIcon.value = 'bi-info-circle-fill text-white';
   }
 
-  if (toastEl.value) {
-    const toast = new Toast(toastEl.value);
+  if (toastEl.value && window.bootstrap) {
+    const toast = new window.bootstrap.Toast(toastEl.value);
     toast.show();
   }
 };
