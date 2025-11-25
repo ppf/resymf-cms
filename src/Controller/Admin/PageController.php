@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Page;
 use App\Form\PageType;
+use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,7 @@ class PageController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly PageRepository $pageRepository,
+        private readonly CategoryRepository $categoryRepository,
     ) {
     }
 
@@ -44,31 +46,21 @@ class PageController extends AbstractController
     }
 
     /**
-     * Create a new page.
+     * Create a new page (Vue form).
      */
-    #[Route('/new', name: 'admin_page_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    #[Route('/new', name: 'admin_page_new', methods: ['GET'])]
+    public function new(): Response
     {
-        $page = new Page();
-
-        // Set current user as author
-        $page->setAuthor($this->getUser());
-
-        $form = $this->createForm(PageType::class, $page);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($page);
-            $this->entityManager->flush();
-
-            $this->addFlash('success', sprintf('Page "%s" has been created successfully.', $page->getTitle()));
-
-            return $this->redirectToRoute('admin_page_index');
-        }
+        // Fetch all categories for the form
+        $categories = $this->categoryRepository->findAll();
+        $categoriesData = array_map(fn($category) => [
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'description' => $category->getDescription(),
+        ], $categories);
 
         return $this->render('admin/page/new.html.twig', [
-            'page' => $page,
-            'form' => $form,
+            'categoriesData' => json_encode($categoriesData),
         ]);
     }
 
@@ -84,25 +76,22 @@ class PageController extends AbstractController
     }
 
     /**
-     * Edit existing page.
+     * Edit existing page (Vue form).
      */
-    #[Route('/{id}/edit', name: 'admin_page_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Request $request, Page $page): Response
+    #[Route('/{id}/edit', name: 'admin_page_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function edit(Page $page): Response
     {
-        $form = $this->createForm(PageType::class, $page);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
-
-            $this->addFlash('success', sprintf('Page "%s" has been updated successfully.', $page->getTitle()));
-
-            return $this->redirectToRoute('admin_page_index');
-        }
+        // Fetch all categories for the form
+        $categories = $this->categoryRepository->findAll();
+        $categoriesData = array_map(fn($category) => [
+            'id' => $category->getId(),
+            'name' => $category->getName(),
+            'description' => $category->getDescription(),
+        ], $categories);
 
         return $this->render('admin/page/edit.html.twig', [
             'page' => $page,
-            'form' => $form,
+            'categoriesData' => json_encode($categoriesData),
         ]);
     }
 
