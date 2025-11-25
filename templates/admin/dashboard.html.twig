@@ -9,40 +9,12 @@
     <p class="subtitle">{{ 'now'|date('l, F j, Y') }} • Last login: {{ user.createdAt|date('M j, Y') }}</p>
 </div>
 
-{# Stats Grid #}
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="bi bi-people"></i>
-        </div>
-        <div class="stat-value">-</div>
-        <div class="stat-label">Total Users</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="bi bi-file-text"></i>
-        </div>
-        <div class="stat-value">-</div>
-        <div class="stat-label">Published Pages</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="bi bi-tags"></i>
-        </div>
-        <div class="stat-value">-</div>
-        <div class="stat-label">Categories</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="bi bi-activity"></i>
-        </div>
-        <div class="stat-value">-</div>
-        <div class="stat-label">Recent Activity</div>
-    </div>
-</div>
+{# Vue Dashboard Stats Widget #}
+<div
+    data-vue-island="dashboard-stats"
+    data-api-url="{{ path('api_dashboard_stats') }}"
+    data-auto-refresh="false"
+></div>
 
 {# Vue Demo Widget (Vite island) #}
 <div class="row mb-4">
