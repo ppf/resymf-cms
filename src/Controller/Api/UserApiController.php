@@ -304,6 +304,7 @@ class UserApiController extends AbstractController
      * Validate user data.
      *
      * @param array<string, mixed> $data
+     *
      * @return array<string, string> Validation errors
      */
     private function validateUserData(array $data, UserRepository $users, ?User $existing = null): array

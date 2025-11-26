@@ -291,6 +291,8 @@ class CategoryApiController extends AbstractController
     /**
      * Validate category data.
      *
+     * @param array<string, mixed> $data
+     *
      * @return array<string, string> Validation errors
      */
     private function validateCategoryData(array $data, CategoryRepository $categories, ?Category $existing = null): array

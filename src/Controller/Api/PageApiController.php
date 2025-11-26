@@ -419,6 +419,7 @@ class PageApiController extends AbstractController
      * Validate page data.
      *
      * @param array<string, mixed> $data
+     *
      * @return array<string, string> Validation errors
      */
     private function validatePageData(array $data, PageRepository $pages, ?Page $existing = null): array
