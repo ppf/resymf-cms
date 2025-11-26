@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Form\UserType;
 use App\Repository\ThemeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,7 +46,7 @@ class UserController extends AbstractController
     public function new(ThemeRepository $themes): Response
     {
         // Get all themes for the form dropdown
-        $themesData = array_map(fn($theme) => [
+        $themesData = array_map(fn ($theme) => [
             'id' => $theme->getId(),
             'name' => $theme->getName(),
         ], $themes->findAll());
@@ -75,7 +74,7 @@ class UserController extends AbstractController
     public function edit(User $user, ThemeRepository $themes): Response
     {
         // Get all themes for the form dropdown
-        $themesData = array_map(fn($theme) => [
+        $themesData = array_map(fn ($theme) => [
             'id' => $theme->getId(),
             'name' => $theme->getName(),
         ], $themes->findAll());

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Page;
-use App\Form\PageType;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,7 +52,7 @@ class PageController extends AbstractController
     {
         // Fetch all categories for the form
         $categories = $this->categoryRepository->findAll();
-        $categoriesData = array_map(fn($category) => [
+        $categoriesData = array_map(fn ($category) => [
             'id' => $category->getId(),
             'name' => $category->getName(),
             'description' => $category->getDescription(),
@@ -83,7 +82,7 @@ class PageController extends AbstractController
     {
         // Fetch all categories for the form
         $categories = $this->categoryRepository->findAll();
-        $categoriesData = array_map(fn($category) => [
+        $categoriesData = array_map(fn ($category) => [
             'id' => $category->getId(),
             'name' => $category->getName(),
             'description' => $category->getDescription(),

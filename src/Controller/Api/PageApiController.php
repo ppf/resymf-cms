@@ -7,7 +7,6 @@ namespace App\Controller\Api;
 use App\Entity\Page;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -204,7 +203,7 @@ class PageApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         PageRepository $pages,
-        CategoryRepository $categories
+        CategoryRepository $categories,
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -271,7 +270,7 @@ class PageApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         PageRepository $pages,
-        CategoryRepository $categories
+        CategoryRepository $categories,
     ): JsonResponse {
         $page = $pages->find($id);
 

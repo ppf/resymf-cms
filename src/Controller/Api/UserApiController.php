@@ -106,7 +106,7 @@ class UserApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserRepository $users,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -157,7 +157,7 @@ class UserApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserRepository $users,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
         $user = $users->find($id);
 
