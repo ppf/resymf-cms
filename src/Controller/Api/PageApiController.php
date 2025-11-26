@@ -224,7 +224,9 @@ class PageApiController extends AbstractController
         $page->setDisplayOrder($data['displayOrder'] ?? 0);
 
         // Set author to current user
-        $page->setAuthor($this->getUser());
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $page->setAuthor($user);
 
         // Handle publishedAt
         if (!empty($data['publishedAt'])) {
@@ -416,6 +418,7 @@ class PageApiController extends AbstractController
     /**
      * Validate page data.
      *
+     * @param array<string, mixed> $data
      * @return array<string, string> Validation errors
      */
     private function validatePageData(array $data, PageRepository $pages, ?Page $existing = null): array
