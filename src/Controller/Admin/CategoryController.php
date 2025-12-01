@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * Handles category management in the admin area
  */
 #[Route('/admin/categories')]
-#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_ADMIN')]
 class CategoryController extends AbstractController
 {
     public function __construct(

@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * Modern Symfony 7 implementation with autowiring and PHP 8 attributes
  */
 #[Route('/admin/pages')]
-#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_ADMIN')]
 class PageController extends AbstractController
 {
     public function __construct(

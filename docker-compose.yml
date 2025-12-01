@@ -1,6 +1,7 @@
 # docker-compose.yml for ReSymf-CMS (Symfony 7)
 #
 # This configuration is intended for local development.
+# ⚠️ Do not deploy this file to production; secrets and ports are dev-only defaults.
 #
 services:
   php:
@@ -16,7 +17,7 @@ services:
       # Symfony environment variables
       APP_ENV: dev
       APP_DEBUG: 1
-      APP_SECRET: '!ChangeMe!' # Use a different secret in production
+      APP_SECRET: 'dev-only-change-me' # Replace for any non-local use
       # Database connection
       DATABASE_URL: "mysql://resymf:password@db:3306/resymf_cms?serverVersion=8.0&charset=utf8mb4"
       # Mailer DSN (using a local catcher like MailHog)

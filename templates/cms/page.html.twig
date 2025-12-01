@@ -83,7 +83,7 @@
 
             {# Page Content #}
             <div class="cms-page-body">
-                {{ page.content|raw }}
+                {{ page.content|escape('html') }}
             </div>
 
             {# Categories #}

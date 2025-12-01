@@ -27,6 +27,13 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $env = $_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? null;
+        if ($env !== 'dev' && $env !== 'test') {
+            echo "Skipping UserFixtures outside dev/test environments.\n";
+
+            return;
+        }
+
         // Create admin user
         $admin = new User();
         $admin->setUsername('admin');
@@ -78,12 +85,5 @@ class UserFixtures extends Fixture
 
         // Add reference for other fixtures
         $this->addReference(self::USER_ADMIN, $admin);
-
-        // Output confirmation (visible when running fixtures)
-        echo "✅ Created 3 users:\n";
-        echo "   - admin (admin@resymf.local) - ROLE_ADMIN - Password: admin123\n";
-        echo "   - testuser (user@resymf.local) - ROLE_USER - Password: user123\n";
-        echo "   - inactive (inactive@resymf.local) - ROLE_USER - Password: inactive123 [DISABLED]\n";
-        echo "\n⚠️  Remember to change default passwords in production!\n";
     }
 }

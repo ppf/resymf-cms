@@ -24,7 +24,6 @@ class FileUploadService
         'image/png',
         'image/gif',
         'image/webp',
-        'image/svg+xml',
     ];
 
     private const ALLOWED_DOCUMENT_TYPES = [
