@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-        {# Global app styles (Vite, with fallback to importmap/asset mapper) #}
+        {# Global app styles (Vite, with fallback handled by extension) #}
         {{ vite_entry_link_tags('app') }}
 
         {% block stylesheets %}{% endblock %}

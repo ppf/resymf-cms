@@ -20,5 +20,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    # Ensure Twig helpers (e.g., ViteExtension) are always registered
+    App\Twig\ViteExtension:
+        tags: ['twig.extension']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

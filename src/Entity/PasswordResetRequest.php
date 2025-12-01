@@ -126,7 +126,7 @@ class PasswordResetRequest
      */
     public function isExpired(): bool
     {
-        return $this->expiresAt < new \DateTimeImmutable();
+        return $this->expiresAt <= new \DateTimeImmutable();
     }
 
     /**
