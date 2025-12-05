@@ -18,14 +18,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * User Entity.
  *
  * Migrated from legacy ReSymf\Bundle\CmsBundle\Entity\User
- * Modern Symfony 7 implementation with PHP 8.3 features
+ * Modern Symfony 7 implementation with PHP 8.5 features
  *
  * Changes from legacy:
  * - Implements UserInterface instead of AdvancedUserInterface (removed in Symfony 6+)
  * - Uses PasswordAuthenticatedUserInterface for password handling
  * - Roles stored as JSON array instead of ManyToMany for simplicity (Symfony best practice)
  * - Salt removed (modern password hashers don't need it)
- * - PHP 8.3 typed properties and constructor property promotion
+ * - PHP 8.5 typed properties, pipe operator, and constructor property promotion
  * - Doctrine attributes instead of annotations
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]

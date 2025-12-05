@@ -48,10 +48,14 @@ class FileUploadService
     // Maximum file size (in bytes) - 10MB default
     private const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+    /**
+     * PHP 8.5: Using final constructor property promotion to prevent
+     * property overrides in subclasses, ensuring immutability.
+     */
     public function __construct(
-        private readonly FilesystemOperator $uploadsStorage,
-        private readonly FilesystemOperator $documentsStorage,
-        private readonly SluggerInterface $slugger,
+        private final readonly FilesystemOperator $uploadsStorage,
+        private final readonly FilesystemOperator $documentsStorage,
+        private final readonly SluggerInterface $slugger,
     ) {
     }
 
@@ -220,11 +224,10 @@ class FileUploadService
      */
     public function getAllowedMimeTypes(): array
     {
-        return array_merge(
-            self::ALLOWED_IMAGE_TYPES,
-            self::ALLOWED_DOCUMENT_TYPES,
-            self::ALLOWED_ARCHIVE_TYPES,
-        );
+        // PHP 8.5: Pipe operator for cleaner array merging pipeline
+        return self::ALLOWED_IMAGE_TYPES
+            |> array_merge($$, self::ALLOWED_DOCUMENT_TYPES)
+            |> array_merge($$, self::ALLOWED_ARCHIVE_TYPES);
     }
 
     /**
@@ -296,11 +299,14 @@ class FileUploadService
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $extension = $file->guessExtension();
 
-        if ($preserveOriginalName) {
-            $safeFilename = $this->slugger->slug($originalFilename)->lower()->toString();
-        } else {
+        // PHP 8.5: Pipe operator for cleaner transformation pipeline
+        $safeFilename = $originalFilename
+            |> $this->slugger->slug($$)
+            |> $$->lower()
+            |> $$->toString();
+
+        if (!$preserveOriginalName) {
             // Generate unique filename with timestamp
-            $safeFilename = $this->slugger->slug($originalFilename)->lower()->toString();
             $safeFilename .= '-' . uniqid('', true);
         }
 

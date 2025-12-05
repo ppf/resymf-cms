@@ -16,9 +16,13 @@ use Symfony\Component\String\Slugger\SluggerInterface;
  */
 class SlugGenerator
 {
+    /**
+     * PHP 8.5: Using final constructor property promotion to prevent
+     * property overrides in subclasses, ensuring immutability.
+     */
     public function __construct(
-        private readonly SluggerInterface $slugger,
-        private readonly EntityManagerInterface $entityManager,
+        private final readonly SluggerInterface $slugger,
+        private final readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -40,8 +44,11 @@ class SlugGenerator
         string $slugField = 'slug',
         int $maxLength = 255,
     ): string {
-        // Generate base slug
-        $baseSlug = $this->slugger->slug($text)->lower()->toString();
+        // Generate base slug using PHP 8.5 pipe operator for cleaner transformation chain
+        $baseSlug = $text
+            |> $this->slugger->slug($$)
+            |> $$->lower()
+            |> $$->toString();
 
         // Truncate if needed (leave room for suffix)
         if (strlen($baseSlug) > $maxLength - 10) {
@@ -84,13 +91,15 @@ class SlugGenerator
      */
     public function slugify(string $text, int $maxLength = 255): string
     {
-        $slug = $this->slugger->slug($text)->lower()->toString();
+        // PHP 8.5: Pipe operator for cleaner transformation pipeline
+        $slug = $text
+            |> $this->slugger->slug($$)
+            |> $$->lower()
+            |> $$->toString();
 
-        if (strlen($slug) > $maxLength) {
-            $slug = substr($slug, 0, $maxLength);
-        }
-
-        return $slug;
+        return strlen($slug) > $maxLength
+            ? substr($slug, 0, $maxLength)
+            : $slug;
     }
 
     /**
@@ -119,10 +128,11 @@ class SlugGenerator
      */
     public function generateFromParts(array $parts, string $separator = '-'): string
     {
-        $cleanParts = array_filter($parts, fn ($part) => !empty($part));
-        $combined = implode(' ' . $separator . ' ', $cleanParts);
-
-        return $this->slugify($combined);
+        // PHP 8.5: Pipe operator for cleaner array transformation pipeline
+        return $parts
+            |> array_filter($$, fn ($part) => !empty($part))
+            |> implode(' ' . $separator . ' ', $$)
+            |> $this->slugify($$);
     }
 
     /**

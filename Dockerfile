@@ -10,9 +10,9 @@ RUN npm install
 RUN npm run build
 
 # --- Base Stage ---
-# Use the official PHP 8.3 FPM image as a base.
+# Use the official PHP 8.5 FPM image as a base.
 # This stage installs PHP extensions and Composer.
-FROM php:8.3-fpm-alpine AS app_base
+FROM php:8.5-fpm-alpine AS app_base
 
 # Set working directory
 WORKDIR /app

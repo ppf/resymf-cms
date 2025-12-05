@@ -17,10 +17,13 @@ use Symfony\Component\Mime\Address;
  */
 class EmailService
 {
+    /**
+     * PHP 8.5: Using final constructor property promotion for immutability.
+     */
     public function __construct(
-        private readonly MailerInterface $mailer,
-        private readonly string $fromEmail = 'noreply@example.com',
-        private readonly string $fromName = 'ReSymf CMS',
+        private final readonly MailerInterface $mailer,
+        private final readonly string $fromEmail = 'noreply@example.com',
+        private final readonly string $fromName = 'ReSymf CMS',
     ) {
     }
 

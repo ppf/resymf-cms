@@ -97,8 +97,11 @@ class AdminConfigService
         'short_date_format' => 'Y-m-d',
     ];
 
+    /**
+     * PHP 8.5: Using final constructor property promotion for immutability.
+     */
     public function __construct(
-        private readonly SettingsRepository $settingsRepository,
+        private final readonly SettingsRepository $settingsRepository,
     ) {
     }
 

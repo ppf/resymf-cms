@@ -20,12 +20,15 @@ class ViteExtension extends AbstractExtension
 {
     private ?array $manifest = null;
 
+    /**
+     * PHP 8.5: Using final constructor property promotion for immutability.
+     */
     public function __construct(
-        private readonly Packages $packages,
+        private final readonly Packages $packages,
         #[Autowire(service: 'asset_mapper.importmap.renderer', lazy: true)]
-        private readonly ?ImportMapRenderer $importMapRenderer = null,
+        private final readonly ?ImportMapRenderer $importMapRenderer = null,
         #[Autowire('%kernel.project_dir%')]
-        private readonly string $projectDir,
+        private final readonly string $projectDir,
     ) {
     }
 

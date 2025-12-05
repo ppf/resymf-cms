@@ -276,10 +276,9 @@ class PageVoterSimplifiedTest extends TestCase
         $user->setEmail("user{$id}@test.com");
         $user->setRoles($roles);
 
-        // Set ID using reflection
+        // Set ID using reflection (PHP 8.5: setAccessible() no longer needed since PHP 8.1)
         $reflection = new \ReflectionClass($user);
         $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
         $property->setValue($user, $id);
 
         return $user;

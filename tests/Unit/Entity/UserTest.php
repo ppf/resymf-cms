@@ -112,9 +112,9 @@ class UserTest extends TestCase
         $user->setRoles(['ROLE_ADMIN', 'ROLE_EDITOR']);
         $user->removeRole('ROLE_ADMIN');
 
+        // PHP 8.5: setAccessible() is deprecated and no longer needed since PHP 8.1
         $reflection = new \ReflectionClass($user);
         $property = $reflection->getProperty('roles');
-        $property->setAccessible(true);
         $internalRoles = $property->getValue($user);
 
         // Check that array is re-indexed (keys are sequential)

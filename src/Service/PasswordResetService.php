@@ -26,13 +26,16 @@ class PasswordResetService
     // Maximum number of active reset requests per user
     private const MAX_ACTIVE_REQUESTS = 3;
 
+    /**
+     * PHP 8.5: Using final constructor property promotion for immutability.
+     */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly PasswordResetRequestRepository $resetRequestRepository,
-        private readonly UserRepository $userRepository,
-        private readonly EmailService $emailService,
-        private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private final readonly EntityManagerInterface $entityManager,
+        private final readonly PasswordResetRequestRepository $resetRequestRepository,
+        private final readonly UserRepository $userRepository,
+        private final readonly EmailService $emailService,
+        private final readonly UserPasswordHasherInterface $passwordHasher,
+        private final readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
