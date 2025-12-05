@@ -222,12 +222,16 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Find pages with pagination.
+     * Includes eager loading for author and categories to prevent N+1 queries.
      *
      * @return Page[]
      */
     public function findPaginated(int $page = 1, int $limit = 20, bool $publishedOnly = false): array
     {
-        $qb = $this->createQueryBuilder('p');
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.author', 'a')
+            ->leftJoin('p.categories', 'c')
+            ->addSelect('a', 'c');
 
         if ($publishedOnly) {
             $qb->andWhere('p.isPublished = :published')
@@ -299,6 +303,25 @@ class PageRepository extends ServiceEntityRepository
             ->update()
             ->set('p.isHomepage', ':false')
             ->setParameter('false', false)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * Atomically increment view count for a page.
+     * Uses SQL UPDATE to prevent race conditions under high concurrency.
+     *
+     * @param int $pageId The page ID
+     *
+     * @return int Number of affected rows (should be 1)
+     */
+    public function incrementViewCount(int $pageId): int
+    {
+        return (int) $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.viewCount', 'p.viewCount + 1')
+            ->where('p.id = :id')
+            ->setParameter('id', $pageId)
             ->getQuery()
             ->execute();
     }

@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Repository\PageRepository;
 use App\Repository\SettingsRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,7 +21,6 @@ class CmsController extends AbstractController
     public function __construct(
         private readonly PageRepository $pageRepository,
         private readonly SettingsRepository $settingsRepository,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -45,9 +43,8 @@ class CmsController extends AbstractController
             throw $this->createNotFoundException('No homepage found. Please create a page and mark it as homepage.');
         }
 
-        // Increment view count
-        $page->incrementViewCount();
-        $this->entityManager->flush();
+        // Increment view count atomically (prevents race conditions)
+        $this->pageRepository->incrementViewCount($page->getId());
 
         $settings = $this->settingsRepository->getOrCreate();
 
@@ -74,9 +71,8 @@ class CmsController extends AbstractController
             throw $this->createNotFoundException(sprintf('Page with slug "%s" not found or not published.', $slug));
         }
 
-        // Increment view count
-        $page->incrementViewCount();
-        $this->entityManager->flush();
+        // Increment view count atomically (prevents race conditions)
+        $this->pageRepository->incrementViewCount($page->getId());
 
         $settings = $this->settingsRepository->getOrCreate();
 

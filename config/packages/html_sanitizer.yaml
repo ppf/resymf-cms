@@ -1,0 +1,31 @@
+framework:
+    html_sanitizer:
+        sanitizers:
+            # Default sanitizer for CMS content - allows safe HTML formatting
+            app.html_sanitizer:
+                # Allow common safe formatting elements
+                allow_safe_elements: true
+                # Block dangerous elements
+                block_elements:
+                    - 'script'
+                    - 'style'
+                    - 'iframe'
+                    - 'frame'
+                    - 'frameset'
+                    - 'object'
+                    - 'embed'
+                    - 'applet'
+                    - 'form'
+                    - 'input'
+                    - 'button'
+                    - 'select'
+                    - 'textarea'
+                    - 'base'
+                    - 'meta'
+                    - 'link'
+                # Drop dangerous attributes from all elements
+                drop_attributes:
+                    'on*': '*'  # All event handlers (onclick, onmouseover, etc.)
+                    'style': '*'  # Inline styles can be used for CSS injection
+                # Force HTTPS for links
+                force_https_urls: true

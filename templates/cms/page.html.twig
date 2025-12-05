@@ -81,9 +81,9 @@
                 </span>
             </div>
 
-            {# Page Content #}
+            {# Page Content - sanitized to prevent XSS attacks #}
             <div class="cms-page-body">
-                {{ page.content|raw }}
+                {{ page.content|sanitize_html }}
             </div>
 
             {# Categories #}

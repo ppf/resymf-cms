@@ -1,0 +1,25 @@
+framework:
+    rate_limiter:
+        # Login rate limiter - prevent brute force attacks
+        login:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 minute'
+
+        # API rate limiter - prevent API abuse
+        api:
+            policy: 'sliding_window'
+            limit: 60
+            interval: '1 minute'
+
+        # Password reset rate limiter - prevent enumeration
+        password_reset:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '1 hour'
+
+        # User creation rate limiter - prevent mass account creation
+        user_creation:
+            policy: 'fixed_window'
+            limit: 10
+            interval: '1 hour'

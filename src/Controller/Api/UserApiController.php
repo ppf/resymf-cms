@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Entity\Theme;
 use App\Entity\User;
+use App\Repository\ThemeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -19,6 +21,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class UserApiController extends AbstractController
 {
+    /**
+     * Allowed roles that can be assigned to users.
+     * Prevents privilege escalation attacks.
+     */
+    private const ALLOWED_ROLES = ['ROLE_USER', 'ROLE_ADMIN'];
+
+    /**
+     * Minimum password length for security.
+     */
+    private const MIN_PASSWORD_LENGTH = 8;
+
     #[Route('', name: 'api_users_index', methods: ['GET'])]
     public function index(Request $request, UserRepository $users): JsonResponse
     {
@@ -106,6 +119,7 @@ class UserApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserRepository $users,
+        ThemeRepository $themes,
         UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
@@ -125,16 +139,22 @@ class UserApiController extends AbstractController
         $user = new User();
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
-        $user->setRoles($data['roles'] ?? ['ROLE_USER']);
+
+        // Sanitize roles - only allow whitelisted roles (prevents privilege escalation)
+        $roles = $this->sanitizeRoles($data['roles'] ?? ['ROLE_USER']);
+        $user->setRoles($roles);
         $user->setIsActive($data['isActive'] ?? true);
 
         // Hash password
         $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
-        // Set theme if provided
+        // Set theme if provided - validate it exists first
         if (!empty($data['themeId'])) {
-            $theme = $em->getReference('App\Entity\Theme', $data['themeId']);
+            $theme = $themes->find($data['themeId']);
+            if ($theme === null) {
+                return $this->json(['errors' => ['themeId' => 'Theme not found']], 422);
+            }
             $user->setTheme($theme);
         }
 
@@ -157,6 +177,7 @@ class UserApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserRepository $users,
+        ThemeRepository $themes,
         UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
         $user = $users->find($id);
@@ -181,7 +202,10 @@ class UserApiController extends AbstractController
         // Update user
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
-        $user->setRoles($data['roles'] ?? ['ROLE_USER']);
+
+        // Sanitize roles - only allow whitelisted roles (prevents privilege escalation)
+        $roles = $this->sanitizeRoles($data['roles'] ?? ['ROLE_USER']);
+        $user->setRoles($roles);
         $user->setIsActive($data['isActive'] ?? true);
 
         // Update password if provided
@@ -190,10 +214,13 @@ class UserApiController extends AbstractController
             $user->setPassword($hashedPassword);
         }
 
-        // Update theme
+        // Update theme - validate it exists first
         if (isset($data['themeId'])) {
             if ($data['themeId']) {
-                $theme = $em->getReference('App\Entity\Theme', $data['themeId']);
+                $theme = $themes->find($data['themeId']);
+                if ($theme === null) {
+                    return $this->json(['errors' => ['themeId' => 'Theme not found']], 422);
+                }
                 $user->setTheme($theme);
             } else {
                 $user->setTheme(null);
@@ -359,23 +386,63 @@ class UserApiController extends AbstractController
             }
         }
 
-        // Validate password (if provided)
+        // Validate password (if provided) - stronger security policy
         if (!empty($data['password'])) {
-            if (strlen($data['password']) < 6) {
-                $errors['password'] = 'Password must be at least 6 characters';
+            $password = $data['password'];
+
+            if (strlen($password) < self::MIN_PASSWORD_LENGTH) {
+                $errors['password'] = sprintf('Password must be at least %d characters', self::MIN_PASSWORD_LENGTH);
+            } elseif (!preg_match('/[A-Z]/', $password)) {
+                $errors['password'] = 'Password must contain at least one uppercase letter';
+            } elseif (!preg_match('/[a-z]/', $password)) {
+                $errors['password'] = 'Password must contain at least one lowercase letter';
+            } elseif (!preg_match('/[0-9]/', $password)) {
+                $errors['password'] = 'Password must contain at least one number';
             }
 
             // Validate password confirmation
-            if (isset($data['passwordConfirm']) && $data['password'] !== $data['passwordConfirm']) {
+            if (isset($data['passwordConfirm']) && $password !== $data['passwordConfirm']) {
                 $errors['passwordConfirm'] = 'Password confirmation does not match';
             }
         }
 
         // Validate roles
-        if (isset($data['roles']) && !is_array($data['roles'])) {
-            $errors['roles'] = 'Roles must be an array';
+        if (isset($data['roles'])) {
+            if (!is_array($data['roles'])) {
+                $errors['roles'] = 'Roles must be an array';
+            } else {
+                // Check for invalid roles
+                $invalidRoles = array_diff($data['roles'], self::ALLOWED_ROLES);
+                if (!empty($invalidRoles)) {
+                    $errors['roles'] = sprintf(
+                        'Invalid roles: %s. Allowed: %s',
+                        implode(', ', $invalidRoles),
+                        implode(', ', self::ALLOWED_ROLES),
+                    );
+                }
+            }
         }
 
         return $errors;
+    }
+
+    /**
+     * Sanitize roles to only include allowed values.
+     * Prevents privilege escalation by filtering out unauthorized roles.
+     *
+     * @param array<string> $roles
+     *
+     * @return array<string>
+     */
+    private function sanitizeRoles(array $roles): array
+    {
+        $sanitized = array_intersect($roles, self::ALLOWED_ROLES);
+
+        // Ensure at least ROLE_USER
+        if (empty($sanitized)) {
+            return ['ROLE_USER'];
+        }
+
+        return array_values($sanitized);
     }
 }

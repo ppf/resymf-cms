@@ -27,6 +27,11 @@ security:
             provider: app_user_provider
             user_checker: App\Security\UserChecker
 
+            # Login throttling to prevent brute force attacks
+            login_throttling:
+                max_attempts: 5
+                interval: '1 minute'
+
             # Form login for admin panel
             form_login:
                 login_path: app_login

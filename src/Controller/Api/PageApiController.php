@@ -62,9 +62,14 @@ class PageApiController extends AbstractController
                 ->setParameter('categoryId', $categoryId);
         }
 
-        // Count total
+        // Count total efficiently using COUNT query instead of fetching all results
         $countQb = clone $qb;
-        $total = count($countQb->getQuery()->getResult());
+        $total = (int) $countQb
+            ->select('COUNT(DISTINCT p.id)')
+            ->resetDQLPart('groupBy')
+            ->resetDQLPart('orderBy')
+            ->getQuery()
+            ->getSingleScalarResult();
 
         // Paginate
         $results = $qb

@@ -268,21 +268,36 @@ class FileUploadService
             throw new FileException(sprintf('File size (%s) exceeds maximum allowed size (%s)', $this->formatBytes($file->getSize()), $this->formatBytes(self::MAX_FILE_SIZE)));
         }
 
-        // Check MIME type
-        $mimeType = $file->getMimeType();
+        // Additional security check: ensure file is actually uploaded
+        if (!$file->isValid()) {
+            throw new FileException('Invalid file upload');
+        }
+
+        // Get allowed MIME types
         $allowedTypes = array_merge(
             self::ALLOWED_IMAGE_TYPES,
             self::ALLOWED_DOCUMENT_TYPES,
             self::ALLOWED_ARCHIVE_TYPES,
         );
 
-        if ($mimeType === null || !in_array($mimeType, $allowedTypes, true)) {
-            throw new FileException(sprintf('File type "%s" is not allowed. Allowed types: %s', $mimeType ?? 'unknown', implode(', ', $allowedTypes)));
+        // Check client-reported MIME type
+        $clientMimeType = $file->getMimeType();
+        if ($clientMimeType === null || !in_array($clientMimeType, $allowedTypes, true)) {
+            throw new FileException(sprintf('File type "%s" is not allowed. Allowed types: %s', $clientMimeType ?? 'unknown', implode(', ', $allowedTypes)));
         }
 
-        // Additional security check: ensure file is actually uploaded
-        if (!$file->isValid()) {
-            throw new FileException('Invalid file upload');
+        // SECURITY: Verify actual file content matches claimed MIME type
+        // This prevents MIME type spoofing attacks
+        $actualMimeType = $this->detectActualMimeType($file->getPathname());
+        if ($actualMimeType !== null && !in_array($actualMimeType, $allowedTypes, true)) {
+            throw new FileException(sprintf('File content does not match allowed types. Detected: %s', $actualMimeType));
+        }
+
+        // Additional check for image files - verify they're actually valid images
+        if (in_array($clientMimeType, self::ALLOWED_IMAGE_TYPES, true)) {
+            if (!$this->isValidImageFile($file->getPathname())) {
+                throw new FileException('File is not a valid image');
+            }
         }
     }
 
@@ -311,6 +326,59 @@ class FileUploadService
         }
 
         return $safeFilename . '.' . $extension;
+    }
+
+
+    /**
+     * Detect actual MIME type by reading file content.
+     * Uses finfo to analyze file magic bytes.
+     *
+     * @param string $filePath Path to the file
+     *
+     * @return string|null The detected MIME type, or null on failure
+     */
+    private function detectActualMimeType(string $filePath): ?string
+    {
+        if (!file_exists($filePath) || !is_readable($filePath)) {
+            return null;
+        }
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($filePath);
+
+        return $mimeType !== false ? $mimeType : null;
+    }
+
+    /**
+     * Verify that a file is actually a valid image.
+     * Prevents malicious files disguised as images.
+     *
+     * @param string $filePath Path to the file
+     *
+     * @return bool True if the file is a valid image
+     */
+    private function isValidImageFile(string $filePath): bool
+    {
+        if (!file_exists($filePath) || !is_readable($filePath)) {
+            return false;
+        }
+
+        // getimagesize returns false for non-image files
+        $imageInfo = @getimagesize($filePath);
+
+        if ($imageInfo === false) {
+            return false;
+        }
+
+        // Verify the image type is one we accept
+        $validImageTypes = [
+            IMAGETYPE_JPEG,
+            IMAGETYPE_PNG,
+            IMAGETYPE_GIF,
+            IMAGETYPE_WEBP,
+        ];
+
+        return in_array($imageInfo[2], $validImageTypes, true);
     }
 
     /**
