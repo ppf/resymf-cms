@@ -33,12 +33,6 @@ class EntityVoter extends Voter
             'delete' => ['ROLE_ADMIN'],
             'create' => ['ROLE_USER'],
         ],
-        'App\Entity\Theme' => [
-            'view' => ['ROLE_USER'],
-            'edit' => ['ROLE_ADMIN'],
-            'delete' => ['ROLE_ADMIN'],
-            'create' => ['ROLE_ADMIN'],
-        ],
         'App\Entity\Settings' => [
             'view' => ['ROLE_ADMIN'],
             'edit' => ['ROLE_ADMIN'],

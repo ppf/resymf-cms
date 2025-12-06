@@ -52,9 +52,9 @@ class PageVoter extends Voter
 
         // User must be logged in for admin actions
         if (!$user instanceof UserInterface) {
-            // Public can view published pages
+            // Public can view visible pages (respects scheduled publishing)
             if ($attribute === self::VIEW && $subject instanceof Page) {
-                return $subject->getIsPublished();
+                return $subject->isVisible();
             }
 
             return false;
@@ -91,8 +91,8 @@ class PageVoter extends Voter
             }
         }
 
-        // Everyone can view published pages
-        return $page->getIsPublished();
+        // Everyone can view visible pages (respects scheduled publishing)
+        return $page->isVisible();
     }
 
     private function canEdit(UserInterface $user, ?Page $page): bool

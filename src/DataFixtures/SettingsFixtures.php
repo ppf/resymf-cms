@@ -21,35 +21,11 @@ class SettingsFixtures extends Fixture
         // Create default site settings
         $settings = new Settings();
         $settings->setSiteName('ReSymf CMS');
-        $settings->setSiteTagline('A Modern Symfony Content Management System');
+        $settings->setAdminPanelTitle('ReSymf CMS Admin');
         $settings->setSeoDescription('ReSymf CMS is a powerful and flexible content management system built with Symfony 7, featuring modern architecture, robust security, and an intuitive admin interface.');
         $settings->setSeoKeywords('symfony, cms, content management, php, symfony 7, resymf');
-        $settings->setAdminEmail('admin@resymf.local');
-
-        // Analytics - disabled by default
-        $settings->setGoogleAnalyticsId(null);
-        $settings->setGoogleTagManagerKey(null);
-
-        // Maintenance mode - disabled by default
-        $settings->setMaintenanceMode(false);
-        $settings->setMaintenanceMessage('We are currently performing scheduled maintenance. Please check back soon.');
-
-        // Locale and timezone
         $settings->setDefaultLocale('en');
-        $settings->setTimezone('UTC');
-
-        // Pagination
-        $settings->setItemsPerPage(10);
-
-        // User registration settings
-        $settings->setRegistrationEnabled(true);
-        $settings->setEmailVerificationRequired(false);
-
-        // Social media links - set to null by default
-        $settings->setFacebookUrl(null);
-        $settings->setTwitterUrl(null);
-        $settings->setLinkedinUrl(null);
-        $settings->setGithubUrl('https://github.com/resymf/resymf-cms');
+        $settings->setHeadlessMode(false);
 
         $manager->persist($settings);
         $manager->flush();
@@ -57,12 +33,9 @@ class SettingsFixtures extends Fixture
         // Output confirmation (visible when running fixtures)
         echo "✅ Created site settings:\n";
         echo "   - Site Name: {$settings->getSiteName()}\n";
-        echo "   - Tagline: {$settings->getSiteTagline()}\n";
+        echo "   - Admin Panel Title: {$settings->getAdminPanelTitle()}\n";
         echo "   - Default Locale: {$settings->getDefaultLocale()}\n";
-        echo "   - Timezone: {$settings->getTimezone()}\n";
-        echo "   - Items Per Page: {$settings->getItemsPerPage()}\n";
-        echo '   - Registration Enabled: ' . ($settings->isRegistrationEnabled() ? 'Yes' : 'No') . "\n";
-        echo '   - Maintenance Mode: ' . ($settings->isMaintenanceMode() ? 'Yes' : 'No') . "\n";
-        echo "\n💡 Customize these settings via the admin panel or config files.\n";
+        echo '   - Headless Mode: ' . ($settings->isHeadlessMode() ? 'Yes' : 'No') . "\n";
+        echo "\n💡 Customize these settings via the admin panel.\n";
     }
 }

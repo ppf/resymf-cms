@@ -44,7 +44,6 @@ class PageApiController extends AbstractController
             ->leftJoin('p.categories', 'c')
             ->leftJoin('p.author', 'a')
             ->addSelect('c', 'a')
-            ->groupBy('p.id')
             ->orderBy('p.' . $sort, $order);
 
         if ('' !== $search) {
@@ -63,7 +62,6 @@ class PageApiController extends AbstractController
         $countQb = clone $qb;
         $total = (int) $countQb
             ->select('COUNT(DISTINCT p.id)')
-            ->resetDQLPart('groupBy')
             ->resetDQLPart('orderBy')
             ->getQuery()
             ->getSingleScalarResult();

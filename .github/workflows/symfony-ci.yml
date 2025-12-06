@@ -124,8 +124,14 @@ jobs:
 
       - name: Create .env.test.local file
         run: |
-          echo "DATABASE_URL='mysql://root:root@127.0.0.1:3306/resymf_test?serverVersion=${{ env.MYSQL_VERSION }}&charset=utf8mb4'" > .env.test.local
-          echo "MAILER_DSN=null://null" >> .env.test.local
+          cat > .env.test.local <<EOF
+          DB_HOST=127.0.0.1
+          DB_USER=root
+          DB_PASS=root
+          DB_NAME=resymf_test
+          DB_VERSION=${{ env.MYSQL_VERSION }}
+          MAILER_DSN=null://null
+          EOF
 
       - name: Wait for MySQL to be ready
         run: |
@@ -245,7 +251,13 @@ jobs:
 
       - name: Create .env.test.local file
         run: |
-          echo "DATABASE_URL='mysql://root:root@127.0.0.1:3306/resymf_test?serverVersion=${{ env.MYSQL_VERSION }}&charset=utf8mb4'" > .env.test.local
+          cat > .env.test.local <<EOF
+          DB_HOST=127.0.0.1
+          DB_USER=root
+          DB_PASS=root
+          DB_NAME=resymf_test
+          DB_VERSION=${{ env.MYSQL_VERSION }}
+          EOF
 
       - name: Wait for MySQL
         run: |

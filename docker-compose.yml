@@ -13,15 +13,14 @@ services:
       - .:/app # Mount the application directory
       # Use a named volume for the vendor directory to persist dependencies
       - vendor:/app/vendor
+    env_file: .env
     environment:
-      # Symfony environment variables
-      APP_ENV: dev
-      APP_DEBUG: 1
-      APP_SECRET: 'dev-only-change-me' # Replace for any non-local use
-      # Database connection
-      DATABASE_URL: "mysql://resymf:password@db:3306/resymf_cms?serverVersion=8.0&charset=utf8mb4"
-      # Mailer DSN (using a local catcher like MailHog)
-      MAILER_DSN: "smtp://mailhog:1025"
+      # Docker-specific overrides only
+      APP_SECRET: "dev-only-change-me"
+      DB_HOST: db
+      DB_USER: resymf
+      DB_PASS: password
+      MAILER_DSN: "smtp://mailpit:1025"
     depends_on:
       - frontend-build
       - db
@@ -42,26 +41,26 @@ services:
       - resymf_network
 
   db:
-    image: mysql:8.0
+    image: mariadb:11
     container_name: resymf_db
     ports:
-      - "33066:3306" # Map host port 33066 to container port 3306 to avoid conflicts
+      - "33066:3306"
     environment:
-      MYSQL_DATABASE: resymf_cms
-      MYSQL_USER: resymf
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: resymf_cms
+      MARIADB_USER: resymf
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: root_password
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - resymf_network
 
-  mailhog:
-    image: mailhog/mailhog
-    container_name: resymf_mailhog
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: resymf_mailpit
     ports:
-      - "1030:1025" # SMTP port (shifted to avoid host conflicts)
-      - "8030:8025" # Web UI port (shifted to avoid host conflicts)
+      - "1030:1025"  # SMTP
+      - "8030:8025"  # Web UI
     networks:
       - resymf_network
 

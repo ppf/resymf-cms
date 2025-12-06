@@ -26,7 +26,6 @@ export default defineConfig({
         'category-form-app': './assets/vue/category-form-app.js',
         'user-form-app': './assets/vue/user-form-app.js',
         'page-form-app': './assets/vue/page-form-app.js',
-        'theme-grid-app': './assets/vue/theme-grid-app.js',
         'page-grid-app': './assets/vue/page-grid-app.js',
       },
     },

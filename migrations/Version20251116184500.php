@@ -21,9 +21,11 @@ final class Version20251116184500 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $platform = $this->connection->getDatabasePlatform();
         $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MySQLPlatform,
-            'Migration can only be executed safely on \'mysql\'.'
+            !$platform instanceof \Doctrine\DBAL\Platforms\MySQLPlatform
+            && !$platform instanceof \Doctrine\DBAL\Platforms\MariaDBPlatform,
+            'Migration can only be executed safely on MySQL or MariaDB.'
         );
 
         $this->addSql('CREATE TABLE resymf_password_reset_requests (

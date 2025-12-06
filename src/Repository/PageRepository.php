@@ -39,6 +39,21 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
+     * Add visibility conditions for published pages.
+     * Checks both isPublished flag and publishedAt date for scheduled publishing.
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param string $alias Entity alias in the query
+     */
+    private function addVisibilityConditions($qb, string $alias = 'p'): void
+    {
+        $qb->andWhere("$alias.isPublished = :published")
+           ->andWhere("($alias.publishedAt IS NULL OR $alias.publishedAt <= :now)")
+           ->setParameter('published', true)
+           ->setParameter('now', new \DateTimeImmutable());
+    }
+
+    /**
      * Find page by slug.
      */
     public function findBySlug(string $slug): ?Page
@@ -52,52 +67,56 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Find published page by slug (public access).
+     * Respects scheduled publishing via publishedAt date.
      */
     public function findPublishedBySlug(string $slug): ?Page
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.slug = :slug')
-            ->andWhere('p.isPublished = :published')
-            ->setParameter('slug', $slug)
-            ->setParameter('published', true)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setParameter('slug', $slug);
+
+        $this->addVisibilityConditions($qb);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
      * Find all published pages.
+     * Respects scheduled publishing via publishedAt date.
      *
      * @return Page[]
      */
     public function findPublished(): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.isPublished = :published')
-            ->setParameter('published', true)
+        $qb = $this->createQueryBuilder('p')
             ->orderBy('p.displayOrder', 'ASC')
-            ->addOrderBy('p.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->addOrderBy('p.createdAt', 'DESC');
+
+        $this->addVisibilityConditions($qb);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
      * Find homepage page.
+     * Respects scheduled publishing via publishedAt date.
      */
     public function findHomepage(): ?Page
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.isHomepage = :homepage')
-            ->andWhere('p.isPublished = :published')
             ->setParameter('homepage', true)
-            ->setParameter('published', true)
             ->orderBy('p.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setMaxResults(1);
+
+        $this->addVisibilityConditions($qb);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
      * Find pages by category.
+     * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *
      * @return Page[]
      */
@@ -109,8 +128,7 @@ class PageRepository extends ServiceEntityRepository
             ->setParameter('categoryId', $category->getId());
 
         if ($publishedOnly) {
-            $qb->andWhere('p.isPublished = :published')
-                ->setParameter('published', true);
+            $this->addVisibilityConditions($qb);
         }
 
         return $qb->orderBy('p.displayOrder', 'ASC')
@@ -136,6 +154,7 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Find recent pages.
+     * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *
      * @return Page[]
      */
@@ -144,8 +163,7 @@ class PageRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p');
 
         if ($publishedOnly) {
-            $qb->andWhere('p.isPublished = :published')
-                ->setParameter('published', true);
+            $this->addVisibilityConditions($qb);
         }
 
         return $qb->orderBy('p.createdAt', 'DESC')
@@ -156,6 +174,7 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Find popular pages by view count.
+     * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *
      * @return Page[]
      */
@@ -164,8 +183,7 @@ class PageRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p');
 
         if ($publishedOnly) {
-            $qb->andWhere('p.isPublished = :published')
-                ->setParameter('published', true);
+            $this->addVisibilityConditions($qb);
         }
 
         return $qb->orderBy('p.viewCount', 'DESC')
@@ -177,6 +195,7 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Search pages by title or content.
+     * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *
      * @return Page[]
      */
@@ -187,8 +206,7 @@ class PageRepository extends ServiceEntityRepository
             ->setParameter('query', '%' . $query . '%');
 
         if ($publishedOnly) {
-            $qb->andWhere('p.isPublished = :published')
-                ->setParameter('published', true);
+            $this->addVisibilityConditions($qb);
         }
 
         return $qb->orderBy('p.createdAt', 'DESC')
@@ -209,20 +227,22 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Count published pages.
+     * Respects scheduled publishing via publishedAt date.
      */
     public function countPublished(): int
     {
-        return (int) $this->createQueryBuilder('p')
-            ->select('COUNT(p.id)')
-            ->andWhere('p.isPublished = :published')
-            ->setParameter('published', true)
-            ->getQuery()
-            ->getSingleScalarResult();
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)');
+
+        $this->addVisibilityConditions($qb);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
      * Find pages with pagination.
      * Includes eager loading for author and categories to prevent N+1 queries.
+     * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *
      * @return Page[]
      */
@@ -234,8 +254,7 @@ class PageRepository extends ServiceEntityRepository
             ->addSelect('a', 'c');
 
         if ($publishedOnly) {
-            $qb->andWhere('p.isPublished = :published')
-                ->setParameter('published', true);
+            $this->addVisibilityConditions($qb);
         }
 
         return $qb->orderBy('p.displayOrder', 'ASC')
@@ -248,6 +267,7 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Find pages ordered by display order.
+     * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *
      * @return Page[]
      */
@@ -256,8 +276,7 @@ class PageRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p');
 
         if ($publishedOnly) {
-            $qb->andWhere('p.isPublished = :published')
-                ->setParameter('published', true);
+            $this->addVisibilityConditions($qb);
         }
 
         return $qb->orderBy('p.displayOrder', 'ASC')
@@ -281,17 +300,18 @@ class PageRepository extends ServiceEntityRepository
 
     /**
      * Find first published page (for fallback homepage).
+     * Respects scheduled publishing via publishedAt date.
      */
     public function findFirstPublished(): ?Page
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.isPublished = :published')
-            ->setParameter('published', true)
+        $qb = $this->createQueryBuilder('p')
             ->orderBy('p.displayOrder', 'ASC')
             ->addOrderBy('p.createdAt', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setMaxResults(1);
+
+        $this->addVisibilityConditions($qb);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**

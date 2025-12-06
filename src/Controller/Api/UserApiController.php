@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Entity\Theme;
 use App\Entity\User;
-use App\Repository\ThemeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -105,7 +103,6 @@ class UserApiController extends AbstractController
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
             'isActive' => $user->getIsActive(),
-            'themeId' => $user->getTheme()?->getId(),
             'createdAt' => $user->getCreatedAt()->format('c'),
             'updatedAt' => $user->getUpdatedAt()?->format('c'),
         ]);
@@ -119,7 +116,6 @@ class UserApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserRepository $users,
-        ThemeRepository $themes,
         UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
@@ -149,15 +145,6 @@ class UserApiController extends AbstractController
         $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
-        // Set theme if provided - validate it exists first
-        if (!empty($data['themeId'])) {
-            $theme = $themes->find($data['themeId']);
-            if ($theme === null) {
-                return $this->json(['errors' => ['themeId' => 'Theme not found']], 422);
-            }
-            $user->setTheme($theme);
-        }
-
         $em->persist($user);
         $em->flush();
 
@@ -177,7 +164,6 @@ class UserApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserRepository $users,
-        ThemeRepository $themes,
         UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
         $user = $users->find($id);
@@ -212,19 +198,6 @@ class UserApiController extends AbstractController
         if (!empty($data['password'])) {
             $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
             $user->setPassword($hashedPassword);
-        }
-
-        // Update theme - validate it exists first
-        if (isset($data['themeId'])) {
-            if ($data['themeId']) {
-                $theme = $themes->find($data['themeId']);
-                if ($theme === null) {
-                    return $this->json(['errors' => ['themeId' => 'Theme not found']], 422);
-                }
-                $user->setTheme($theme);
-            } else {
-                $user->setTheme(null);
-            }
         }
 
         $em->flush();

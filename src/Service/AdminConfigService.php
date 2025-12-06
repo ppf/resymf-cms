@@ -42,19 +42,6 @@ class AdminConfigService
                 ],
             ],
         ],
-        'appearance' => [
-            'label' => 'Appearance',
-            'icon' => 'bi-palette',
-            'items' => [
-                'theme' => [
-                    'label' => 'Themes',
-                    'icon' => 'bi-brush',
-                    'entity' => 'App\Entity\Theme',
-                    'route' => 'admin_theme',
-                    'roles' => ['ROLE_ADMIN'],
-                ],
-            ],
-        ],
         'users' => [
             'label' => 'Users & Security',
             'icon' => 'bi-people',

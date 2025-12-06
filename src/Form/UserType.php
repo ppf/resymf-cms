@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Theme;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -67,17 +65,6 @@ class UserType extends AbstractType
                     'class' => 'form-check-input',
                 ],
                 'help' => 'Whether this user account is active',
-            ])
-            ->add('theme', EntityType::class, [
-                'label' => 'Theme',
-                'class' => Theme::class,
-                'choice_label' => 'name',
-                'required' => false,
-                'placeholder' => 'Use default theme',
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'help' => 'Custom theme for this user (optional)',
             ]);
 
         // Only add password field for new users or when explicitly requested

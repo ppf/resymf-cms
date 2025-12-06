@@ -8,7 +8,6 @@ export function useUserForm(apiBaseUrl) {
     passwordConfirm: '',
     roles: ['ROLE_USER'],
     isActive: true,
-    themeId: null,
   });
 
   const errors = reactive({});
@@ -29,7 +28,6 @@ export function useUserForm(apiBaseUrl) {
       form.email = data.email || '';
       form.roles = data.roles || ['ROLE_USER'];
       form.isActive = data.isActive ?? true;
-      form.themeId = data.themeId || null;
       // Password fields remain empty for security
 
       return { success: true };
@@ -54,7 +52,6 @@ export function useUserForm(apiBaseUrl) {
           passwordConfirm: form.passwordConfirm,
           roles: form.roles,
           isActive: form.isActive,
-          themeId: form.themeId,
         }),
       });
 
@@ -86,7 +83,6 @@ export function useUserForm(apiBaseUrl) {
         email: form.email,
         roles: form.roles,
         isActive: form.isActive,
-        themeId: form.themeId,
       };
 
       // Only include password if it's being changed
@@ -204,7 +200,6 @@ export function useUserForm(apiBaseUrl) {
     form.passwordConfirm = '';
     form.roles = ['ROLE_USER'];
     form.isActive = true;
-    form.themeId = null;
     clearErrors();
   };
 

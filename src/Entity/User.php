@@ -90,13 +90,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $plainPassword = null;
 
     /**
-     * Theme relationship (optional - for UI customization).
-     */
-    #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(name: 'theme_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
-    private ?Theme $theme = null;
-
-    /**
      * Pages authored by this user
      * Lazy loaded - not fetched unless explicitly needed.
      */
@@ -299,18 +292,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    public function getTheme(): ?Theme
-    {
-        return $this->theme;
-    }
-
-    public function setTheme(?Theme $theme): static
-    {
-        $this->theme = $theme;
-
-        return $this;
     }
 
     /**

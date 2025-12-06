@@ -181,28 +181,6 @@
         </div>
       </div>
 
-      <!-- Theme Selection -->
-      <div v-if="themes.length > 0" class="mb-3">
-        <label for="user-theme" class="form-label">Theme (Optional)</label>
-        <select
-          id="user-theme"
-          v-model="form.themeId"
-          class="form-select"
-        >
-          <option :value="null">Use default theme</option>
-          <option
-            v-for="theme in themes"
-            :key="theme.id"
-            :value="theme.id"
-          >
-            {{ theme.name }}
-          </option>
-        </select>
-        <small class="form-text text-muted">
-          Custom theme for this user (optional)
-        </small>
-      </div>
-
       <!-- Active Toggle -->
       <div class="mb-4">
         <div class="form-check form-switch">
@@ -290,10 +268,6 @@ const props = defineProps({
     type: String,
     default: '/admin/users',
   },
-  themesData: {
-    type: String,
-    default: '[]',
-  },
 });
 
 const {
@@ -318,15 +292,6 @@ const validatingEmail = ref(false);
 const showPassword = ref(false);
 const toast = ref({ show: false, message: '', type: 'success' });
 const originalData = ref(null);
-const themes = ref([]);
-
-// Parse themes data
-try {
-  themes.value = JSON.parse(props.themesData);
-} catch (e) {
-  console.error('Failed to parse themes data:', e);
-  themes.value = [];
-}
 
 const hasChanges = computed(() => {
   if (!originalData.value) return false;
@@ -335,7 +300,6 @@ const hasChanges = computed(() => {
     form.email !== originalData.value.email ||
     JSON.stringify(form.roles) !== JSON.stringify(originalData.value.roles) ||
     form.isActive !== originalData.value.isActive ||
-    form.themeId !== originalData.value.themeId ||
     form.password !== ''
   );
 });
@@ -523,7 +487,6 @@ onMounted(async () => {
         email: form.email,
         roles: [...form.roles],
         isActive: form.isActive,
-        themeId: form.themeId,
       };
 
       // Validate username and email to show they're available

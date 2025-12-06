@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Repository\ThemeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,17 +40,9 @@ class UserController extends AbstractController
      * Create a new user.
      */
     #[Route('/new', name: 'admin_user_new', methods: ['GET'])]
-    public function new(ThemeRepository $themes): Response
+    public function new(): Response
     {
-        // Get all themes for the form dropdown
-        $themesData = array_map(fn ($theme) => [
-            'id' => $theme->getId(),
-            'name' => $theme->getName(),
-        ], $themes->findAll());
-
-        return $this->render('admin/user/new.html.twig', [
-            'themesData' => json_encode($themesData),
-        ]);
+        return $this->render('admin/user/new.html.twig');
     }
 
     /**
@@ -69,17 +60,10 @@ class UserController extends AbstractController
      * Edit existing user.
      */
     #[Route('/{id}/edit', name: 'admin_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function edit(User $user, ThemeRepository $themes): Response
+    public function edit(User $user): Response
     {
-        // Get all themes for the form dropdown
-        $themesData = array_map(fn ($theme) => [
-            'id' => $theme->getId(),
-            'name' => $theme->getName(),
-        ], $themes->findAll());
-
         return $this->render('admin/user/edit.html.twig', [
             'user' => $user,
-            'themesData' => json_encode($themesData),
         ]);
     }
 
