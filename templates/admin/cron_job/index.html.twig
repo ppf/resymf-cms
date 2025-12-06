@@ -1,0 +1,21 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}Cron Jobs{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between mb-4">
+    <h1>Cron Jobs</h1>
+    <a href="{{ path('admin_cron_job_new') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Create New
+    </a>
+</div>
+
+<div 
+    data-vue-island="cron-job-grid"
+    data-api-url="{{ path('api_cron_jobs_list') }}"
+    data-csrf-token="{{ csrf_token('cron_job_api') }}"
+></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ vite_entry_script_tags('cron-job-grid-app') }}
+{% endblock %}

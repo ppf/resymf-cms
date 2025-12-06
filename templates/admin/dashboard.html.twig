@@ -85,7 +85,8 @@
     </div>
 </div>
 
-{# System Information Card #}
+{% if app.environment == 'dev' %}
+{# System Information Card - Only visible in dev environment #}
 <div class="card">
     <div class="card-header">
         <h3>System Information</h3>
@@ -123,6 +124,7 @@
         </table>
     </div>
 </div>
+{% endif %}
 
 {# Migration Status (Optional - can be removed after migration complete) #}
 <div class="alert alert-info">

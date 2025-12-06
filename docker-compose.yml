@@ -74,6 +74,27 @@ services:
     networks:
       - resymf_network
 
+  scheduler:
+    build:
+      context: .
+      target: app_dev
+    container_name: resymf_scheduler
+    command: php bin/console messenger:consume scheduler_cron --time-limit=60 -vv
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - vendor:/app/vendor
+    env_file: .env
+    environment:
+      DB_HOST: db
+      DB_USER: resymf
+      DB_PASS: password
+    depends_on:
+      - db
+      - php
+    networks:
+      - resymf_network
+
 volumes:
   db_data:
   vendor:

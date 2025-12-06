@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sign in · ReSymf CMS{% endblock %}
+{% block title %}Sign in · {{ site_settings.siteName }}{% endblock %}
 
 {% block body %}
 <section class="auth-hero">
@@ -77,7 +77,7 @@
         </form>
 
         <p class="auth-footnote text-center mt-4 mb-0">
-            &copy; {{ 'now'|date('Y') }} ReSymf CMS · Crafted with Symfony 7
+            &copy; {{ 'now'|date('Y') }} {{ site_settings.siteName }} · Crafted with Symfony 7
         </p>
     </div>
 </section>

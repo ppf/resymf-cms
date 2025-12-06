@@ -416,7 +416,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         enabled?: bool, // Default: true
  *     },
  *     lock?: bool|string|array{ // Lock configuration
- *         enabled?: bool, // Default: false
+ *         enabled?: bool, // Default: true
  *         resources?: array<string, string|list<scalar|null>>,
  *     },
  *     semaphore?: bool|string|array{ // Semaphore configuration
@@ -466,7 +466,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         }>,
  *     },
  *     scheduler?: bool|array{ // Scheduler configuration
- *         enabled?: bool, // Default: false
+ *         enabled?: bool, // Default: true
  *     },
  *     disallow_search_engine_index?: bool, // Enabled by default when debug is enabled. // Default: true
  *     http_client?: bool|array{ // HTTP Client configuration

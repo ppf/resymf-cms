@@ -27,6 +27,7 @@ export default defineConfig({
         'user-form-app': './assets/vue/user-form-app.js',
         'page-form-app': './assets/vue/page-form-app.js',
         'page-grid-app': './assets/vue/page-grid-app.js',
+        'cron-job-grid-app': './assets/vue/cron-job-grid-app.js',
       },
     },
   },

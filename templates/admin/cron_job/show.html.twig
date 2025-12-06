@@ -1,0 +1,111 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Cron Job: {{ cronJob.name }}{% endblock %}
+
+{% block body %}
+<div class="dashboard-welcome mb-4">
+    <h1>{{ cronJob.name }}</h1>
+    <p class="subtitle">{{ cronJob.description|default('No description') }}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Job Configuration</h5>
+                <span class="badge bg-{{ cronJob.isActive ? 'success' : 'secondary' }}">
+                    {{ cronJob.isActive ? 'Active' : 'Inactive' }}
+                </span>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th style="width: 150px">Command</th>
+                        <td><code>{{ cronJob.command }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>Schedule</th>
+                        <td><code>{{ cronJob.cronExpression }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>Created</th>
+                        <td>{{ cronJob.createdAt|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                    {% if cronJob.updatedAt %}
+                    <tr>
+                        <th>Updated</th>
+                        <td>{{ cronJob.updatedAt|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+
+        {% if cronJob.lastOutput %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Last Output</h5>
+            </div>
+            <div class="card-body">
+                <pre class="bg-dark text-light p-3 rounded" style="max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;">{{ cronJob.lastOutput }}</pre>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Last Execution</h5>
+            </div>
+            <div class="card-body">
+                {% if cronJob.lastRunAt %}
+                    <p class="mb-2">
+                        <strong>Time:</strong><br>
+                        {{ cronJob.lastRunAt|date('Y-m-d H:i:s') }}
+                    </p>
+                    <p class="mb-0">
+                        <strong>Status:</strong><br>
+                        <span class="badge bg-{{
+                            cronJob.lastStatus == 'success' ? 'success' :
+                            (cronJob.lastStatus == 'running' ? 'warning' :
+                            (cronJob.lastStatus == 'locked' ? 'info' : 'danger'))
+                        }} fs-6">
+                            {{ cronJob.lastStatus|upper }}
+                        </span>
+                    </p>
+                {% else %}
+                    <p class="text-muted mb-0">Never executed</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Actions</h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+                <form action="{{ path('admin_cron_job_run', {id: cronJob.id}) }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('run' ~ cronJob.id) }}">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-play-fill"></i> Run Now
+                    </button>
+                </form>
+                <a href="{{ path('admin_cron_job_edit', {id: cronJob.id}) }}" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <form action="{{ path('admin_cron_job_toggle_active', {id: cronJob.id}) }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ cronJob.id) }}">
+                    <button type="submit" class="btn btn-{{ cronJob.isActive ? 'secondary' : 'primary' }} w-100">
+                        <i class="bi bi-{{ cronJob.isActive ? 'pause' : 'play' }}"></i>
+                        {{ cronJob.isActive ? 'Deactivate' : 'Activate' }}
+                    </button>
+                </form>
+                <a href="{{ path('admin_cron_job_index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
