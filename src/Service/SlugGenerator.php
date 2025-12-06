@@ -16,13 +16,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
  */
 class SlugGenerator
 {
-    /**
-     * PHP 8.5: Using final constructor property promotion to prevent
-     * property overrides in subclasses, ensuring immutability.
-     */
     public function __construct(
-        private final readonly SluggerInterface $slugger,
-        private final readonly EntityManagerInterface $entityManager,
+        private readonly SluggerInterface $slugger,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -44,11 +40,7 @@ class SlugGenerator
         string $slugField = 'slug',
         int $maxLength = 255,
     ): string {
-        // Generate base slug using PHP 8.5 pipe operator for cleaner transformation chain
-        $baseSlug = $text
-            |> $this->slugger->slug($$)
-            |> $$->lower()
-            |> $$->toString();
+        $baseSlug = $this->slugger->slug($text)->lower()->toString();
 
         // Truncate if needed (leave room for suffix)
         if (strlen($baseSlug) > $maxLength - 10) {
@@ -91,11 +83,7 @@ class SlugGenerator
      */
     public function slugify(string $text, int $maxLength = 255): string
     {
-        // PHP 8.5: Pipe operator for cleaner transformation pipeline
-        $slug = $text
-            |> $this->slugger->slug($$)
-            |> $$->lower()
-            |> $$->toString();
+        $slug = $this->slugger->slug($text)->lower()->toString();
 
         return strlen($slug) > $maxLength
             ? substr($slug, 0, $maxLength)
@@ -128,11 +116,10 @@ class SlugGenerator
      */
     public function generateFromParts(array $parts, string $separator = '-'): string
     {
-        // PHP 8.5: Pipe operator for cleaner array transformation pipeline
-        return $parts
-            |> array_filter($$, fn ($part) => !empty($part))
-            |> implode(' ' . $separator . ' ', $$)
-            |> $this->slugify($$);
+        $filtered = array_filter($parts, fn ($part) => !empty($part));
+        $combined = implode(' ' . $separator . ' ', $filtered);
+
+        return $this->slugify($combined);
     }
 
     /**

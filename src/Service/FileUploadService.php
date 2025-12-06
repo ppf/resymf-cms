@@ -48,14 +48,10 @@ class FileUploadService
     // Maximum file size (in bytes) - 10MB default
     private const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-    /**
-     * PHP 8.5: Using final constructor property promotion to prevent
-     * property overrides in subclasses, ensuring immutability.
-     */
     public function __construct(
-        private final readonly FilesystemOperator $uploadsStorage,
-        private final readonly FilesystemOperator $documentsStorage,
-        private final readonly SluggerInterface $slugger,
+        private readonly FilesystemOperator $uploadsStorage,
+        private readonly FilesystemOperator $documentsStorage,
+        private readonly SluggerInterface $slugger,
     ) {
     }
 
@@ -224,10 +220,11 @@ class FileUploadService
      */
     public function getAllowedMimeTypes(): array
     {
-        // PHP 8.5: Pipe operator for cleaner array merging pipeline
-        return self::ALLOWED_IMAGE_TYPES
-            |> array_merge($$, self::ALLOWED_DOCUMENT_TYPES)
-            |> array_merge($$, self::ALLOWED_ARCHIVE_TYPES);
+        return array_merge(
+            self::ALLOWED_IMAGE_TYPES,
+            self::ALLOWED_DOCUMENT_TYPES,
+            self::ALLOWED_ARCHIVE_TYPES,
+        );
     }
 
     /**
@@ -314,11 +311,7 @@ class FileUploadService
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $extension = $file->guessExtension();
 
-        // PHP 8.5: Pipe operator for cleaner transformation pipeline
-        $safeFilename = $originalFilename
-            |> $this->slugger->slug($$)
-            |> $$->lower()
-            |> $$->toString();
+        $safeFilename = $this->slugger->slug($originalFilename)->lower()->toString();
 
         if (!$preserveOriginalName) {
             // Generate unique filename with timestamp

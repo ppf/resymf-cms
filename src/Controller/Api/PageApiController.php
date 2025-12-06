@@ -26,10 +26,7 @@ class PageApiController extends AbstractController
     #[Route('/list', name: 'api_pages_list', methods: ['GET'])]
     public function list(Request $request, PageRepository $pages): JsonResponse
     {
-        // PHP 8.5: Pipe operator for cleaner type casting and transformation
-        $search = $request->query->get('search', '')
-            |> (string) $$
-            |> trim($$);
+        $search = trim((string) $request->query->get('search', ''));
         $sort = $request->query->get('sort', 'createdAt');
         $order = $request->query->get('order', 'desc');
         $page = max(1, (int) $request->query->get('page', 1));
@@ -110,10 +107,7 @@ class PageApiController extends AbstractController
     {
         $page = max(1, $request->query->getInt('page', 1));
         $limit = max(1, min(50, $request->query->getInt('limit', 10)));
-        // PHP 8.5: Pipe operator for cleaner type casting and transformation
-        $search = $request->query->get('q', '')
-            |> (string) $$
-            |> trim($$);
+        $search = trim((string) $request->query->get('q', ''));
         $sortField = $request->query->get('sort', 'createdAt');
         $sortOrder = strtoupper($request->query->get('order', 'DESC')) === 'ASC' ? 'ASC' : 'DESC';
 
@@ -419,11 +413,7 @@ class PageApiController extends AbstractController
             return $this->json(['error' => 'Title is required'], 400);
         }
 
-        // PHP 8.5: Pipe operator for cleaner transformation pipeline
-        $slug = $title
-            |> $slugger->slug($$)
-            |> $$->lower()
-            |> $$->toString();
+        $slug = $slugger->slug($title)->lower()->toString();
 
         return $this->json([
             'slug' => $slug,

@@ -349,13 +349,14 @@ class Page
 
     /**
      * Get excerpt from content (first N characters).
-     * PHP 8.5: Using pipe operator for cleaner string transformation.
      */
     public function getExcerpt(int $length = 200): string
     {
-        $text = $this->content |> strip_tags($$);
+        $text = strip_tags($this->content);
+        if (mb_strlen($text) <= $length) {
+            return $text;
+        }
 
-        return mb_strlen($text) <= $length
-            ? $text
-            : $text |> mb_substr($$, 0, $length) |> $$ . '...';
+        return mb_substr($text, 0, $length) . '...';
+    }
 }
