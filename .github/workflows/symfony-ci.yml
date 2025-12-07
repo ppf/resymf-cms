@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 env:
-  PHP_VERSION: '8.3'
+  PHP_VERSION: '8.5'
   MYSQL_VERSION: '8.0'
   NODE_VERSION: '20'
 
@@ -78,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.3']
+        php-version: ['8.5']
         # Future: Add 8.4 when stable
 
     defaults:
