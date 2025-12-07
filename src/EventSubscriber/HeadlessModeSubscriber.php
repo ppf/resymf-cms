@@ -50,7 +50,7 @@ class HeadlessModeSubscriber implements EventSubscriberInterface
             if ($settings->isHeadlessMode()) {
                 $event->setResponse(new Response(
                     'Frontend disabled - headless mode active',
-                    Response::HTTP_NOT_FOUND
+                    Response::HTTP_NOT_FOUND,
                 ));
             }
         } catch (\Exception) {
