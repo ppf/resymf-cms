@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  publicDir: false,
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'assets'),
