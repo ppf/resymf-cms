@@ -26,10 +26,10 @@ class SettingsRepository extends ServiceEntityRepository
      */
     public function save(Settings $settings, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($settings);
+        $this->_em->persist($settings);
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->_em->flush();
         }
     }
 
@@ -38,10 +38,10 @@ class SettingsRepository extends ServiceEntityRepository
      */
     public function remove(Settings $settings, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($settings);
+        $this->_em->remove($settings);
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->_em->flush();
         }
     }
 

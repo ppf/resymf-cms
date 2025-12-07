@@ -20,19 +20,19 @@ class CronJobRepository extends ServiceEntityRepository
 
     public function save(CronJob $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->_em->persist($entity);
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->_em->flush();
         }
     }
 
     public function remove(CronJob $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->_em->remove($entity);
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->_em->flush();
         }
     }
 

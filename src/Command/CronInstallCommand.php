@@ -100,11 +100,11 @@ class CronInstallCommand extends Command
         }
 
         // Add new entry
-        $newCrontab = trim($existingCrontab)."\n".$cronEntry."\n";
+        $newCrontab = trim($existingCrontab) . "\n" . $cronEntry . "\n";
 
         $tempFile = tempnam(sys_get_temp_dir(), 'cron');
         file_put_contents($tempFile, $newCrontab);
-        exec('crontab '.$tempFile, $output, $returnCode);
+        exec('crontab ' . $tempFile, $output, $returnCode);
         unlink($tempFile);
 
         if ($returnCode !== 0) {

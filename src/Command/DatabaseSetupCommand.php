@@ -80,7 +80,7 @@ class DatabaseSetupCommand extends Command
             $dropInput->setInteractive(false);
 
             $returnCode = $dropCommand->run($dropInput, $output);
-            if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
+            if ($returnCode !== Command::SUCCESS) {
                 $io->warning('Could not drop database (it may not exist)');
             } else {
                 $io->success('Database dropped successfully');
@@ -100,7 +100,7 @@ class DatabaseSetupCommand extends Command
         $createInput->setInteractive(false);
 
         $returnCode = $createCommand->run($createInput, $output);
-        if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
+        if ($returnCode !== Command::SUCCESS) {
             $io->error('Failed to create database');
 
             return Command::FAILURE;
@@ -118,7 +118,7 @@ class DatabaseSetupCommand extends Command
         $migrateInput->setInteractive(false);
 
         $returnCode = $migrateCommand->run($migrateInput, $output);
-        if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
+        if ($returnCode !== Command::SUCCESS) {
             $io->error('Failed to run migrations');
 
             return Command::FAILURE;
@@ -144,7 +144,7 @@ class DatabaseSetupCommand extends Command
                 $fixturesInput->setInteractive(false);
 
                 $returnCode = $fixturesCommand->run($fixturesInput, $output);
-                if ($returnCode !== Command::SUCCESS && $returnCode !== 0) {
+                if ($returnCode !== Command::SUCCESS) {
                     $io->error('Failed to load fixtures');
 
                     return Command::FAILURE;
