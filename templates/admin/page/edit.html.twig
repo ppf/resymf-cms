@@ -14,7 +14,7 @@
     data-page-id="{{ page.id }}"
     data-api-url="{{ path('api_pages_index') }}"
     data-cancel-url="{{ path('admin_page_index') }}"
-    data-categories-data="{{ categoriesData|raw }}"
+    data-categories-data="{{ categoriesData|e('html_attr') }}"
 ></div>
 
 <div class="mt-3">
