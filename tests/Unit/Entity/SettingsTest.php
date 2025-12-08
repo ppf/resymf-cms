@@ -18,12 +18,12 @@ class SettingsTest extends TestCase
 
         $this->assertNull($settings->getId());
         $this->assertEquals('ReSymf CMS', $settings->getSiteName());
+        $this->assertEquals('ReSymf CMS Admin', $settings->getAdminPanelTitle());
         $this->assertEquals('en', $settings->getDefaultLocale());
-        $this->assertEquals('UTC', $settings->getTimezone());
-        $this->assertEquals(10, $settings->getItemsPerPage());
-        $this->assertFalse($settings->isMaintenanceMode());
-        $this->assertTrue($settings->isRegistrationEnabled());
-        $this->assertFalse($settings->isEmailVerificationRequired());
+        $this->assertFalse($settings->isHeadlessMode());
+        $this->assertFalse($settings->isEnforce2fa());
+        $this->assertNull($settings->getSeoDescription());
+        $this->assertNull($settings->getSeoKeywords());
         $this->assertInstanceOf(\DateTimeImmutable::class, $settings->getCreatedAt());
         $this->assertNull($settings->getUpdatedAt());
     }
@@ -36,15 +36,12 @@ class SettingsTest extends TestCase
         $this->assertEquals('My CMS', $settings->getSiteName());
     }
 
-    public function testSiteTaglineGetterAndSetter(): void
+    public function testAdminPanelTitleGetterAndSetter(): void
     {
         $settings = new Settings();
+        $settings->setAdminPanelTitle('Custom Admin Panel');
 
-        $this->assertNull($settings->getSiteTagline());
-
-        $settings->setSiteTagline('The best CMS');
-
-        $this->assertEquals('The best CMS', $settings->getSiteTagline());
+        $this->assertEquals('Custom Admin Panel', $settings->getAdminPanelTitle());
     }
 
     public function testSeoDescriptionGetterAndSetter(): void
@@ -69,61 +66,6 @@ class SettingsTest extends TestCase
         $this->assertEquals('cms, content, management', $settings->getSeoKeywords());
     }
 
-    public function testAdminEmailGetterAndSetter(): void
-    {
-        $settings = new Settings();
-
-        $this->assertNull($settings->getAdminEmail());
-
-        $settings->setAdminEmail('admin@example.com');
-
-        $this->assertEquals('admin@example.com', $settings->getAdminEmail());
-    }
-
-    public function testGoogleAnalyticsIdGetterAndSetter(): void
-    {
-        $settings = new Settings();
-
-        $this->assertNull($settings->getGoogleAnalyticsId());
-
-        $settings->setGoogleAnalyticsId('UA-123456-1');
-
-        $this->assertEquals('UA-123456-1', $settings->getGoogleAnalyticsId());
-    }
-
-    public function testGoogleTagManagerKeyGetterAndSetter(): void
-    {
-        $settings = new Settings();
-
-        $this->assertNull($settings->getGoogleTagManagerKey());
-
-        $settings->setGoogleTagManagerKey('GTM-XXXXX');
-
-        $this->assertEquals('GTM-XXXXX', $settings->getGoogleTagManagerKey());
-    }
-
-    public function testMaintenanceModeGetterAndSetter(): void
-    {
-        $settings = new Settings();
-
-        $this->assertFalse($settings->isMaintenanceMode());
-
-        $settings->setMaintenanceMode(true);
-
-        $this->assertTrue($settings->isMaintenanceMode());
-    }
-
-    public function testMaintenanceMessageGetterAndSetter(): void
-    {
-        $settings = new Settings();
-
-        $this->assertNull($settings->getMaintenanceMessage());
-
-        $settings->setMaintenanceMessage('Site under maintenance');
-
-        $this->assertEquals('Site under maintenance', $settings->getMaintenanceMessage());
-    }
-
     public function testDefaultLocaleGetterAndSetter(): void
     {
         $settings = new Settings();
@@ -132,67 +74,26 @@ class SettingsTest extends TestCase
         $this->assertEquals('fr', $settings->getDefaultLocale());
     }
 
-    public function testTimezoneGetterAndSetter(): void
+    public function testHeadlessModeGetterAndSetter(): void
     {
         $settings = new Settings();
-        $settings->setTimezone('America/New_York');
 
-        $this->assertEquals('America/New_York', $settings->getTimezone());
+        $this->assertFalse($settings->isHeadlessMode());
+
+        $settings->setHeadlessMode(true);
+
+        $this->assertTrue($settings->isHeadlessMode());
     }
 
-    public function testItemsPerPageGetterAndSetter(): void
-    {
-        $settings = new Settings();
-        $settings->setItemsPerPage(20);
-
-        $this->assertEquals(20, $settings->getItemsPerPage());
-    }
-
-    public function testRegistrationEnabledGetterAndSetter(): void
+    public function testEnforce2faGetterAndSetter(): void
     {
         $settings = new Settings();
 
-        $this->assertTrue($settings->isRegistrationEnabled());
+        $this->assertFalse($settings->isEnforce2fa());
 
-        $settings->setRegistrationEnabled(false);
+        $settings->setEnforce2fa(true);
 
-        $this->assertFalse($settings->isRegistrationEnabled());
-    }
-
-    public function testEmailVerificationRequiredGetterAndSetter(): void
-    {
-        $settings = new Settings();
-
-        $this->assertFalse($settings->isEmailVerificationRequired());
-
-        $settings->setEmailVerificationRequired(true);
-
-        $this->assertTrue($settings->isEmailVerificationRequired());
-    }
-
-    public function testSocialUrlGetters(): void
-    {
-        $settings = new Settings();
-
-        $this->assertNull($settings->getFacebookUrl());
-        $this->assertNull($settings->getTwitterUrl());
-        $this->assertNull($settings->getLinkedinUrl());
-        $this->assertNull($settings->getGithubUrl());
-    }
-
-    public function testSocialUrlSetters(): void
-    {
-        $settings = new Settings();
-
-        $settings->setFacebookUrl('facebook.com/example');
-        $settings->setTwitterUrl('twitter.com/example');
-        $settings->setLinkedinUrl('linkedin.com/company/example');
-        $settings->setGithubUrl('github.com/example');
-
-        $this->assertEquals('facebook.com/example', $settings->getFacebookUrl());
-        $this->assertEquals('twitter.com/example', $settings->getTwitterUrl());
-        $this->assertEquals('linkedin.com/company/example', $settings->getLinkedinUrl());
-        $this->assertEquals('github.com/example', $settings->getGithubUrl());
+        $this->assertTrue($settings->isEnforce2fa());
     }
 
     public function testCreatedAtGetterAndSetter(): void
@@ -239,10 +140,10 @@ class SettingsTest extends TestCase
 
         $result = $settings
             ->setSiteName('Test')
-            ->setSiteTagline('Tagline')
+            ->setAdminPanelTitle('Admin')
             ->setDefaultLocale('en')
-            ->setTimezone('UTC')
-            ->setItemsPerPage(15);
+            ->setHeadlessMode(false)
+            ->setEnforce2fa(false);
 
         $this->assertSame($settings, $result);
     }

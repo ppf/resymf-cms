@@ -372,7 +372,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             $this->totpSecret,
             TotpConfiguration::ALGORITHM_SHA1,
             30,  // period in seconds
-            6    // digits
+            6,    // digits
         );
     }
 

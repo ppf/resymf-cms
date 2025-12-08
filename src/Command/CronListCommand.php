@@ -83,7 +83,7 @@ class CronListCommand extends Command
 
         $io->table(
             ['ID', 'Name', 'Expression', 'Command', 'Active', 'Last Status', 'Last Run'],
-            $rows
+            $rows,
         );
 
         $io->note(sprintf('%d job(s) configured', count($jobs)));

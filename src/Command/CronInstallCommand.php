@@ -78,7 +78,7 @@ class CronInstallCommand extends Command
             $phpBin,
             $consolePath,
             $logPath,
-            self::CRON_MARKER
+            self::CRON_MARKER,
         );
 
         if ($input->getOption('show-only')) {

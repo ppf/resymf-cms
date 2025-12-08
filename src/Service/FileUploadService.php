@@ -321,7 +321,6 @@ class FileUploadService
         return $safeFilename . '.' . $extension;
     }
 
-
     /**
      * Detect actual MIME type by reading file content.
      * Uses finfo to analyze file magic bytes.

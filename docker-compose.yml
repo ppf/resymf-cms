@@ -42,7 +42,7 @@ services:
 
   db:
     image: mariadb:11
-    container_name: resymf_db
+    container_name: resymf_dbs
     ports:
       - "33066:3306"
     environment:

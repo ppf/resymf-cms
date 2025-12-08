@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Repository;
 
 use App\Entity\Page;
-use App\Repository\PageRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -112,7 +108,7 @@ class PageRepositoryScheduledPublishingTest extends TestCase
         bool $isPublished,
         ?string $publishedAtModifier,
         bool $expectedVisible,
-        string $description
+        string $description,
     ): void {
         $page = new Page();
         $page->setTitle('Test Page');

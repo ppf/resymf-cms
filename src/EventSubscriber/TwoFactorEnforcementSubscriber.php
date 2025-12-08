@@ -102,7 +102,7 @@ class TwoFactorEnforcementSubscriber implements EventSubscriberInterface
 
         // Redirect to 2FA setup
         $event->setResponse(new RedirectResponse(
-            $this->urlGenerator->generate('2fa_setup')
+            $this->urlGenerator->generate('2fa_setup'),
         ));
     }
 }
