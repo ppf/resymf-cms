@@ -18,9 +18,20 @@ class ApplicationAvailabilityTest extends WebTestCase
     public function testPageIsSuccessful(string $url, int $expectedCode): void
     {
         $client = self::createClient();
+
+        // If we expect 200, don't catch exceptions to see actual errors
+        if ($expectedCode === 200) {
+            $client->catchExceptions(false);
+        }
+
         $client->request('GET', $url);
 
-        $this->assertEquals($expectedCode, $client->getResponse()->getStatusCode());
+        $response = $client->getResponse();
+        $this->assertEquals(
+            $expectedCode,
+            $response->getStatusCode(),
+            sprintf('Failed for URL %s. Response: %s', $url, substr((string) $response->getContent(), 0, 2000)),
+        );
     }
 
     public static function urlProvider(): \Generator
