@@ -35,5 +35,5 @@ security-report.json
 nbproject*
 composer.phar
 
-.claude
-.serena
+.claude/
+.serena/
