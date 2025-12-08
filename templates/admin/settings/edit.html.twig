@@ -51,6 +51,21 @@
                 </div>
             </div>
 
+            <div class="form-section">
+                <h3 class="form-section-title">Security</h3>
+
+                <div class="form-check mb-3">
+                    {{ form_widget(form.enforce2fa) }}
+                    {{ form_label(form.enforce2fa) }}
+                    {{ form_help(form.enforce2fa) }}
+                </div>
+
+                <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
+                    <i class="bi bi-info-circle me-2"></i>
+                    When enabled, users without 2FA configured will be redirected to set it up on their next login.
+                </div>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-circle"></i> Save Settings

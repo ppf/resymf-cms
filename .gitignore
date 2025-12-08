@@ -37,3 +37,5 @@ composer.phar
 
 .claude/
 .serena/
+.DS_Store
+.phpactor.json

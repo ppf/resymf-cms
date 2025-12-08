@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Two-Factor Authentication · {{ site_settings.siteName }}{% endblock %}
+
+{% block body %}
+<section class="auth-hero">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <div class="auth-logo mx-auto">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <h1 class="auth-title">Two-Factor Authentication</h1>
+            <p class="auth-subtitle">Enter the 6-digit code from your authenticator app</p>
+        </div>
+
+        {% if authenticationError %}
+            <div class="alert alert-danger" role="alert">
+                {{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{{ path('2fa_login_check') }}">
+            <div class="mb-4">
+                <label for="authCode" class="form-label fw-semibold">Authentication Code</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                    <input
+                        type="text"
+                        name="{{ authCodeParameterName }}"
+                        id="authCode"
+                        class="form-control text-center"
+                        autocomplete="one-time-code"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        maxlength="6"
+                        required
+                        autofocus
+                        placeholder="000000"
+                        style="font-size: 1.25rem; letter-spacing: 0.3em;">
+                </div>
+                <div class="form-text mt-2">
+                    Open your authenticator app (Google Authenticator, Authy, etc.) and enter the current code.
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('two_factor') }}">
+
+            <button class="btn auth-cta text-white w-100" type="submit">
+                Verify
+            </button>
+        </form>
+
+        <p class="text-center mt-4 mb-0">
+            <a href="{{ path('app_logout') }}" class="text-muted text-decoration-none">
+                <i class="bi bi-arrow-left me-1"></i> Cancel and logout
+            </a>
+        </p>
+
+        <p class="auth-footnote text-center mt-4 mb-0">
+            &copy; {{ 'now'|date('Y') }} {{ site_settings.siteName }} · Crafted with Symfony 7
+        </p>
+    </div>
+</section>
+{% endblock %}

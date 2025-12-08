@@ -59,6 +59,12 @@ class Settings
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $headlessMode = false;
 
+    /**
+     * Whether two-factor authentication is enforced for all users.
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $enforce2fa = false;
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
@@ -151,6 +157,18 @@ class Settings
     public function setHeadlessMode(bool $headlessMode): static
     {
         $this->headlessMode = $headlessMode;
+
+        return $this;
+    }
+
+    public function isEnforce2fa(): bool
+    {
+        return $this->enforce2fa;
+    }
+
+    public function setEnforce2fa(bool $enforce2fa): static
+    {
+        $this->enforce2fa = $enforce2fa;
 
         return $this;
     }
