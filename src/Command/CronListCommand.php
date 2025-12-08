@@ -73,7 +73,7 @@ class CronListCommand extends Command
                 $job->getName(),
                 $job->getCronExpression(),
                 mb_strlen($job->getCommand()) > 40
-                    ? mb_substr($job->getCommand(), 0, 37).'...'
+                    ? mb_substr($job->getCommand(), 0, 37) . '...'
                     : $job->getCommand(),
                 $job->getIsActive() ? '<fg=green>Yes</>' : '<fg=gray>No</>',
                 $statusDisplay,

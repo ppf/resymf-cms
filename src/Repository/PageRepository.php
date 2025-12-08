@@ -39,21 +39,6 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Add visibility conditions for published pages.
-     * Checks both isPublished flag and publishedAt date for scheduled publishing.
-     *
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param string $alias Entity alias in the query
-     */
-    private function addVisibilityConditions($qb, string $alias = 'p'): void
-    {
-        $qb->andWhere("$alias.isPublished = :published")
-           ->andWhere("($alias.publishedAt IS NULL OR $alias.publishedAt <= :now)")
-           ->setParameter('published', true)
-           ->setParameter('now', new \DateTimeImmutable());
-    }
-
-    /**
      * Find page by slug.
      */
     public function findBySlug(string $slug): ?Page
@@ -344,5 +329,20 @@ class PageRepository extends ServiceEntityRepository
             ->setParameter('id', $pageId)
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * Add visibility conditions for published pages.
+     * Checks both isPublished flag and publishedAt date for scheduled publishing.
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param string $alias Entity alias in the query
+     */
+    private function addVisibilityConditions($qb, string $alias = 'p'): void
+    {
+        $qb->andWhere("$alias.isPublished = :published")
+           ->andWhere("($alias.publishedAt IS NULL OR $alias.publishedAt <= :now)")
+           ->setParameter('published', true)
+           ->setParameter('now', new \DateTimeImmutable());
     }
 }

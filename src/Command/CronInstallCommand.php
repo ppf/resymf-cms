@@ -69,8 +69,8 @@ class CronInstallCommand extends Command
         }
 
         $phpBin = PHP_BINARY;
-        $consolePath = $this->projectDir.'/bin/console';
-        $logPath = $this->projectDir.'/var/log/cron.log';
+        $consolePath = $this->projectDir . '/bin/console';
+        $logPath = $this->projectDir . '/var/log/cron.log';
 
         $cronEntry = sprintf(
             '* * * * * cd %s && %s %s messenger:consume scheduler_cron --time-limit=60 >> %s 2>&1 # %s',
@@ -104,7 +104,7 @@ class CronInstallCommand extends Command
 
         $tempFile = tempnam(sys_get_temp_dir(), 'cron');
         file_put_contents($tempFile, $newCrontab);
-        exec('crontab ' . $tempFile, $output, $returnCode);
+        exec('crontab ' . $tempFile, $execOutput, $returnCode);
         unlink($tempFile);
 
         if ($returnCode !== 0) {

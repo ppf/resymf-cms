@@ -143,7 +143,7 @@ class CronJobController extends AbstractController
     #[Route('/{id}/run', name: 'admin_cron_job_run', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function run(Request $request, CronJob $cronJob, \Symfony\Component\Messenger\MessageBusInterface $messageBus): Response
     {
-        if ($this->isCsrfTokenValid('run'.$cronJob->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('run' . $cronJob->getId(), $request->request->get('_token'))) {
             $messageBus->dispatch(new \App\Message\CronJobMessage($cronJob->getId()));
             $this->addFlash('success', sprintf('Cron job "%s" has been triggered.', $cronJob->getName()));
         } else {
