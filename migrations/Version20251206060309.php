@@ -30,12 +30,27 @@ final class Version20251206060309 extends AbstractMigration
         if (!isset($columns['theme_id'])) {
             // Only drop themes table
             $this->addSql('DROP TABLE IF EXISTS resymf_themes');
+
             return;
         }
 
-        // Drop FK and column from users first
-        $this->addSql('ALTER TABLE resymf_users DROP FOREIGN KEY IF EXISTS `FK_USER_THEME`');
-        $this->addSql('ALTER TABLE resymf_users DROP INDEX IF EXISTS `IDX_USER_THEME`');
+        // Drop FK if exists (MySQL-compatible check)
+        $fks = $schemaManager->listTableForeignKeys('resymf_users');
+        foreach ($fks as $fk) {
+            if (strtoupper($fk->getName()) === 'FK_USER_THEME') {
+                $this->addSql('ALTER TABLE resymf_users DROP FOREIGN KEY `FK_USER_THEME`');
+
+                break;
+            }
+        }
+
+        // Drop index if exists
+        $indexes = $schemaManager->listTableIndexes('resymf_users');
+        if (isset($indexes['IDX_USER_THEME']) || isset($indexes['idx_user_theme'])) {
+            $this->addSql('ALTER TABLE resymf_users DROP INDEX `IDX_USER_THEME`');
+        }
+
+        // Drop column
         $this->addSql('ALTER TABLE resymf_users DROP COLUMN theme_id');
 
         // Drop themes table
