@@ -16,6 +16,20 @@ jobs:
       matrix:
         php-version: ['8.5']
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: resymf_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -42,6 +56,35 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Configure test environment
+        run: |
+          cat > .env.test.local <<'EOF'
+          APP_ENV=test
+          APP_DEBUG=0
+          DB_HOST=127.0.0.1
+          DB_USER=root
+          DB_PASS=root
+          DB_NAME=resymf_test
+          DB_VERSION=8.0
+          MAILER_DSN="null://null"
+          EOF
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
+
+      - name: Prepare database
+        run: |
+          php bin/console doctrine:database:create --if-not-exists --env=test
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
       - name: Run PHPUnit tests
         run: |
