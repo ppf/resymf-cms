@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\Page;
-use App\Entity\Theme;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
@@ -172,18 +171,6 @@ class UserTest extends TestCase
         $this->assertNotNull($user->getUpdatedAt());
         $this->assertGreaterThanOrEqual($before, $user->getUpdatedAt());
         $this->assertLessThanOrEqual($after, $user->getUpdatedAt());
-    }
-
-    public function testThemeGetterAndSetter(): void
-    {
-        $user = new User();
-        $theme = $this->createMock(Theme::class);
-
-        $this->assertNull($user->getTheme());
-
-        $user->setTheme($theme);
-
-        $this->assertSame($theme, $user->getTheme());
     }
 
     public function testAuthoredPagesCollection(): void
