@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfigurationInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -35,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['username'], message: 'This username is already taken.')]
 #[UniqueEntity(fields: ['email'], message: 'This email address is already registered.')]
 #[ORM\HasLifecycleCallbacks]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -95,6 +98,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Page::class, mappedBy: 'author')]
     private Collection $authoredPages;
+
+    /**
+     * TOTP secret for two-factor authentication.
+     */
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $totpSecret = null;
+
+    /**
+     * Whether TOTP 2FA is enabled for this user.
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $isTotpEnabled = false;
 
     public function __construct()
     {
@@ -320,6 +335,67 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $page->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    // ========================================
+    // Two-Factor Authentication (TwoFactorInterface)
+    // ========================================
+
+    /**
+     * Check if TOTP authentication is enabled and configured.
+     */
+    public function isTotpAuthenticationEnabled(): bool
+    {
+        return $this->isTotpEnabled && $this->totpSecret !== null;
+    }
+
+    /**
+     * Get the username shown in authenticator apps.
+     */
+    public function getTotpAuthenticationUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * Get TOTP configuration for the authenticator.
+     */
+    public function getTotpAuthenticationConfiguration(): ?TotpConfigurationInterface
+    {
+        if ($this->totpSecret === null) {
+            return null;
+        }
+
+        return new TotpConfiguration(
+            $this->totpSecret,
+            TotpConfiguration::ALGORITHM_SHA1,
+            30,  // period in seconds
+            6    // digits
+        );
+    }
+
+    public function getTotpSecret(): ?string
+    {
+        return $this->totpSecret;
+    }
+
+    public function setTotpSecret(?string $totpSecret): static
+    {
+        $this->totpSecret = $totpSecret;
+
+        return $this;
+    }
+
+    public function isTotpEnabled(): bool
+    {
+        return $this->isTotpEnabled;
+    }
+
+    public function setIsTotpEnabled(bool $isTotpEnabled): static
+    {
+        $this->isTotpEnabled = $isTotpEnabled;
 
         return $this;
     }

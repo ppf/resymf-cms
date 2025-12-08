@@ -118,4 +118,23 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('admin_user_index');
     }
+
+    /**
+     * Reset user's 2FA configuration.
+     */
+    #[Route('/{id}/reset-2fa', name: 'admin_user_reset_2fa', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function reset2fa(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('reset2fa' . $user->getId(), $request->request->get('_token'))) {
+            $user->setTotpSecret(null);
+            $user->setIsTotpEnabled(false);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', sprintf('Two-factor authentication has been reset for user "%s".', $user->getUsername()));
+        } else {
+            $this->addFlash('error', 'Invalid CSRF token.');
+        }
+
+        return $this->redirectToRoute('admin_user_show', ['id' => $user->getId()]);
+    }
 }

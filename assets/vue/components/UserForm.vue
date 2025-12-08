@@ -165,19 +165,6 @@
             </label>
           </div>
 
-          <div class="form-check">
-            <input
-              id="role-super-admin"
-              v-model="form.roles"
-              type="checkbox"
-              class="form-check-input"
-              value="ROLE_SUPER_ADMIN"
-            />
-            <label for="role-super-admin" class="form-check-label">
-              <strong>Super Admin</strong>
-              <span class="text-muted d-block small">Highest level access with system configuration rights</span>
-            </label>
-          </div>
         </div>
       </div>
 

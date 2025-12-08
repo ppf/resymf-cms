@@ -1,0 +1,11 @@
+# https://symfony.com/bundles/SchebTwoFactorBundle/6.x/configuration.html
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+
+    totp:
+        enabled: true
+        server_name: 'ReSymf CMS'
+        issuer: 'ReSymf CMS'
+        leeway: 1  # Allow +/- 1 period (30 seconds) for clock drift

@@ -85,6 +85,16 @@ class SettingsType extends AbstractType
                     'class' => 'form-check-input',
                 ],
                 'help' => 'Enable to disable frontend URLs (API and admin only)',
+            ])
+
+            // Security
+            ->add('enforce2fa', CheckboxType::class, [
+                'label' => 'Enforce Two-Factor Authentication',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'help' => 'When enabled, all users must set up 2FA to access admin panel',
             ]);
     }
 
