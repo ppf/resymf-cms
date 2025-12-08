@@ -1,7 +1,140 @@
 {% extends 'admin/base.html.twig' %}
+
 {% block title %}{{ category.name }}{% endblock %}
+
 {% block body %}
-<h1>{{ category.name }}</h1>
-<p>{{ category.description }}</p>
-<a href="{{ path('admin_category_index') }}" class="btn btn-secondary">Back</a>
+{# Category Header #}
+<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="h-12 w-12 rounded-xl bg-violet-100 flex items-center justify-center">
+                <i class="bi bi-tag text-xl text-violet-600"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-semibold text-slate-900">{{ category.name }}</h1>
+                <p class="text-sm text-slate-500 mt-0.5">
+                    {{ category.slug }}
+                </p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <a href="{{ path('admin_category_edit', {id: category.id}) }}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors no-underline">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a href="{{ path('admin_category_index') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors no-underline">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+{# Main Content Grid #}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {# Left Column - Category Details #}
+    <div class="lg:col-span-2 space-y-6">
+        {# Description #}
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-card-text text-blue-600"></i>
+                Description
+            </h2>
+            {% if category.description %}
+                <p class="text-sm text-slate-700 leading-relaxed">{{ category.description }}</p>
+            {% else %}
+                <p class="text-sm text-slate-500 italic">No description provided</p>
+            {% endif %}
+        </div>
+
+        {# Pages in Category #}
+        {% if category.pages|length > 0 %}
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-file-earmark-text text-blue-600"></i>
+                Pages ({{ category.pages|length }})
+            </h2>
+            <div class="space-y-2">
+                {% for page in category.pages %}
+                <a href="{{ path('admin_page_show', {id: page.id}) }}"
+                   class="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors no-underline group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+                            <i class="bi bi-file-text text-slate-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-slate-900 group-hover:text-blue-600">{{ page.title }}</span>
+                            <span class="text-xs text-slate-500 block">{{ page.slug }}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        {% if page.isPublished %}
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                        {% else %}
+                            <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                        {% endif %}
+                        <i class="bi bi-chevron-right text-slate-400 group-hover:text-blue-600"></i>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {# Right Column - Sidebar #}
+    <div class="space-y-6">
+        {# Status & Info #}
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-info-circle text-blue-600"></i>
+                Details
+            </h2>
+            <div class="space-y-4">
+                <div>
+                    <div class="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Status</div>
+                    {% if category.isActive %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full">
+                            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                            Active
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">
+                            <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
+                            Inactive
+                        </span>
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Display Order</div>
+                    <span class="text-sm text-slate-900">{{ category.displayOrder }}</span>
+                </div>
+                <div>
+                    <div class="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Pages</div>
+                    <span class="text-sm text-slate-900">{{ category.pages|length }} page{{ category.pages|length != 1 ? 's' : '' }}</span>
+                </div>
+            </div>
+        </div>
+
+        {# Timestamps #}
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-clock-history text-amber-600"></i>
+                Activity
+            </h2>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-slate-500">Created</span>
+                    <span class="text-slate-900">{{ category.createdAt|date('M j, Y') }}</span>
+                </div>
+                {% if category.updatedAt %}
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-slate-500">Last Updated</span>
+                    <span class="text-slate-900">{{ category.updatedAt|date('M j, Y') }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

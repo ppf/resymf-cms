@@ -500,91 +500,327 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* ============================================
+   Design System: Refined Editorial
+   Aligned with admin sidebar aesthetic
+   ============================================ */
+
+/* Color Palette */
 .user-form-container {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+
   max-width: 800px;
   margin: 0 auto;
 }
 
+/* Main Form Container */
 .user-form {
   background: white;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  border: 1px solid var(--slate-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Section Titles */
 .section-title {
-  font-size: 1.1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--slate-900);
   margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--slate-200);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 1rem;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Form Sections */
 .password-section,
 .roles-section {
-  background: #f8f9fa;
+  background: var(--slate-50);
   padding: 1.5rem;
-  border-radius: 6px;
+  border-radius: 10px;
   margin-bottom: 1.5rem;
+  border: 1px solid var(--slate-100);
 }
 
+/* Form Labels */
+.user-form :deep(.form-label) {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--slate-700);
+  margin-bottom: 0.375rem;
+}
+
+/* Form Inputs */
+.user-form :deep(.form-control) {
+  border: 1px solid var(--slate-200);
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--slate-900);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.user-form :deep(.form-control:focus) {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.user-form :deep(.form-control::placeholder) {
+  color: var(--slate-300);
+}
+
+.user-form :deep(.form-control.is-valid) {
+  border-color: var(--success);
+  background-image: none;
+}
+
+.user-form :deep(.form-control.is-invalid) {
+  border-color: var(--danger);
+  background-image: none;
+}
+
+/* Password Input Group */
 .password-input-group {
   display: flex;
   gap: 0;
 }
 
 .password-input-group input {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
 .password-input-group button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left: 0;
+  border: 1px solid var(--slate-200);
+  background: var(--slate-50);
+  color: var(--slate-600);
+  padding: 0.625rem 1rem;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
 }
 
+.password-input-group button:hover {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+/* Role Checkboxes */
 .role-checkboxes {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.form-check-label strong {
-  display: block;
-  margin-bottom: 0.25rem;
+.role-checkboxes .form-check {
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--slate-200);
+  transition: all 0.15s ease;
 }
 
-.form-check-input:disabled {
+.role-checkboxes .form-check:hover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.02);
+}
+
+.user-form :deep(.form-check-input) {
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1.5px solid var(--slate-300);
+  border-radius: 4px;
+  margin-top: 0.125rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.user-form :deep(.form-check-input:checked) {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.user-form :deep(.form-check-input:focus) {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  border-color: var(--primary);
+}
+
+.user-form :deep(.form-check-input:disabled) {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.form-check-input {
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: 0.125rem;
+.user-form :deep(.form-check-label) {
+  font-size: 0.875rem;
+  color: var(--slate-700);
+  cursor: pointer;
 }
 
+.user-form :deep(.form-check-label strong) {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--slate-900);
+  font-weight: 500;
+}
+
+/* Toggle Switch */
+.user-form :deep(.form-switch .form-check-input) {
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--slate-200);
+  border: none;
+}
+
+.user-form :deep(.form-switch .form-check-input:checked) {
+  background-color: var(--success);
+}
+
+/* Form Actions */
 .form-actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
-  padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
+  padding-top: 1.25rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--slate-200);
 }
 
+.form-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  transition: all 0.15s ease;
+}
+
+/* Primary Button */
+.user-form :deep(.btn-primary) {
+  background: var(--primary);
+  border: none;
+  color: white;
+}
+
+.user-form :deep(.btn-primary:hover:not(:disabled)) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.user-form :deep(.btn-primary:active) {
+  transform: translateY(0);
+}
+
+.user-form :deep(.btn-primary:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Secondary Button */
+.user-form :deep(.btn-secondary) {
+  background: var(--slate-100);
+  border: 1px solid var(--slate-200);
+  color: var(--slate-700);
+}
+
+.user-form :deep(.btn-secondary:hover) {
+  background: var(--slate-200);
+  color: var(--slate-900);
+}
+
+/* Outline Secondary Button */
+.user-form :deep(.btn-outline-secondary) {
+  background: transparent;
+  border: 1px solid var(--slate-200);
+  color: var(--slate-600);
+}
+
+.user-form :deep(.btn-outline-secondary:hover) {
+  background: var(--slate-50);
+  border-color: var(--slate-300);
+  color: var(--slate-900);
+}
+
+/* Help Text */
+.user-form :deep(.form-text) {
+  font-size: 0.75rem;
+  color: var(--slate-500);
+  margin-top: 0.375rem;
+}
+
+.user-form :deep(.form-text.text-success) {
+  color: var(--success);
+}
+
+.user-form :deep(.form-text.text-danger) {
+  color: var(--danger);
+}
+
+/* Validation Feedback */
+.user-form :deep(.invalid-feedback) {
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 0.375rem;
+}
+
+.user-form :deep(.valid-feedback) {
+  font-size: 0.75rem;
+  color: var(--success);
+  margin-top: 0.375rem;
+}
+
+/* Alert */
+.user-form :deep(.alert-danger) {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+/* Toast Notification */
 .toast-notification {
   position: fixed;
   top: 20px;
   right: 20px;
   padding: 1rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 10px;
   color: white;
   font-weight: 500;
+  font-size: 0.875rem;
   z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   animation: slideIn 0.3s ease-out;
   display: flex;
   align-items: center;
@@ -592,15 +828,15 @@ onMounted(async () => {
 }
 
 .toast-success {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
 }
 
 .toast-error {
-  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
 }
 
 .toast-warning {
-  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+  background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
 }
 
 @keyframes slideIn {
@@ -614,10 +850,22 @@ onMounted(async () => {
   }
 }
 
+/* Loading Spinner */
+.user-form :deep(.spinner-border-sm) {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .user-form {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .password-section,
+  .roles-section {
+    padding: 1rem;
   }
 
   .form-actions {

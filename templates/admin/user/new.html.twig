@@ -3,9 +3,23 @@
 {% block title %}Create User{% endblock %}
 
 {% block body %}
-<div class="dashboard-welcome mb-4">
-    <h1>Create New User</h1>
-    <p class="subtitle">Add a new user to the system</p>
+{# Page Header #}
+<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                <i class="bi bi-person-plus text-xl text-blue-600"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-semibold text-slate-900">Create New User</h1>
+                <p class="text-sm text-slate-500 mt-0.5">Add a new user to the system</p>
+            </div>
+        </div>
+        <a href="{{ path('admin_user_index') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors no-underline">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
 </div>
 
 {# Vue User Form #}

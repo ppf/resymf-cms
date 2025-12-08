@@ -4,9 +4,25 @@
 {% block title %}Edit Cron Job{% endblock %}
 
 {% block body %}
-<div class="dashboard-welcome mb-4">
-    <h1>Edit Cron Job: {{ cronJob.name }}</h1>
-    <p class="subtitle">Modify scheduled task configuration</p>
+{# Page Header #}
+<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="h-12 w-12 rounded-xl bg-amber-100 flex items-center justify-center">
+                <i class="bi bi-clock-history text-xl text-amber-600"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-semibold text-slate-900">Edit Cron Job</h1>
+                <p class="text-sm text-slate-500 mt-0.5">
+                    Modify scheduled task: <span class="font-medium text-slate-700">{{ cronJob.name }}</span>
+                </p>
+            </div>
+        </div>
+        <a href="{{ path('admin_cron_job_index') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition-colors no-underline">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
 </div>
 
 <div class="card">
@@ -48,10 +64,10 @@
 </div>
 
 {% if cronJob.lastStatus %}
-<div class="mt-3">
+<div class="mt-4">
     <div class="alert alert-{{ cronJob.lastStatus == 'success' ? 'success' : (cronJob.lastStatus == 'running' ? 'warning' : 'danger') }}">
         <strong>Last Execution:</strong>
-        {{ cronJob.lastRunAt|date('Y-m-d H:i:s') }} - Status: {{ cronJob.lastStatus }}
+        {{ cronJob.lastRunAt|date('M j, Y H:i:s') }} - Status: {{ cronJob.lastStatus }}
     </div>
 </div>
 {% endif %}

@@ -1,4 +1,4 @@
-{# Modern Minimalist Admin Base Template #}
+{# Modern Sidebar Admin Layout - Tailwind + Bootstrap hybrid #}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,122 +6,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Admin{% endblock %} - {{ site_settings.adminPanelTitle }}</title>
 
-    {# Bootstrap 5 CSS #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {# Google Fonts - Inter #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    {# Bootstrap Icons #}
+    {# Bootstrap 5 CSS (for Vue components) #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    {# Custom Admin Styles #}
-    {{ vite_entry_link_tags('admin') }}
+    {# Tailwind CDN for layout #}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        border: "hsl(240 5.9% 90%)",
+                        input: "hsl(240 5.9% 90%)",
+                        ring: "hsl(240 5.9% 10%)",
+                        background: "hsl(0 0% 100%)",
+                        foreground: "hsl(240 10% 3.9%)",
+                        primary: {
+                            DEFAULT: "hsl(240 5.9% 10%)",
+                            foreground: "hsl(0 0% 98%)",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(240 4.8% 95.9%)",
+                            foreground: "hsl(240 5.9% 10%)",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(240 4.8% 95.9%)",
+                            foreground: "hsl(240 3.8% 46.1%)",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(240 4.8% 95.9%)",
+                            foreground: "hsl(240 5.9% 10%)",
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Ensure Bootstrap components render inside Tailwind layout */
+        .admin-content .table { margin-bottom: 0; }
+        .admin-content .btn { font-family: 'Inter', sans-serif; }
+    </style>
 
     {% block stylesheets %}{% endblock %}
 </head>
-<body class="admin-layout">
-    {# Top Navigation Bar #}
-    <nav class="admin-navbar">
-        <a class="navbar-brand" href="{{ path('admin_dashboard') }}">
-            <i class="bi bi-speedometer2"></i>
-            {{ site_settings.adminPanelTitle }}
-        </a>
+<body class="bg-slate-50 text-slate-900 antialiased flex h-screen overflow-hidden text-sm">
 
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link {{ app.request.get('_route') starts with 'admin_dashboard' ? 'active' : '' }}"
-                   href="{{ path('admin_dashboard') }}">
-                    Dashboard
-                </a>
-            </li>
+    {# Sidebar #}
+    <aside class="w-64 border-r border-slate-200 flex flex-col bg-white shrink-0">
+        <div class="h-14 flex items-center px-6 border-b border-slate-200">
+            <a href="{{ path('admin_dashboard') }}" class="font-bold text-lg tracking-tight text-slate-900 no-underline">
+                <i class="bi bi-speedometer2 mr-2 text-blue-600"></i>
+                {{ site_settings.adminPanelTitle }}
+            </a>
+        </div>
 
-            <li class="nav-item">
-                <a class="nav-link {{ app.request.get('_route') starts with 'admin_page' or app.request.get('_route') starts with 'admin_category' ? 'active' : '' }}"
-                   href="#">
-                    Content <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ path('admin_page_index') }}">
-                        <i class="bi bi-file-text"></i> Pages
-                    </a>
-                    <a class="dropdown-item" href="{{ path('admin_category_index') }}">
-                        <i class="bi bi-tags"></i> Categories
-                    </a>
-                </div>
-            </li>
+        <div class="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
+            <div class="px-3 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">Platform</div>
 
-            {% if is_granted('ROLE_ADMIN') %}
-            <li class="nav-item">
-                <a class="nav-link {{ app.request.get('_route') starts with 'admin_user' ? 'active' : '' }}"
-                   href="#">
-                    Users <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ path('admin_user_index') }}">
-                        <i class="bi bi-people"></i> All Users
-                    </a>
-                    <a class="dropdown-item" href="{{ path('admin_user_new') }}">
-                        <i class="bi bi-person-plus"></i> Add New
-                    </a>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ app.request.get('_route') starts with 'admin_settings' or app.request.get('_route') starts with 'admin_cron_job' ? 'active' : '' }}"
-                   href="#">
-                    Settings <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ path('admin_settings_edit') }}">
-                        <i class="bi bi-gear"></i> General
-                    </a>
-                    <a class="dropdown-item" href="{{ path('admin_cron_job_index') }}">
-                        <i class="bi bi-clock-history"></i> Cron Jobs
-                    </a>
-                </div>
-            </li>
-            {% endif %}
-        </ul>
-
-        <div class="navbar-nav-right">
-            <a class="nav-link" href="{{ path('cms_homepage') }}" target="_blank" title="View Site">
-                <i class="bi bi-eye"></i>
+            <a href="{{ path('admin_dashboard') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium no-underline transition-colors {{ app.request.get('_route') starts with 'admin_dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                <i class="bi bi-house-door text-base"></i>
+                Dashboard
             </a>
 
-            <div class="user-menu">
-                <a href="#" class="user-toggle">
-                    <i class="bi bi-person-circle"></i>
-                    {{ app.user.username }}
-                    <i class="bi bi-chevron-down" style="font-size: 10px;"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ path('admin_settings_edit') }}">
-                        <i class="bi bi-gear"></i> Settings
-                    </a>
-                    <hr style="margin: 4px 0;">
-                    <a class="dropdown-item" href="{{ path('app_logout') }}">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                    </a>
+            <div class="px-3 mt-6 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">Content</div>
+
+            <a href="{{ path('admin_page_index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium no-underline transition-colors {{ app.request.get('_route') starts with 'admin_page' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                <i class="bi bi-file-earmark-text text-base"></i>
+                Pages
+            </a>
+
+            <a href="{{ path('admin_category_index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium no-underline transition-colors {{ app.request.get('_route') starts with 'admin_category' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                <i class="bi bi-tags text-base"></i>
+                Categories
+            </a>
+
+            {% if is_granted('ROLE_ADMIN') %}
+            <div class="px-3 mt-6 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">Administration</div>
+
+            <a href="{{ path('admin_user_index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium no-underline transition-colors {{ app.request.get('_route') starts with 'admin_user' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                <i class="bi bi-people text-base"></i>
+                Users
+            </a>
+            {% endif %}
+
+            <div class="px-3 mt-6 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">System</div>
+
+            <a href="{{ path('admin_settings_edit') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium no-underline transition-colors {{ app.request.get('_route') starts with 'admin_settings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                <i class="bi bi-gear text-base"></i>
+                Settings
+            </a>
+
+            <a href="{{ path('admin_cron_job_index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium no-underline transition-colors {{ app.request.get('_route') starts with 'admin_cron_job' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                <i class="bi bi-clock-history text-base"></i>
+                Cron Jobs
+            </a>
+        </div>
+
+        {# User section at bottom #}
+        <div class="p-4 border-t border-slate-200">
+            <div class="flex items-center gap-3">
+                <div class="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700 text-sm">
+                    {{ app.user.username|slice(0, 2)|upper }}
                 </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-slate-900 truncate">{{ app.user.username }}</div>
+                    <div class="text-xs text-slate-500 truncate">{{ app.user.email }}</div>
+                </div>
+                <a href="{{ path('app_logout') }}" class="text-slate-400 hover:text-slate-600 p-1" title="Logout">
+                    <i class="bi bi-box-arrow-right text-lg"></i>
+                </a>
             </div>
         </div>
-    </nav>
+    </aside>
 
-    {# Main Content Area #}
-    <main class="admin-main">
-        {# Flash Messages #}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+    {# Main Content #}
+    <main class="flex-1 flex flex-col overflow-hidden">
+        {# Header #}
+        <header class="h-14 flex items-center justify-between px-8 border-b border-slate-200 bg-white shrink-0">
+            <div class="flex items-center text-sm text-slate-500">
+                <span>Admin</span>
+                <span class="mx-2 text-slate-300">/</span>
+                <span class="text-slate-900 font-medium">
+                    {% if app.request.get('_route') == 'admin_dashboard' %}Dashboard
+                    {% elseif app.request.get('_route') starts with 'admin_page' %}Pages
+                    {% elseif app.request.get('_route') starts with 'admin_category' %}Categories
+                    {% elseif app.request.get('_route') starts with 'admin_user' %}Users
+                    {% elseif app.request.get('_route') starts with 'admin_settings' %}Settings
+                    {% elseif app.request.get('_route') starts with 'admin_cron_job' %}Cron Jobs
+                    {% else %}Overview{% endif %}
+                </span>
+            </div>
+            <a href="{{ path('cms_homepage') }}" target="_blank"
+               class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 no-underline transition-colors">
+                <i class="bi bi-box-arrow-up-right"></i>
+                View Site
+            </a>
+        </header>
+
+        {# Scrollable Page Content #}
+        <div class="flex-1 overflow-auto p-8 admin-content">
+            {# Flash Messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show mb-4" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
 
-        {# Page Content #}
-        {% block body %}{% endblock %}
+            {% block body %}{% endblock %}
+        </div>
     </main>
 
-    {# JavaScript #}
+    {# Bootstrap JS (for alerts, modals, etc) #}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     {# TinyMCE Rich Text Editor #}
@@ -130,7 +184,7 @@
     <script src="{{ asset('tinymce-init.js') }}" type="module"></script>
     {% endblock %}
 
-    {# Admin JavaScript Enhancements #}
+    {# Admin JavaScript #}
     {{ vite_entry_script_tags('admin') }}
 
     {% block javascripts %}{% endblock %}

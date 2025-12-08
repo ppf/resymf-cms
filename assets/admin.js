@@ -3,6 +3,8 @@
  * Enhanced admin area functionality
  */
 
+import './styles/admin.css';
+
 // Slug Auto-Generation
 class SlugGenerator {
     constructor() {

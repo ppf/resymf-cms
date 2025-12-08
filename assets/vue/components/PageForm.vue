@@ -481,52 +481,358 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* ============================================
+   Design System: Refined Editorial
+   Aligned with admin sidebar aesthetic
+   ============================================ */
+
+/* Color Palette */
 .page-form-container {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-500: #64748b;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+
   max-width: 900px;
 }
 
+/* Main Form Container */
 .page-form {
   background: white;
   padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--slate-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Labels */
+.page-form :deep(.form-label) {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--slate-700);
+  margin-bottom: 0.375rem;
+}
+
+/* Form Inputs */
+.page-form :deep(.form-control) {
+  border: 1px solid var(--slate-200);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--slate-900);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.card {
-  border: 1px solid #dee2e6;
+.page-form :deep(.form-control:focus) {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
 }
 
-.card-header {
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-  padding: 0.75rem 1rem;
+.page-form :deep(.form-control::placeholder) {
+  color: var(--slate-300);
 }
 
+.page-form :deep(.form-control.is-valid) {
+  border-color: var(--success);
+  background-image: none;
+  padding-right: 0.875rem;
+}
+
+.page-form :deep(.form-control.is-invalid) {
+  border-color: var(--danger);
+  background-image: none;
+  padding-right: 0.875rem;
+}
+
+/* Input Group (Slug field with button) */
+.page-form :deep(.input-group) {
+  display: flex;
+}
+
+.page-form :deep(.input-group .form-control) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.page-form :deep(.input-group .btn) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border: 1px solid var(--slate-200);
+  border-left: none;
+  background: var(--slate-50);
+  color: var(--slate-700);
+  font-size: 0.8125rem;
+  padding: 0.625rem 1rem;
+  transition: all 0.15s ease;
+}
+
+.page-form :deep(.input-group .btn:hover:not(:disabled)) {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+.page-form :deep(.input-group .btn:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Card Sections (SEO, Publishing) */
+.page-form .card {
+  border: 1px solid var(--slate-200);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.page-form .card-header {
+  background: linear-gradient(to bottom, var(--slate-50), #ffffff);
+  border-bottom: 1px solid var(--slate-100);
+  padding: 1rem 1.25rem;
+}
+
+.page-form .card-header h6 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--slate-900);
+  display: flex;
+  align-items: center;
+}
+
+.page-form .card-header h6 i {
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.page-form .card-body {
+  padding: 1.25rem;
+  background: white;
+}
+
+/* Categories Section */
 .category-checkboxes {
-  background: #f8f9fa;
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200) !important;
+  border-radius: 8px !important;
   max-height: 200px;
   overflow-y: auto;
+  padding: 1rem !important;
 }
 
-.form-check {
-  margin-bottom: 0.5rem;
+.category-checkboxes::-webkit-scrollbar {
+  width: 6px;
 }
 
-.form-check:last-child {
+.category-checkboxes::-webkit-scrollbar-track {
+  background: var(--slate-100);
+  border-radius: 3px;
+}
+
+.category-checkboxes::-webkit-scrollbar-thumb {
+  background: var(--slate-300);
+  border-radius: 3px;
+}
+
+/* Checkboxes */
+.page-form :deep(.form-check) {
+  margin-bottom: 0.75rem;
+  padding-left: 1.75rem;
+}
+
+.page-form :deep(.form-check:last-child) {
   margin-bottom: 0;
 }
 
+.page-form :deep(.form-check-input) {
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1.5px solid var(--slate-300);
+  border-radius: 4px;
+  margin-top: 0.125rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.page-form :deep(.form-check-input:checked) {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.page-form :deep(.form-check-input:focus) {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  border-color: var(--primary);
+}
+
+.page-form :deep(.form-check-label) {
+  font-size: 0.875rem;
+  color: var(--slate-700);
+  cursor: pointer;
+}
+
+.page-form :deep(.form-check-label strong) {
+  color: var(--slate-900);
+  font-weight: 500;
+}
+
+/* Help Text */
+.page-form :deep(.form-text) {
+  font-size: 0.75rem;
+  color: var(--slate-500);
+  margin-top: 0.375rem;
+}
+
+.page-form :deep(.form-text.text-success) {
+  color: var(--success);
+}
+
+.page-form :deep(.form-text.text-primary) {
+  color: var(--primary);
+}
+
+/* Validation Feedback */
+.page-form :deep(.invalid-feedback) {
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 0.375rem;
+}
+
+.page-form :deep(.valid-feedback) {
+  font-size: 0.75rem;
+  color: var(--success);
+  margin-top: 0.375rem;
+}
+
+/* Buttons */
+.page-form :deep(.btn-primary) {
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+}
+
+.page-form :deep(.btn-primary:hover:not(:disabled)) {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.page-form :deep(.btn-primary:active) {
+  transform: translateY(0);
+}
+
+.page-form :deep(.btn-primary:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.page-form :deep(.btn-secondary) {
+  background: var(--slate-100);
+  border: 1px solid var(--slate-200);
+  border-radius: 8px;
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--slate-700);
+  transition: all 0.15s ease;
+}
+
+.page-form :deep(.btn-secondary:hover:not(:disabled)) {
+  background: var(--slate-200);
+  color: var(--slate-900);
+}
+
+.page-form :deep(.btn-outline-secondary) {
+  background: transparent;
+  border: 1px solid var(--slate-200);
+  border-radius: 8px;
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--slate-600);
+  transition: all 0.15s ease;
+}
+
+.page-form :deep(.btn-outline-secondary:hover) {
+  background: var(--slate-50);
+  border-color: var(--slate-300);
+  color: var(--slate-900);
+}
+
+/* Action Bar */
+.page-form .border-top {
+  border-color: var(--slate-200) !important;
+}
+
+/* Toast Notifications */
 .toast-container {
   z-index: 1050;
 }
 
+.toast {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.toast.bg-success {
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%) !important;
+}
+
+.toast.bg-danger {
+  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%) !important;
+}
+
+.toast.bg-info {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%) !important;
+}
+
+.toast .toast-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1rem;
+}
+
+.toast .toast-body {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Loading Spinner */
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
   border-width: 0.15em;
 }
 
+.page-form .spinner-border.text-primary {
+  color: var(--primary) !important;
+}
+
+/* Toast Close Button */
 .btn-close {
   filter: invert(1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .page-form {
+    padding: 1.25rem;
+  }
+
+  .page-form .card-body {
+    padding: 1rem;
+  }
 }
 </style>
