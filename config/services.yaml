@@ -4,6 +4,12 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Alert Rules Engine configuration
+    alert_rules:
+        enabled: true
+        default_cooldown: '5 minutes'
+        config_path: '%kernel.project_dir%/config/packages/alert_rules.yaml'
+        rules: []  # Rules are loaded from config/packages/alert_rules.yaml
 
 services:
     # default configuration for services in *this* file
@@ -35,6 +41,22 @@ services:
         arguments:
             $apiLimiter: '@limiter.api'
             $userCreationLimiter: '@limiter.user_creation'
+
+    # Alert Rules Engine services
+    App\Service\AlertRules\AlertRuleParser:
+        arguments:
+            $configPath: '%kernel.project_dir%/config/packages/alert_rules.yaml'
+
+    App\Service\AlertRules\AlertCooldownManager:
+        arguments:
+            $alertEventRepository: '@?App\Repository\AlertEventRepository'
+            $cache: '@?cache.app'
+
+    App\Service\AlertRules\AlertRulesEngine:
+        arguments:
+            $entityManager: '@?doctrine.orm.entity_manager'
+            $alertEventRepository: '@?App\Repository\AlertEventRepository'
+            $config: '%alert_rules%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

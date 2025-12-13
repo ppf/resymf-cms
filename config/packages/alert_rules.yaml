@@ -1,0 +1,140 @@
+# Alert Rules Engine Configuration
+#
+# This file defines the alert rules that the engine will evaluate in-memory.
+# Rules can be pattern-based (regex matching) or threshold-based (event counting).
+#
+# YAML Schema:
+# ------------
+# alert_rules:
+#   enabled: boolean          # Enable/disable the alert rules engine
+#   config_path: string       # Path to custom alert rules directory (optional)
+#   default_cooldown: string  # Default cooldown period (e.g., '5 minutes')
+#
+#   rules:
+#     - name: string          # Unique rule identifier
+#       description: string   # Human-readable description
+#       enabled: boolean      # Enable/disable this specific rule
+#       type: string          # 'pattern' or 'threshold'
+#       priority: string      # 'low', 'medium', 'high', 'critical'
+#
+#       # For pattern-based rules:
+#       pattern:
+#         regex: string       # Regular expression to match
+#         field: string       # Field to match against (e.g., 'message', 'level')
+#         case_sensitive: boolean  # Case sensitivity (default: false)
+#
+#       # For threshold-based rules:
+#       threshold:
+#         count: integer      # Number of events to trigger alert
+#         window: string      # Time window (e.g., '5 minutes', '1 hour')
+#         field: string       # Field to count/aggregate on (optional)
+#         operator: string    # 'gt', 'gte', 'lt', 'lte', 'eq' (default: 'gte')
+#
+#       # Sliding window aggregation (optional):
+#       aggregation:
+#         type: string        # 'count', 'sum', 'avg', 'min', 'max'
+#         field: string       # Field to aggregate
+#         group_by: string    # Group by field (optional)
+#
+#       # Cooldown and deduplication:
+#       cooldown: string      # Cooldown period (e.g., '10 minutes')
+#       dedupe_key: string    # Field to use for deduplication (optional)
+#
+#       # Actions when alert triggers:
+#       actions:
+#         - type: string      # 'log', 'email', 'webhook', 'messenger'
+#           target: string    # Target for the action (email address, URL, etc.)
+#           template: string  # Template name (optional)
+
+alert_rules:
+    enabled: true
+    default_cooldown: '5 minutes'
+
+    rules:
+        # Example: Pattern-based rule for error detection
+        - name: 'critical_error_pattern'
+          description: 'Detects critical errors in log messages'
+          enabled: true
+          type: 'pattern'
+          priority: 'critical'
+          pattern:
+              regex: '(?i)(fatal|critical|emergency)'
+              field: 'message'
+              case_sensitive: false
+          cooldown: '15 minutes'
+          dedupe_key: 'message'
+          actions:
+              - type: 'log'
+                target: 'alert'
+
+        # Example: Pattern-based rule for authentication failures
+        - name: 'auth_failure_pattern'
+          description: 'Detects authentication failure attempts'
+          enabled: true
+          type: 'pattern'
+          priority: 'high'
+          pattern:
+              regex: '(authentication failed|invalid credentials|login failed)'
+              field: 'message'
+              case_sensitive: false
+          cooldown: '5 minutes'
+          actions:
+              - type: 'log'
+                target: 'security'
+
+        # Example: Threshold-based rule for high error rate
+        - name: 'high_error_rate'
+          description: 'Triggers when error count exceeds threshold in time window'
+          enabled: true
+          type: 'threshold'
+          priority: 'high'
+          threshold:
+              count: 100
+              window: '5 minutes'
+              field: 'level'
+              operator: 'gte'
+          aggregation:
+              type: 'count'
+              field: 'level'
+          cooldown: '10 minutes'
+          actions:
+              - type: 'log'
+                target: 'alert'
+
+        # Example: Threshold-based rule for slow response times
+        - name: 'slow_response_threshold'
+          description: 'Triggers when average response time exceeds limit'
+          enabled: true
+          type: 'threshold'
+          priority: 'medium'
+          threshold:
+              count: 1000
+              window: '1 minute'
+              operator: 'gt'
+          aggregation:
+              type: 'avg'
+              field: 'response_time'
+          cooldown: '5 minutes'
+          actions:
+              - type: 'log'
+                target: 'performance'
+
+        # Example: Brute force detection with sliding window
+        - name: 'brute_force_detection'
+          description: 'Detects potential brute force attacks'
+          enabled: true
+          type: 'threshold'
+          priority: 'critical'
+          threshold:
+              count: 10
+              window: '1 minute'
+              operator: 'gte'
+          aggregation:
+              type: 'count'
+              field: 'ip_address'
+              group_by: 'ip_address'
+          cooldown: '30 minutes'
+          dedupe_key: 'ip_address'
+          actions:
+              - type: 'log'
+                target: 'security'
