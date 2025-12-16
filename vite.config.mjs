@@ -17,7 +17,7 @@ export default defineConfig({
     outDir: 'public/build',
     minify: 'terser',
     cssMinify: true,
-    sourcemap: false,
+    sourcemap: process.env.NODE_ENV === 'production' ? false : true,
     terserOptions: {
       compress: {
         drop_console: true,

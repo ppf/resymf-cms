@@ -44,11 +44,14 @@ when@test:
             # Using explicit DB_NAME in .env.test instead of suffix
         orm:
             query_cache_driver:
-                type: array
+                type: pool
+                pool: doctrine.test_cache_pool
             result_cache_driver:
-                type: array
+                type: pool
+                pool: doctrine.test_cache_pool
             metadata_cache_driver:
-                type: array
+                type: pool
+                pool: doctrine.test_cache_pool
 
 when@prod:
     doctrine:
