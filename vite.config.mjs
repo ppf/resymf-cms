@@ -15,6 +15,15 @@ export default defineConfig({
   build: {
     manifest: true,
     outDir: 'public/build',
+    minify: 'terser',
+    cssMinify: true,
+    sourcemap: false,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       input: {
         app: './assets/app.js',
@@ -29,6 +38,12 @@ export default defineConfig({
         'page-form-app': './assets/vue/page-form-app.js',
         'page-grid-app': './assets/vue/page-grid-app.js',
         'cron-job-grid-app': './assets/vue/cron-job-grid-app.js',
+      },
+      output: {
+        manualChunks: {
+          'vendor-vue': ['vue'],
+          'vendor-vueuse': ['@vueuse/core'],
+        },
       },
     },
   },

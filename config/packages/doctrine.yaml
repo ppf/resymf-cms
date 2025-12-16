@@ -11,7 +11,7 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
-        auto_generate_proxy_classes: true
+        auto_generate_proxy_classes: '%kernel.debug%'
         enable_lazy_ghost_objects: true
         report_fields_where_declared: true
         validate_xml_mapping: true
@@ -28,28 +28,30 @@ doctrine:
                 alias: App
         controller_resolver:
             auto_mapping: false
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
 
 when@test:
     doctrine:
         dbal:
             # Using explicit DB_NAME in .env.test instead of suffix
+        orm:
+            query_cache_driver:
+                type: array
+            result_cache_driver:
+                type: array
+            metadata_cache_driver:
+                type: array
 
 when@prod:
     doctrine:
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
-            query_cache_driver:
-                type: pool
-                pool: doctrine.system_cache_pool
-            result_cache_driver:
-                type: pool
-                pool: doctrine.result_cache_pool
-
-    framework:
-        cache:
-            pools:
-                doctrine.result_cache_pool:
-                    adapter: cache.app
-                doctrine.system_cache_pool:
-                    adapter: cache.system
