@@ -8,7 +8,7 @@
 .dockerignore
 Dockerfile
 docker-compose.yml
-docker/
+docker/nginx/
 
 # Local environment files
 .env.local

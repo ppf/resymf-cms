@@ -31,13 +31,23 @@ RUN apk add --no-cache \
     icu-dev \
     gmp-dev
 
-# Install PHP extensions (opcache is built-in to PHP 8.5)
+# Install PHP extensions (opcache is built-in and enabled by default in PHP 8.5)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && docker-php-ext-install intl \
     && docker-php-ext-install zip \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install gmp
+
+# Install Redis extension
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del $PHPIZE_DEPS
+
+# Copy PHP configuration
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
