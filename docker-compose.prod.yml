@@ -1,0 +1,25 @@
+# docker-compose.prod.yml - Production testing overlay
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  php:
+    build:
+      target: app_prod
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  scheduler:
+    build:
+      target: app_prod
+    environment:
+      APP_ENV: prod
+
+  # Disable one-shot frontend-build (assets baked into app_prod image)
+  frontend-build:
+    profiles: ["dev-only"]
