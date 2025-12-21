@@ -39,3 +39,4 @@ composer.phar
 .serena/
 .DS_Store
 .phpactor.json
+config/reference.php
