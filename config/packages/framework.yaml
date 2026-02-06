@@ -8,6 +8,9 @@ framework:
         handler_id: '%env(REDIS_URL)%'
         cookie_lifetime: 3600
         gc_maxlifetime: 3600
+        cookie_secure: auto
+        cookie_httponly: true
+        cookie_samesite: lax
 
     # Enable HTTP cache
     http_cache: true

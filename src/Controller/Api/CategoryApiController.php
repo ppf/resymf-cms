@@ -73,9 +73,17 @@ class CategoryApiController extends AbstractController
                 ->setParameter('search', '%' . mb_strtolower($search) . '%');
         }
 
-        // Count total
-        $countQb = clone $qb;
-        $total = count($countQb->getQuery()->getResult());
+        // Count total efficiently with a COUNT query instead of fetching all results
+        $countQb = $categories->createQueryBuilder('c')
+            ->select('COUNT(c.id)');
+
+        if ('' !== $search) {
+            $countQb
+                ->andWhere('LOWER(c.name) LIKE :search OR LOWER(c.slug) LIKE :search')
+                ->setParameter('search', '%' . mb_strtolower($search) . '%');
+        }
+
+        $total = (int) $countQb->getQuery()->getSingleScalarResult();
 
         // Paginate
         $results = $qb

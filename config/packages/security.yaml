@@ -54,7 +54,7 @@ security:
 
             # Switch user (for admin impersonation)
             # https://symfony.com/doc/current/security/impersonating_user.html
-            switch_user: true
+            switch_user: { role: ROLE_ADMIN }
 
             # Two-factor authentication
             two_factor:

@@ -138,6 +138,19 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
+     * Count pages created since a given date.
+     */
+    public function countCreatedSince(\DateTimeImmutable $since): int
+    {
+        return (int) $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->andWhere('p.createdAt >= :since')
+            ->setParameter('since', $since)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Find recent pages.
      * Respects scheduled publishing via publishedAt date when publishedOnly=true.
      *

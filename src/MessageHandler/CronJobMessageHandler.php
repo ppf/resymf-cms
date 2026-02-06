@@ -22,6 +22,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class CronJobMessageHandler
 {
+    private const MAX_OUTPUT_LENGTH = 65535;
+
     private Application $application;
 
     public function __construct(
@@ -91,7 +93,7 @@ class CronJobMessageHandler
             $exitCode = $this->application->doRun($input, $output);
 
             $cronJob->setLastStatus($exitCode === 0 ? CronJob::STATUS_SUCCESS : CronJob::STATUS_FAILED);
-            $cronJob->setLastOutput($output->fetch());
+            $cronJob->setLastOutput(mb_substr($output->fetch(), 0, self::MAX_OUTPUT_LENGTH));
 
             $this->logger->info('Cron job completed', [
                 'job_id' => $cronJob->getId(),
@@ -100,7 +102,7 @@ class CronJobMessageHandler
             ]);
         } catch (\Throwable $e) {
             $cronJob->setLastStatus(CronJob::STATUS_FAILED);
-            $cronJob->setLastOutput($e->getMessage() . "\n" . $e->getTraceAsString());
+            $cronJob->setLastOutput(mb_substr($e->getMessage(), 0, self::MAX_OUTPUT_LENGTH));
 
             $this->logger->error('Cron job failed with exception', [
                 'job_id' => $cronJob->getId(),
