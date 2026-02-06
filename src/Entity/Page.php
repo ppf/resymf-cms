@@ -114,7 +114,7 @@ class Page
      * Author of the page.
      */
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'authoredPages')]
-    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?User $author = null;
 
     /**

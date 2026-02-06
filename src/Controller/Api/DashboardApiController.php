@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/dashboard')]
-#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_ADMIN')]
 class DashboardApiController extends AbstractController
 {
     public function __construct(
@@ -31,32 +31,22 @@ class DashboardApiController extends AbstractController
     #[Route('/stats', name: 'api_dashboard_stats', methods: ['GET'])]
     public function stats(): JsonResponse
     {
-        // User statistics
+        // User statistics - use COUNT queries instead of fetching entities
         $totalUsers = $this->userRepository->countAll();
         $activeUsers = $this->userRepository->countActive();
-        $recentUsers = $this->userRepository->findRecent(30);
-
-        // Calculate users created in the last 30 days
-        $thirtyDaysAgo = new \DateTime('-30 days');
-        $newUsersThisMonth = count(array_filter($recentUsers, function ($user) use ($thirtyDaysAgo) {
-            return $user->getCreatedAt() >= $thirtyDaysAgo;
-        }));
+        $newUsersThisMonth = $this->userRepository->countCreatedSince(new \DateTimeImmutable('-30 days'));
 
         // Page statistics
         $totalPages = $this->pageRepository->countAll();
         $publishedPages = $this->pageRepository->countPublished();
         $draftPages = $totalPages - $publishedPages;
 
-        // Category statistics
+        // Category statistics - use COUNT query instead of fetching entities
         $totalCategories = $this->categoryRepository->countAll();
-        $activeCategories = count($this->categoryRepository->findActive());
+        $activeCategories = $this->categoryRepository->countActive();
 
-        // Recent activity (pages created in last 7 days)
-        $recentPages = $this->pageRepository->findRecent(100);
-        $sevenDaysAgo = new \DateTime('-7 days');
-        $recentActivity = count(array_filter($recentPages, function ($page) use ($sevenDaysAgo) {
-            return $page->getCreatedAt() >= $sevenDaysAgo;
-        }));
+        // Recent activity (pages created in last 7 days) - use COUNT query
+        $recentActivity = $this->pageRepository->countCreatedSince(new \DateTimeImmutable('-7 days'));
 
         return $this->json([
             'users' => [
